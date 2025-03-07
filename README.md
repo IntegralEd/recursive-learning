@@ -443,6 +443,216 @@ This architecture allows for:
 - These keys can be offered to users who want to save threads but not identify by email.
 - This approach ensures secure and temporary access without compromising user privacy.
 
+# Recursive Learning Platform
+
+## Overview
+
+This platform is designed to provide a multitenant recursive learning environment with chat capabilities tailored for each client.
+
+## MVP Implementation for Bmore
+
+### Setup Instructions
+
+1. **Directory Structure**
+
+   Create dedicated directories for Bmore under the `public/` folder:
+
+   ```plaintext
+   public/
+   └── bmore/
+       ├── css/
+       ├── assets/
+       └── index.html
+   ```
+
+2. **Add Custom Assets**
+
+   Place Bmore's CSS files and assets in their respective directories.
+
+3. **Routing Configuration**
+
+   - Update the routing logic to direct Bmore users to the `/bmore/` endpoints.
+   - Ensure that the server correctly serves the Bmore-specific content.
+
+4. **Webhook Integration**
+
+   - Configure webhooks for Bmore's RAG agents.
+   - Update the webhook URLs in the configuration files.
+
+### Testing
+
+- Use CURL to test the webhooks:
+
+  ```bash
+  curl -X POST -H "Content-Type: application/json" -d '{ "message": "Hello" }' https://yourdomain.com/bmore/webhook
+  ```
+
+- Verify responses and ensure correct functioning.
+
+## Expansion to Multitenancy
+
+### Onboarding New Clients
+
+1. **Clone the Template**
+
+   - Copy the `bmore/` folder structure and rename it to the new client's identifier.
+
+     ```bash
+     cp -r public/bmore/ public/newclient/
+     ```
+
+2. **Customize Assets**
+
+   - Replace CSS and assets with the new client's files.
+
+3. **Update Routing**
+
+   - Add routing rules for the new client in your server configuration.
+
+4. **Configure Webhooks**
+
+   - Set up webhooks specific to the new client's data sources and RAG agents.
+
+### Best Practices
+
+- **Consistency:** Maintain a uniform folder structure for all clients.
+- **Scalability:** Keep shared resources modular to facilitate updates across all tenants.
+- **Documentation:** Update this README and any relevant documentation when changes are made.
+
+## Fallback Customer Support Assistant
+
+- Integrated as a universal fallback across all clients.
+- Handles:
+
+  - Unrecognized queries.
+  - Commenting and ticketing issues.
+
+- Ensure it is always accessible and up-to-date.
+
+## Development Workflow
+
+### Branching Strategy
+
+- **`main` Branch:**
+
+  - Contains stable code ready for production.
+
+- **Feature Branches:**
+
+  - Use feature branches for development (`feature/feature-name`).
+
+### Testing
+
+- Regularly test integrations using CURL and other tools.
+- Implement automated tests where possible.
+
+## Getting Started
+
+1. **Install Dependencies**
+
+   ```bash
+   npm install
+   ```
+
+2. **Run the Server**
+
+   ```bash
+   npm start
+   ```
+
+3. **Access the Application**
+
+   - Navigate to `https://yourdomain.com/bmore/` for Bmore's chat interface.
+
+## Contributing
+
+- Please follow the code style guidelines.
+- Submit pull requests for review before merging.
+
+## License
+
+- This project is proprietary and confidential.
+
+## Data Privacy and SIS Compliance
+
+- **Anonymity:** The platform uses `Record_ID` and `Org_ID` to identify users anonymously.
+- **No Email Storage:** Email addresses and names are not stored or transmitted.
+- **Compliance:** The system complies with FERPA regulations and other student privacy laws.
+
+## URL Construction and Routing Logic
+
+- **URL Parameters:**
+
+  ```
+  ?User_ID=-----&Org_ID=-----&Thread_ID=-----&Source=chat&Action_ID=-----
+  ```
+
+- **Frontend Implementation:**
+  - The chat interface constructs the `LAMBDA_URL` with the above parameters.
+  - `Action_ID` corresponds to the specific assistant or action to be performed.
+  - `Org_ID` represents the client's organization ID, used for context and configurations.
+
+- **Lambda Functions:**
+  - AWS Lambda functions parse these query parameters.
+  - Retrieve context and variables from Airtable based on `Action_ID`.
+  - Data flow is managed without exposing personal identifiers.
+
+## Client Configuration Variables
+
+- **Organizational Information:**
+  - `Org_ID`, `Client_Name`, `Client_Slug`
+
+- **Branding:**
+  - Colors: `Client_HEX_Primary`, `Client_HEX_Secondary`, `Client_HEX_Accent`, `Client_HEX_Background`, `Client_HEX_Text`
+
+- **Typography:**
+  - Fonts: `Client_Font_H1`, `Client_Font_H2`, `Client_Font_Body`
+  - Font Sizes: `Client_Font_Size_H1`, `Client_Font_Size_H2`, `Client_Font_Size_Body`
+
+- **Assets:**
+  - URLs for logos, icons, and images
+
+- **Layout:**
+  - Spacing, border radii, padding
+
+- **Accessibility:**
+  - Settings for font scale and contrast modes
+
+- **Support:**
+  - Contact information for client support
+
+## Onboarding a New Client
+
+### Additional Steps:
+
+1. **Update Client Configuration:**
+   - Include all the new variables in `client-config.json`
+   - Ensure that asset URLs are correctly pointed to the client's assets
+
+2. **Customize CSS Variables:**
+   - Generate `variables.css` based on the client's branding configurations
+
+3. **Ensure Accessibility Settings:**
+   - Verify that accessibility options are properly configured and functioning
+
+## Utilizing Softr Forms for Client Intake
+
+- **Collect Additional Branding Information:**
+  - Include fields for all new variables in the form
+  - Ensure clients can upload assets and provide URLs if needed
+
+- **Automate Variable Integration:**
+  - Use integration tools to automatically update `client-config.json` and stylesheets with the information from Airtable
+
+## Generating a Brand Book
+
+- **Enhanced Template:**
+  - Include sections for all new configurations
+  - Display visual representations of colors, fonts, and layouts
+
+- **Automation:**
+  - Update the document generation process to pull in all new variables
+
 
 
 

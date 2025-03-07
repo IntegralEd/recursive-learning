@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Head content -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bmore Maternal Health Chat Interface</title>
+  <link rel="icon" href="assets/favicon.ico">
+  <link rel="stylesheet" href="../../core/styles/base.css">
+  <link rel="stylesheet" href="styles/variables.css">
+  <link rel="stylesheet" href="styles/custom.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <img id="logo" src="assets/logo.png" alt="Logo">
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Chat Interface -->
+    <div id="chat-container"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>Contact us at <a href="mailto:support@bmorehealth.org">support@bmorehealth.org</a></p>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { getClientVariables } from '../../airtable/variables-fetcher.js';
+    import { applyAccessibilitySettings } from '../../core/components/accessibility.js';
+    import { initializeChat } from '../../core/components/ChatInterface.js';
+
+    // Load client configuration
+    fetch('config/client-config.json')
+      .then(response => response.json())
+      .then(config => {
+        // Use config data
+        document.title = `${config.Client_Name} Chat Interface`;
+
+        // Load assets
+        document.getElementById('logo').src = config.Assets.Client_Logo_URL;
+
+        // Apply accessibility settings
+        applyAccessibilitySettings(config.Accessibility);
+
+        // Fetch variables from Airtable or proceed
+        getClientVariables(config.variablesTableID).then(variables => {
+          // Initialize chat with variables and config
+          initializeChat(config, variables);
+        });
+      })
+      .catch(error => {
+        console.error('Error loading client configuration:', error);
+      });
+  </script>
+</body>
+</html> 
