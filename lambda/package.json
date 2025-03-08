@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "Lambda function for MVP",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  },
   "devDependencies": {},
   "scripts": {
-    "build": "your-build-command"
+    "build": "YOUR_BUILD_COMMAND_IF_NEEDED"
   }
 } 

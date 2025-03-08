@@ -1,10 +1,10 @@
 :root {
   /* Branding Colors */
-  --client-primary-color: #007AFF;
-  --client-secondary-color: #34C759;
-  --client-accent-color: #FF9500;
-  --client-background-color: #F5F5F7;
-  --client-text-color: #1A1A1A;
+  --primary-color: #28A745;
+  --secondary-color: #34C759;
+  --accent-color: #FF9500;
+  --background-color: #F5F5F7;
+  --text-color: #1A1A1A;
 
   /* Typography */
   --client-font-h1: 'Inter, sans-serif';

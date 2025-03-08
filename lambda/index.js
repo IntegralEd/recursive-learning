@@ -1,32 +1,57 @@
-const https = require('https');
+const fetch = require('node-fetch');
 
-exports.handler = async (event) => {
-  // Parse query parameters
-  const params = event.queryStringParameters || {};
+// CORS Headers
+const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+};
 
-  const userId = params.User_ID || 'anonymous';
-  const orgId = params.Org_ID || 'default';
-  const threadId = params.Thread_ID || null;
-  const source = params.Source || 'chat';
-  const actionId = params.Action_ID || 'INIT_CHAT';
+// Helper function to generate a thread ID
+function generateThreadId() {
+  return 'thread_' + Math.random().toString(36).substr(2, 9);
+}
 
-  // Parse the body
-  const body = JSON.parse(event.body || '{}');
-  const message = body.message || '';
+// Main handler
+exports.handler = async (event, context) => {
+    console.log("Received event:", event);
 
-  // Hardcoded recipe logic for MVP
-  const responseMessage = await processAction(actionId, message);
+    // Handle OPTIONS request for CORS
+    if (event.requestContext?.http?.method === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers: corsHeaders,
+            body: ''
+        };
+    }
 
-  // Logging can be added here (e.g., send logs to Make.com)
+    // Parse the incoming request
+    const { message, thread_id, User_ID, Org_ID, Source, Action_ID } = event.body ? JSON.parse(event.body) : {};
 
-  // Return response
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      thread_id: threadId || generateThreadId(),
-      message: responseMessage,
-    }),
-  };
+    if (!message) {
+        return {
+            statusCode: 400,
+            headers: corsHeaders,
+            body: JSON.stringify({ error: "Message is required" })
+        };
+    }
+
+    // Log received data
+    console.log(`Message received from user ${User_ID || 'Unknown'}: ${message}`);
+
+    // Generate synthetic response
+    const assistantResponse = `You said: "${message}". This is a synthetic response.`;
+
+    // Return the synthetic response
+    return {
+        statusCode: 200,
+        headers: corsHeaders,
+        body: JSON.stringify({
+            message: assistantResponse,
+            thread_id: thread_id || generateThreadId(),
+            assistant_id: 'synthetic_assistant'
+        })
+    };
 };
 
 async function processAction(actionId, message) {
@@ -36,10 +61,6 @@ async function processAction(actionId, message) {
 
   // Fallback response
   return "Sorry, I couldn't process your request.";
-}
-
-function generateThreadId() {
-  return 'thread_' + Math.random().toString(36).substr(2, 9);
 }
 
 // Function to get context from Airtable

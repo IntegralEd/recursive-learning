@@ -222,3 +222,13 @@ lambda/*.log
 
 # Ignore any other unnecessary files
 lambda/*.tmp
+
+# Ignore the softr-embed.html file
+docs/clients/BHB/softr-embed.html
+
+lambda-deploy/
+
+# Ignore softr HTML files
+softr-embed.html
+softr.html
+docs/clients/*/softr-embed.html
