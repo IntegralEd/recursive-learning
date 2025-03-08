@@ -1,0 +1,41 @@
+/* docs/assets/css/ie-central.css */
+
+/* CSS Variables */
+:root {
+    --primary-color: #004080;
+    --secondary-color: #0080ff;
+    --background-color: #f0f0f0;
+    --font-family: 'Arial', sans-serif;
+    /* ... other variables */
+}
+
+/* Base Styles */
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color, #333);
+    margin: 0;
+    padding: 0;
+}
+
+/* Header Styles */
+.header {
+    background-color: var(--primary-color);
+    color: var(--header-text-color, #fff);
+    padding: 20px;
+}
+
+/* Button Styles */
+.button {
+    background-color: var(--secondary-color);
+    color: var(--button-text-color, #fff);
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+/* ... other styles */
+
+.logo {
+    background-image: url('../../assets/images/logo.png');
+} 
