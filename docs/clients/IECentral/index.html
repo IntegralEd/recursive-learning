@@ -5,15 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IE Central Support Chat</title>
     <!-- Favicon (if any) -->
-    <link rel="icon" href="../../assets/images/favicon.ico">
+    <link rel="icon" href="assets/logo.ico">
     <!-- Corrected CSS Paths -->
-    <link rel="stylesheet" href="../../Assets/css/ie-central.css">
     <link rel="stylesheet" href="styles/variables.css">
     <link rel="stylesheet" href="styles/custom.css">
 </head>
 <body>
     <!-- Corrected Image Path -->
-    <img src="../../Assets/images/logo.png" alt="Logo">
+    <img src="assets/logo.png" alt="Logo">
 
     <!-- Main Content -->
     <main>
@@ -33,5 +32,24 @@
     <!-- Remove or update this if accessibility.js is no longer used -->
     <!-- <script src="../../Assets/js/accessibility.js"></script> -->
     <script src="../../Assets/js/chat.js"></script>
+    <script>
+        // Parse the 'context' URL parameter
+        const params = new URLSearchParams(window.location.search);
+        const contextParam = params.get('context');
+
+        let context = {};
+        if (contextParam) {
+            try {
+                context = JSON.parse(decodeURIComponent(contextParam));
+                console.log('Context:', context);
+                // Use context variables as needed
+            } catch (error) {
+                console.error('Failed to parse context:', error);
+            }
+        } else {
+            console.log('No context provided');
+        }
+        // Proceed with initializing chat or other features
+    </script>
 </body>
 </html> 
