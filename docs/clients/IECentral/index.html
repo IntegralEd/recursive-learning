@@ -9,6 +9,8 @@
     <!-- Corrected CSS Paths -->
     <link rel="stylesheet" href="styles/variables.css">
     <link rel="stylesheet" href="styles/custom.css">
+    <!-- Corrected CSS and JS Paths -->
+    <link rel="stylesheet" href="../../Assets/css/ie-core.css">
 </head>
 <body>
     <!-- Corrected Image Path -->
@@ -32,24 +34,96 @@
     <!-- Remove or update this if accessibility.js is no longer used -->
     <!-- <script src="../../Assets/js/accessibility.js"></script> -->
     <script src="../../Assets/js/chat.js"></script>
+    <script src="../../Assets/js/ie-core.js"></script>
     <script>
-        // Parse the 'context' URL parameter
-        const params = new URLSearchParams(window.location.search);
-        const contextParam = params.get('context');
+        // Function to wait for context from Softr or other sources
+        function waitForContext(callback) {
+            let maxAttempts = 20; // Maximum number of attempts
+            let attempt = 0;
+            let interval = 500; // Interval in milliseconds (0.5 seconds)
 
-        let context = {};
-        if (contextParam) {
-            try {
-                context = JSON.parse(decodeURIComponent(contextParam));
-                console.log('Context:', context);
-                // Use context variables as needed
-            } catch (error) {
-                console.error('Failed to parse context:', error);
-            }
-        } else {
-            console.log('No context provided');
+            const checkContext = () => {
+                attempt++;
+                // Check if Softr has provided context
+                if (window.Softr && window.Softr.Context && window.Softr.Context.isReady) {
+                    // Context is available
+                    callback(window.Softr.Context.data);
+                } else if (attempt < maxAttempts) {
+                    // Context not yet available, try again after interval
+                    setTimeout(checkContext, interval);
+                } else {
+                    // Context not available after maximum attempts, log error
+                    console.error('Context not available after waiting.');
+                    // Do not proceed without context
+                    // You can decide to proceed with default context or show an error message to the user
+                }
+            };
+
+            checkContext();
         }
-        // Proceed with initializing chat or other features
+
+        // Function to extract subdomain
+        function getSubdomain() {
+            const host = window.location.hostname; // e.g., "integral-mothership.softr.app"
+            const domainParts = host.split('.');
+            if (domainParts.length > 2) {
+                // Extract subdomain(s)
+                return domainParts.slice(0, domainParts.length - 2).join('.');
+            } else {
+                return '';
+            }
+        }
+
+        // Wait for context and then initialize chat
+        waitForContext(function(contextData) {
+            let context = {};
+            if (contextData) {
+                context = contextData;
+                console.log('Context received from Softr:', context);
+            } else {
+                console.log('No context provided after waiting.');
+                // Do not proceed with chat initialization
+                return;
+            }
+
+            // Extract subdomain as source
+            const subdomain = getSubdomain();
+            console.log('Subdomain:', subdomain);
+
+            // Perform regex matching on subdomain to determine Source
+            let source = 'unknown';
+            if (/integral|iecentral|ie/i.test(subdomain)) {
+                source = 'IE-Team';
+            } else if (/bhb|bmore|baltimore/i.test(subdomain)) {
+                source = 'bmore';
+            } else {
+                source = subdomain || 'unknown';
+            }
+            context.Source = source;
+
+            // Determine client based on the URL path
+            const pathSegments = window.location.pathname.split('/').filter(segment => segment);
+            let client = '';
+
+            if (pathSegments.includes('IECentral')) {
+                client = 'IECentral';
+            } else if (pathSegments.includes('BHB')) {
+                client = 'BHB';
+            } else {
+                client = 'Other';
+            }
+
+            console.log('Client:', client);
+            console.log('Updated Context:', context);
+
+            // Initialize chat based on the client
+            initializeChat(client, context);
+        });
+
+        document.addEventListener('SoftrContextReady', function(event) {
+            const contextData = event.detail;
+            // Proceed with the rest of your code using contextData
+        });
     </script>
 </body>
 </html> 

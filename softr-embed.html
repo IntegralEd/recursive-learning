@@ -12,7 +12,7 @@
 
 <div id="chat-container">
   <div id="loading-message">
-    <h3>Welcome <span id="user-name">there</span>!</h3>
+    <h3>Welcome <span id="user-name"></span>!</h3>
     <p>We're preparing your personalized assistant...</p>
   </div>
   <div id="iframe-container" style="display: none; width: 100%; height: 600px;"></div>
@@ -22,7 +22,7 @@
   // Use a self-executing function to avoid global namespace pollution
   (function() {
     // Configuration
-    const GITHUB_PAGES_URL = 'https://integraled.github.io/integraled-central/';
+    const GITHUB_PAGES_URL = 'https://integraled.github.io/recursive-learning/';
     const CHAT_VERSION = '1.0.1'; // Update this when making changes to force cache refresh
     const DEBUG_MODE = false; // Set to true to enable detailed console logging
     

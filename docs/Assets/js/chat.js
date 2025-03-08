@@ -2,7 +2,7 @@ function initializeChat(client, context) {
     // Display loading message
     displayMessage('Initializing chat, please wait...');
 
-    // Send initial data to the appropriate webhook and wait for response
+    // Determine webhook type based on client
     let webhookType = '';
 
     if (client === 'IECentral') {
@@ -18,14 +18,13 @@ function initializeChat(client, context) {
         User_ID: context.User_ID || 'anonymous',
         Org_ID: context.Org_ID || client,
         Thread_ID: context.Thread_ID || null,
-        Source: 'bmore',
+        Source: context.Source || 'unknown',
         Action_ID: context.Action_ID || null
     };
 
     // Send data to webhook and initialize chat after response
     sendDataToWebhook(webhookType, requestData)
         .then(responseData => {
-            // Hide loading message if applicable
             // Update context
             context = { ...context, ...responseData };
 
@@ -212,4 +211,19 @@ function startBusinessAnalystChatSession(context) {
     // Proceed with chat loop as needed
 }
 
+function createIframe(context) {
+    // Ensure userId is defined
+    const userId = context.User_ID || 'anonymous';
+
+    // Proceed with iframe creation using userId
+    const iframe = document.createElement('iframe');
+    iframe.src = `some_url?userId=${encodeURIComponent(userId)}`;
+    // ... rest of your code ...
+}
+
 // Implement displayMessage, displayUserMessage, createInputField functions accordingly 
+
+// Update the GITHUB_PAGES_URL constant if present
+const GITHUB_PAGES_URL = 'https://integraled.github.io/recursive-learning/';
+
+// ... rest of your code ... 
