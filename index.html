@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAG Chat Directory</title>
+    <title>BHB Maternal Health Chat</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -39,6 +39,10 @@
             padding: 2px 6px;
             border-radius: 4px;
         }
+        #chat-container {
+            width: 100%;
+            height: 100vh;
+        }
     </style>
 </head>
 <body>
@@ -62,7 +66,7 @@
         <h2>For Developers</h2>
         <p>If you're a developer looking to implement the RAG Chat Assistant:</p>
         <ol>
-            <li>Visit our <a href="https://github.com/integraled/rag-chat">GitHub repository</a> for documentation</li>
+            <li>Visit our <a href="https://github.com/IntegralEd/recursive-learning/">GitHub repository</a> for documentation</li>
             <li>Check out the client-specific branches for implementation details</li>
             <li>Contact the development team for API keys and access</li>
         </ol>
@@ -72,7 +76,7 @@
         <p><code>support@integral-ed.com</code></p>
     </div>
 
-    <div id="chat-app"></div>
+    <div id="chat-container"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -82,9 +86,9 @@
                 return {
                     User_ID: params.get('User_ID') || 'anonymous',
                     Thread_ID: params.get('Thread_ID') || '----',
-                    Action_ID: params.get('Action_ID') || '',
-                    Org_ID: params.get('Org_ID') || '',
-                    source: params.get('source') || ''
+                    Action_ID: params.get('Action_ID') || 'recan2bciV7HcjXHV', // Default to RAG Chat Action_ID
+                    Org_ID: params.get('Org_ID') || 'recTpsAWPW6z64RVV', // BHB Org_ID
+                    source: params.get('source') || 'bmore'
                 };
             }
 
@@ -112,7 +116,7 @@
                 console.log('Initializing RAG Chat with config:', config);
 
                 // Construct the Make.com webhook URL for RAG Chat
-                const webhookUrl = `https://hook.us1.make.com/YOUR_RAG_CHAT_WEBHOOK_PATH?User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}&Thread_ID=${encodeURIComponent(config.Thread_ID)}&Action_ID=${encodeURIComponent(config.Action_ID)}&Source=${encodeURIComponent(config.source)}`;
+                const webhookUrl = `https://hook.us1.make.com/oh4b9kqlf1gnlypxasliklmc0jkwoi2t?User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}&Thread_ID=${encodeURIComponent(config.Thread_ID)}&Action_ID=${encodeURIComponent(config.Action_ID)}&Source=${encodeURIComponent(config.source)}`;
 
                 // Make the webhook call
                 fetch(webhookUrl)
@@ -138,7 +142,7 @@
                 console.log('Initializing Business Analyst Chat with config:', config);
 
                 // Construct the Make.com webhook URL for Business Analyst
-                const webhookUrl = `https://hook.us1.make.com/YOUR_BUSINESS_ANALYST_WEBHOOK_PATH?User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}&Thread_ID=${encodeURIComponent(config.Thread_ID)}&Action_ID=${encodeURIComponent(config.Action_ID)}&Source=${encodeURIComponent(config.source)}`;
+                const webhookUrl = `https://hook.us1.make.com/huu6kvcj6t6eenynbx4t79c3wa8evfsg?User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}&Thread_ID=${encodeURIComponent(config.Thread_ID)}&Action_ID=${encodeURIComponent(config.Action_ID)}&Source=${encodeURIComponent(config.source)}`;
 
                 // Make the webhook call
                 fetch(webhookUrl)
@@ -162,19 +166,28 @@
 
             function initDefaultChat(config) {
                 console.log('Initializing Default Chat with config:', config);
-                // Implement default chat setup here
-                // Optionally, you can redirect to a default action or show a message
+                alert('No valid Action_ID provided. Please contact support.');
             }
 
             // Function to initialize the chat interface using the Thread_ID
             function initializeChatInterface(threadId, config) {
-                // Implement your chat interface initialization here
-                // This might involve rendering chat UI components, setting up connections, etc.
                 console.log('Initializing chat interface with Thread_ID:', threadId);
+                // Implement your chat interface initialization here
+                // For example, load the chat application into the container
+                const chatContainer = document.getElementById('chat-container');
+                const chatAppUrl = `https://integraled.github.io/recursive-learning/chat-app/index.html?Thread_ID=${encodeURIComponent(threadId)}&User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}`;
 
-                // Example: Redirect to the chat application with the new Thread_ID
-                const chatAppUrl = `chat.html?Thread_ID=${encodeURIComponent(threadId)}&User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}`;
-                window.location.href = chatAppUrl;
+                // Create and configure iframe
+                const iframe = document.createElement('iframe');
+                iframe.src = chatAppUrl;
+                iframe.width = '100%';
+                iframe.height = '100%';
+                iframe.frameBorder = '0';
+                iframe.allow = 'camera; microphone; autoplay; encrypted-media';
+                iframe.title = 'Chat Application';
+
+                // Append the iframe to the chat container
+                chatContainer.appendChild(iframe);
             }
         });
     </script>
