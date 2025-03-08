@@ -111,8 +111,8 @@
             function initRAGChat(config) {
                 console.log('Initializing RAG Chat with config:', config);
 
-                // Construct the webhook URL for RAG Chat
-                const webhookUrl = `https://hook.eu1.make.com/YOUR_RAG_CHAT_WEBHOOK_PATH?User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}&Thread_ID=${encodeURIComponent(config.Thread_ID)}&Action_ID=${encodeURIComponent(config.Action_ID)}&Source=${encodeURIComponent(config.source)}`;
+                // Construct the Make.com webhook URL for RAG Chat
+                const webhookUrl = `https://hook.us1.make.com/YOUR_RAG_CHAT_WEBHOOK_PATH?User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}&Thread_ID=${encodeURIComponent(config.Thread_ID)}&Action_ID=${encodeURIComponent(config.Action_ID)}&Source=${encodeURIComponent(config.source)}`;
 
                 // Make the webhook call
                 fetch(webhookUrl)
@@ -122,7 +122,6 @@
                         if (data && data.Thread_ID) {
                             console.log('Received Thread_ID:', data.Thread_ID);
                             // Continue with chat initialization using the received Thread_ID
-                            // For example:
                             initializeChatInterface(data.Thread_ID, config);
                         } else {
                             console.warn('No Thread_ID received from the webhook.');
@@ -138,8 +137,8 @@
             function initBusinessAnalyst(config) {
                 console.log('Initializing Business Analyst Chat with config:', config);
 
-                // Construct the webhook URL for Business Analyst
-                const webhookUrl = `https://hook.eu1.make.com/YOUR_BUSINESS_ANALYST_WEBHOOK_PATH?User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}&Thread_ID=${encodeURIComponent(config.Thread_ID)}&Action_ID=${encodeURIComponent(config.Action_ID)}&Source=${encodeURIComponent(config.source)}`;
+                // Construct the Make.com webhook URL for Business Analyst
+                const webhookUrl = `https://hook.us1.make.com/YOUR_BUSINESS_ANALYST_WEBHOOK_PATH?User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}&Thread_ID=${encodeURIComponent(config.Thread_ID)}&Action_ID=${encodeURIComponent(config.Action_ID)}&Source=${encodeURIComponent(config.source)}`;
 
                 // Make the webhook call
                 fetch(webhookUrl)
@@ -172,8 +171,10 @@
                 // Implement your chat interface initialization here
                 // This might involve rendering chat UI components, setting up connections, etc.
                 console.log('Initializing chat interface with Thread_ID:', threadId);
-                // Example:
-                // renderChatUI(threadId, config);
+
+                // Example: Redirect to the chat application with the new Thread_ID
+                const chatAppUrl = `chat.html?Thread_ID=${encodeURIComponent(threadId)}&User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}`;
+                window.location.href = chatAppUrl;
             }
         });
     </script>
