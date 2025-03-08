@@ -24,4 +24,10 @@
 
   /* Accessibility */
   --client-font-scale: 1.1;
+
+  /* Update client logo path */
+  --client-logo: url('../assets/logo.png');
+
+  /* Client avatar path */
+  --client-avatar: url('../assets/avatar.png');
 } 
