@@ -72,97 +72,110 @@
         <p><code>support@integral-ed.com</code></p>
     </div>
 
+    <div id="chat-app"></div>
+
     <script>
-        // Get URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('User_ID') || 'anonymous';
-        const orgId = urlParams.get('Org_ID') || 'default_org';
-        const source = urlParams.get('Source') || 'web';
-        const actionId = urlParams.get('Action_ID') || 'default_action';
-        let threadId = localStorage.getItem(`chat_thread_${userId}`);
-
-        // Log user context for debugging
-        console.log('User context:', { userId, orgId, source, actionId });
-
-        // DOM elements
-        const messageList = document.getElementById('messageList');
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
-
-        // Lambda URL
-        const CHAT_WEBHOOK = 'https://YOUR_LAMBDA_URL'; // Replace with your Lambda function URL
-
-        // Add a message to the chat
-        function addMessage(role, content) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${role}`;
-            messageDiv.innerHTML = `<div class="message-content">${content}</div>`;
-            messageList.appendChild(messageDiv);
-            messageList.scrollTop = messageList.scrollHeight;
-        }
-
-        // Send a message to the Lambda function
-        async function sendMessage() {
-            const message = messageInput.value.trim();
-            if (!message) return;
-
-            // Add user message to chat
-            addMessage('user', message);
-
-            // Clear input
-            messageInput.value = '';
-
-            // Disable button while processing
-            sendButton.disabled = true;
-
-            // Add loading indicator
-            addMessage('assistant', 'Typing...');
-
-            try {
-                // Call Lambda function
-                const response = await fetch(CHAT_WEBHOOK, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: message,
-                        thread_id: threadId,
-                        User_ID: userId,
-                        Org_ID: orgId,
-                        Source: source,
-                        Action_ID: actionId
-                    })
-                });
-
-                const data = await response.json();
-
-                // Store thread ID if returned
-                if (data.thread_id) {
-                    threadId = data.thread_id;
-                    localStorage.setItem(`chat_thread_${userId}`, threadId);
-                }
-
-                // Add assistant response
-                addMessage('assistant', data.message || 'Sorry, I could not process your request.');
-            } catch (error) {
-                console.error('Error:', error);
-                // Show error message
-                addMessage('assistant', 'Sorry, there was an error processing your request. Please try again.');
-            } finally {
-                // Re-enable button
-                sendButton.disabled = false;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to parse query parameters
+            function getQueryParams() {
+                const params = new URLSearchParams(window.location.search);
+                return {
+                    User_ID: params.get('User_ID') || 'anonymous',
+                    Thread_ID: params.get('Thread_ID') || '----',
+                    Action_ID: params.get('Action_ID') || '',
+                    Org_ID: params.get('Org_ID') || '',
+                    source: params.get('source') || ''
+                };
             }
-        }
 
-        // Event listeners
-        sendButton.addEventListener('click', sendMessage);
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
+            // Retrieve user data from query parameters
+            const userData = getQueryParams();
+            console.log('User Data:', userData);
+
+            // Mapping of Action_IDs to initialization functions
+            const actionHandlers = {
+                'recan2bciV7HcjXHV': initRAGChat,         // RAG Chat Action_ID
+                'reci08vuv7qfN6D84': initBusinessAnalyst, // Business Analyst Action_ID
+                // Add additional Action_IDs and their handlers here
+            };
+
+            const actionHandler = actionHandlers[userData.Action_ID] || initDefaultChat;
+            actionHandler(userData);
+
+            function initSystemSupportChat(config) {
+                // Code to initialize System Support chat
+                console.log('System Support Chat initialized with config:', config);
+                // Add your implementation here
+            }
+
+            function initRAGChat(config) {
+                console.log('Initializing RAG Chat with config:', config);
+
+                // Construct the webhook URL for RAG Chat
+                const webhookUrl = `https://hook.eu1.make.com/YOUR_RAG_CHAT_WEBHOOK_PATH?User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}&Thread_ID=${encodeURIComponent(config.Thread_ID)}&Action_ID=${encodeURIComponent(config.Action_ID)}&Source=${encodeURIComponent(config.source)}`;
+
+                // Make the webhook call
+                fetch(webhookUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Handle the response
+                        if (data && data.Thread_ID) {
+                            console.log('Received Thread_ID:', data.Thread_ID);
+                            // Continue with chat initialization using the received Thread_ID
+                            // For example:
+                            initializeChatInterface(data.Thread_ID, config);
+                        } else {
+                            console.warn('No Thread_ID received from the webhook.');
+                            // Handle this scenario appropriately
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error initializing RAG Chat:', error);
+                        // Handle the error appropriately
+                    });
+            }
+
+            function initBusinessAnalyst(config) {
+                console.log('Initializing Business Analyst Chat with config:', config);
+
+                // Construct the webhook URL for Business Analyst
+                const webhookUrl = `https://hook.eu1.make.com/YOUR_BUSINESS_ANALYST_WEBHOOK_PATH?User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}&Thread_ID=${encodeURIComponent(config.Thread_ID)}&Action_ID=${encodeURIComponent(config.Action_ID)}&Source=${encodeURIComponent(config.source)}`;
+
+                // Make the webhook call
+                fetch(webhookUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Handle the response
+                        if (data && data.Thread_ID) {
+                            console.log('Received Thread_ID:', data.Thread_ID);
+                            // Continue with chat initialization using the received Thread_ID
+                            initializeChatInterface(data.Thread_ID, config);
+                        } else {
+                            console.warn('No Thread_ID received from the webhook.');
+                            // Handle this scenario appropriately
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error initializing Business Analyst Chat:', error);
+                        // Handle the error appropriately
+                    });
+            }
+
+            function initDefaultChat(config) {
+                console.log('Initializing Default Chat with config:', config);
+                // Implement default chat setup here
+                // Optionally, you can redirect to a default action or show a message
+            }
+
+            // Function to initialize the chat interface using the Thread_ID
+            function initializeChatInterface(threadId, config) {
+                // Implement your chat interface initialization here
+                // This might involve rendering chat UI components, setting up connections, etc.
+                console.log('Initializing chat interface with Thread_ID:', threadId);
+                // Example:
+                // renderChatUI(threadId, config);
+            }
         });
-
-        // Initial message
-        addMessage('assistant', 'Hello! How can I assist you today?');
     </script>
 </body>
 </html>
