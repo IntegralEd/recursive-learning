@@ -209,3 +209,16 @@ npm-debug.log*
 integraled-central/
 *.zip
 deploy.sh
+private/
+
+# Ignore node_modules directory
+lambda/node_modules/
+
+# Ignore the zip file you created
+lambda/function.zip
+
+# Ignore log files
+lambda/*.log
+
+# Ignore any other unnecessary files
+lambda/*.tmp

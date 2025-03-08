@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IE Central Support Chat</title>
+    <!-- Favicon (if any) -->
+    <link rel="icon" href="../../assets/images/favicon.ico">
+    <!-- Default IE Central Styles -->
+    <link rel="stylesheet" href="../../assets/css/ie-central.css">
+    <!-- IECentral-specific Variables -->
+    <link rel="stylesheet" href="css/variables.css">
+    <!-- Client-Specific Stylesheet (Optional) -->
+    <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <!-- Common image -->
+        <img src="../../assets/images/logo.png" alt="Logo">
+        <!-- Client-specific image (if any) -->
+        <!-- <img src="assets/images/logo-iecentral.png" alt="IE Central Logo"> -->
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Chat Interface -->
+        <div id="chat-container"></div>
+
+        <!-- Ticketing or Comment Widgets (future implementation) -->
+        <!-- Placeholder for additional features -->
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Contact us at <a href="mailto:support@integraled.org">support@integraled.org</a></p>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module">
+        import { getClientVariables } from '../../airtable/variables-fetcher.js';
+        import { applyAccessibilitySettings } from '../../core/components/accessibility.js';
+        import { initializeChat } from '../../assets/js/chat.js';
+
+        // Parse context data from URL
+        const params = new URLSearchParams(window.location.search);
+        let context = {};
+        if (params.has('context')) {
+            try {
+                context = JSON.parse(decodeURIComponent(params.get('context')));
+            } catch (error) {
+                console.error('Error parsing context:', error);
+            }
+        }
+
+        // Load client configuration
+        fetch('config/client-config.json')
+            .then(response => response.json())
+            .then(config => {
+                // Use config data
+                document.title = `${config.Client_Name} Chat Interface`;
+
+                // Load assets
+                // If there is a client-specific logo:
+                // document.getElementById('logo').src = config.Assets.Client_Logo_URL;
+
+                // Apply accessibility settings
+                applyAccessibilitySettings(config.Accessibility);
+
+                // Fetch variables from Airtable or proceed
+                getClientVariables(config.variablesTableID).then(variables => {
+                    // Initialize chat with client and context
+                    initializeChat('IECentral', context);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading client configuration:', error);
+            });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,5 @@
+:root {
+    --primary-color: #800000;             /* Overrides IE Central's primary color */
+    --secondary-color: #c00000;           /* Overrides IE Central's secondary color */
+    /* Add other overrides as needed */
+} 

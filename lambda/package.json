@@ -5,5 +5,7 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {},
-  "scripts": {}
+  "scripts": {
+    "build": "your-build-command"
+  }
 } 
