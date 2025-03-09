@@ -3,6 +3,7 @@
 // Import the necessary AWS SDK v3 clients
 const { SSMClient, GetParametersCommand } = require('@aws-sdk/client-ssm');
 const axios = require('axios');
+const https = require('https'); // Make sure to include 'https' if you're using it
 
 // Initialize the SSM client
 const ssmClient = new SSMClient({ region: 'us-east-2' });
@@ -69,11 +70,23 @@ exports.handler = async (event) => {
       }
     );
 
-    // Return response to client
-    return {
-      statusCode: 200,
-      body: JSON.stringify(openAIResponse.data),
+    // Process the incoming event and generate a response
+    const responseBody = {
+        response: openAIResponse.data.choices[0].message.content.trim()
     };
+
+    const lambdaResponse = {
+        statusCode: 200,
+        headers: {
+            "Access-Control-Allow-Origin": "*", // Allows requests from any origin
+            "Access-Control-Allow-Headers": "Content-Type, user_id, org_id, thread_id, action_id, source",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+            "X-Frame-Options": "ALLOWALL" // Allows embedding in iframes
+        },
+        body: JSON.stringify(responseBody),
+    };
+
+    return lambdaResponse;
   } catch (error) {
     console.error('❌ Error:', error);
     return {

@@ -653,6 +653,15 @@ This platform is designed to provide a multitenant recursive learning environmen
 - **Automation:**
   - Update the document generation process to pull in all new variables
 
+### BHB Client Chat Integration
+
+- **Chat Bubble:** A chat bubble is displayed on the BHB site, allowing users to initiate a chat with the Business Analyst assistant.
+- **Script Location:** `/docs/clients/BHB/assets/js/min.js`
+- **Functionality:** Opens a new tab with the chat interface when clicked.
+- **Accessibility:** Includes `aria-label` for screen readers.
+- **Styling:** Features hover effects for improved user interaction.
+- **Error Handling:** Basic error handling for URL loading issues.
+
 
 
 

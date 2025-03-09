@@ -3,86 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <title>BHB Maternal Health Chat</title>
-    <link rel="stylesheet" href="https://integraled.github.io/recursive-learning/docs/assets/css/ie-central.css">
-    <link rel="stylesheet" href="https://integraled.github.io/recursive-learning/docs/clients/BHB/css/style.css">
+    <!-- Commented out custom CSS links -->
+    <!-- <link rel="stylesheet" href="assets/css/ie-central.css">
+    <link rel="stylesheet" href="clients/BHB/css/style.css"> -->
     <style>
         html, body, #chat-container {
             height: 100%;
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        /* Minimal styling for chat interface */
+        #chat-container {
+            display: flex;
+            flex-direction: column;
+        }
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #f5f5f5;
+        }
+        #input-area {
+            display: flex;
+            padding: 10px;
+            background-color: #ddd;
+        }
+        #input-area input {
+            flex: 1;
+            padding: 8px;
+            margin-right: 10px;
+        }
+        #input-area button {
+            padding: 8px 16px;
         }
     </style>
 </head>
 <body>
-    <div id="chat-container"></div>
+    <div id="chat-container">
+        <div id="messages"></div>
+        <div id="input-area">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script src="/recursive-platform/assets/js/chat.js"></script>
+    <script src="/recursive-platform/assets/js/ie-support-embed-min.js"></script>
+    <script src="/recursive-platform/assets/index.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Function to parse query parameters
-            function getQueryParams() {
-                const params = new URLSearchParams(window.location.search);
-                return {
-                    User_ID: params.get('User_ID') || 'anonymous',
-                    Thread_ID: params.get('Thread_ID') || '----',
-                    Action_ID: params.get('Action_ID') || 'recan2bciV7HcjXHV', // Default to RAG Chat Action_ID
-                    Org_ID: params.get('Org_ID') || 'recTpsAWPW6z64RVV', // BHB Org_ID
-                    source: params.get('source') || 'bmore'
-                };
+            // Retrieve user data from Softr placeholders
+            const user = {
+                User_ID: '{LOGGED_IN_USER:airtable_record_id}',
+                Thread_ID: '{LOGGED_IN_USER:Thread_ID}',
+                Assistant_ID: '{LOGGED_IN_USER:Assistant_ID}',
+                Org_ID: '{LOGGED_IN_USER:IE_Central_Org_ID}',
+                Next_Greeting_Text: '{LOGGED_IN_USER:Next_Greeting_Text}',
+                Context_01: '{LOGGED_IN_USER:Context_01}',
+                Context_02: '{LOGGED_IN_USER:Context_02}',
+                Context_03: '{LOGGED_IN_USER:Context_03}'
+            };
+
+            // Function to check if placeholders have been replaced
+            function isPlaceholderReplaced(value, placeholder) {
+                return value && value !== placeholder && value !== '';
             }
 
-            // Retrieve user data from query parameters
-            const config = getQueryParams();
-            console.log('Config:', config);
+            // Determine chat initialization path
+            if (!isPlaceholderReplaced(user.User_ID, '{LOGGED_IN_USER:airtable_record_id}')) {
+                // Public user or unidentified user
+                console.log('Public or unidentified user. Starting new chat session.');
+                user.Assistant_ID = 'BHB'; // Hardcoded Assistant_ID for MVP
+                user.Thread_ID = null; // Start a new thread
+                initChatInterface(user);
+            } else {
+                console.log('User data loaded from Softr placeholders:', user);
 
-            // Initialize the chat interface
-            initChat(config);
+                if (isPlaceholderReplaced(user.Thread_ID, '{LOGGED_IN_USER:Thread_ID}')) {
+                    // Prompt user to continue previous session or start new
+                    const continuePrompt = confirm("We found a thread history associated with your user login. Do you want to pick up where you left off?");
+                    if (continuePrompt) {
+                        initChatInterface(user); // Continue with existing thread
+                    } else {
+                        user.Thread_ID = null; // Reset Thread_ID for a new session
+                        initChatInterface(user);
+                    }
+                } else {
+                    initChatInterface(user); // No existing thread, start new session
+                }
+            }
 
-            function initChat(config) {
-                console.log('Initializing Chat with config:', config);
+            function initChatInterface(config) {
+                const messagesDiv = document.getElementById('messages');
+                const userInput = document.getElementById('user-input');
+                const sendButton = document.getElementById('send-button');
 
-                // Construct the webhook URL
-                const webhookUrl = `https://hook.us1.make.com/oh4b9kqlf1gnlypxasliklmc0jkwoi2t?User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}&Thread_ID=${encodeURIComponent(config.Thread_ID)}&Action_ID=${encodeURIComponent(config.Action_ID)}&Source=${encodeURIComponent(config.source)}`;
+                // Display a personalized welcome message
+                const welcomeMessage = isPlaceholderReplaced(config.Next_Greeting_Text, '{LOGGED_IN_USER:Next_Greeting_Text}')
+                    ? config.Next_Greeting_Text
+                    : 'Hello! How can I help you today?';
+                displayAssistantMessage(welcomeMessage);
 
-                // Make the webhook call
-                fetch(webhookUrl)
+                // Send message on button click
+                sendButton.addEventListener('click', function() {
+                    const message = userInput.value.trim();
+                    if (message !== '') {
+                        sendMessage(message);
+                        userInput.value = '';
+                    }
+                });
+
+                // Send message on Enter key press
+                userInput.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter') {
+                        sendButton.click();
+                    }
+                });
+
+                function sendMessage(message) {
+                    // Display user's message
+                    displayUserMessage(message);
+
+                    // Prepare payload for backend API
+                    const payload = {
+                        User_ID: config.User_ID,
+                        Thread_ID: config.Thread_ID,
+                        Org_ID: config.Org_ID,
+                        Assistant_ID: config.Assistant_ID,
+                        Context_01: config.Context_01,
+                        Context_02: config.Context_02,
+                        Context_03: config.Context_03,
+                        message: message
+                    };
+
+                    // Send message to backend API
+                    fetch('https://9bitww4uk5.execute-api.us-east-2.amazonaws.com/default/IntegralEd-Main', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    })
                     .then(response => response.json())
                     .then(data => {
-                        // Handle the response
-                        if (data && data.Thread_ID) {
-                            console.log('Received Thread_ID:', data.Thread_ID);
-                            // Initialize chat interface with the received Thread_ID
-                            loadChatInterface(data.Thread_ID, config);
+                        // Display assistant's response
+                        if (data && data.response) {
+                            displayAssistantMessage(data.response);
                         } else {
-                            console.warn('No Thread_ID received from the webhook.');
-                            // Fallback to Business Analyst Chat
-                            config.Action_ID = 'reci08vuv7qfN6D84'; // Business Analyst Action_ID
-                            initChat(config);
+                            displayAssistantMessage('Sorry, I did not understand that.');
                         }
                     })
                     .catch(error => {
-                        console.error('Error initializing chat:', error);
-                        alert('An error occurred while initializing chat. Please try again later.');
+                        console.error('Error sending message:', error);
+                        displayAssistantMessage('An error occurred. Please try again later.');
                     });
-            }
+                }
 
-            // Function to load the chat interface
-            function loadChatInterface(threadId, config) {
-                console.log('Loading chat interface with Thread_ID:', threadId);
-                const chatContainer = document.getElementById('chat-container');
-                const chatAppUrl = `https://integraled.github.io/recursive-learning/docs/clients/BHB/chat.html?Thread_ID=${encodeURIComponent(threadId)}&User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}`;
+                function displayUserMessage(message) {
+                    const messageElement = document.createElement('div');
+                    messageElement.style.textAlign = 'right';
+                    messageElement.innerHTML = `<strong>You:</strong> ${message}`;
+                    messagesDiv.appendChild(messageElement);
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                }
 
-                // Create and configure iframe
-                const iframe = document.createElement('iframe');
-                iframe.src = chatAppUrl;
-                iframe.width = '100%';
-                iframe.height = '100%';
-                iframe.frameBorder = '0';
-                iframe.allow = 'camera; microphone; autoplay; encrypted-media';
-                iframe.title = 'Chat Application';
-
-                // Clear any existing content and append the iframe
-                chatContainer.innerHTML = '';
-                chatContainer.appendChild(iframe);
+                function displayAssistantMessage(message) {
+                    const messageElement = document.createElement('div');
+                    messageElement.style.textAlign = 'left';
+                    messageElement.innerHTML = `<strong>Assistant:</strong> ${message}`;
+                    messagesDiv.appendChild(messageElement);
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                }
             }
         });
     </script>
