@@ -3,6 +3,20 @@
 ## Overview
 IntegralEd Core is a multi-tenant platform that provides AI-powered educational support and learning management capabilities. The platform is designed to be embedded within Softr sites while maintaining consistent branding and functionality across different educational institutions.
 
+### Architectural Analogy
+
+To better understand the architecture of the platform, let's use a restaurant analogy:
+
+- **Airtable (Kitchen):** Airtable serves as the kitchen where all the data and content (ingredients) are stored and prepared. It's where the raw data is transformed into useful information.
+
+- **Make.com and Assistants (Chefs):** Make.com (formerly Integromat) and AI Assistants are like the chefs who use the ingredients from the kitchen to create dishes. They process data, handle automation, and generate responses.
+
+- **AWS Lambda (Expediter):** The AWS Lambda functions act as the expediter in the restaurant, coordinating between the kitchen and the dining room. They manage the flow of information, ensuring that the requests from the frontend are sent to the backend and responses are delivered promptly.
+
+- **`docs/` Directory (Dining Room):** The `docs/` directory represents the dining room where customers interact with the menu and receive service from the waitstaff. It contains the frontend code (HTML, CSS, JavaScript) that provides the user interface and user experience.
+
+This analogy helps illustrate how each component of the platform works together to deliver a seamless experience to the end-users.
+
 ## Key Features
 
 ### 1. RAG Chat System
