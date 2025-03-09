@@ -1,0 +1,16 @@
+{
+	"name": "lambda-function",
+	"version": "1.0.0",
+	"description": "AWS Lambda function",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": "ISC",
+	"keywords": [],
+	"dependencies": {
+		"@aws-sdk/client-ssm": "^3.759.0",
+		"axios": "^0.21.1"
+	}
+}

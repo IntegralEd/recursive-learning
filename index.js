@@ -1,8 +1,11 @@
-const https = require('https');
-const { SSMClient, GetParametersCommand } = require('@aws-sdk/client-ssm');
+// const AWS = require('aws-sdk'); // Remove this line if present
 
-// Initialize SSM client
-const ssmClient = new SSMClient({ region: 'us-east-2' }); // Specify your region
+// Import the necessary AWS SDK v3 clients
+const { SSMClient, GetParametersCommand } = require('@aws-sdk/client-ssm');
+const axios = require('axios');
+
+// Initialize the SSM client
+const ssmClient = new SSMClient({ region: 'us-east-2' });
 
 // Parameter ARNs in SSM Parameter Store
 const PARAMETER_ARNS = {
@@ -33,24 +36,52 @@ exports.handler = async (event) => {
   const assistantType = body.assistantType || 'ie_central'; // Default to 'ie_central' if not specified
 
   try {
-    // Retrieve parameters from SSM Parameter Store
-    const { openaiApiKey, assistantId } = await getOpenAIParameters(assistantType);
+    // Retrieve parameters from SSM
+    const params = {
+      Names: [
+        '/path/to/OpenAI_API',
+        `/path/to/${assistantType}_Assistant_ID`,
+      ],
+      WithDecryption: true,
+    };
 
-    // Send user message to OpenAI and get assistant's response
-    const assistantResponse = await getOpenAIResponse(userMessage, openaiApiKey, assistantId);
+    const command = new GetParametersCommand(params);
+    const response = await ssmClient.send(command);
+
+    const { Parameters } = response;
+
+    // Extract parameter values
+    const OpenAI_API = Parameters.find(p => p.Name.endsWith('OpenAI_API')).Value;
+    const OpenAI_Assistant_ID = Parameters.find(p => p.Name.endsWith(`${assistantType}_Assistant_ID`)).Value;
+
+    // Make the API request to OpenAI
+    const openAIResponse = await axios.post(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: userMessage }],
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${OpenAI_API}`,
+        },
+      }
+    );
 
     // Return response to client
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        message: assistantResponse,
-      }),
+      body: JSON.stringify(openAIResponse.data),
     };
   } catch (error) {
     console.error('❌ Error:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Internal server error', message: error.message }),
+      body: JSON.stringify({
+        error: 'Internal server error',
+        message: error.message,
+      }),
     };
   }
 };
