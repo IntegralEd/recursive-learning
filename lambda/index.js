@@ -1,5 +1,6 @@
 const { SSMClient, GetParametersCommand } = require('@aws-sdk/client-ssm');
 const axios = require('axios');
+const Airtable = require('airtable');
 
 // Initialize the SSM client
 const ssmClient = new SSMClient({ region: 'us-east-2' });
@@ -7,15 +8,16 @@ const ssmClient = new SSMClient({ region: 'us-east-2' });
 exports.handler = async (event) => {
   console.log('🔄 Received event:', JSON.stringify(event, null, 2));
 
-  // Default message to start a new chat session
-  const userMessage = 'Start a new chat session with Bmore RAG chat assistant';
-
   try {
     // Retrieve parameters from SSM
     const params = {
       Names: [
-        'arn:aws:ssm:us-east-2:559050208320:parameter/integraled/central/OpenAI_API_Key',
-        'arn:aws:ssm:us-east-2:559050208320:parameter/integraled/bmore/OpenAI_Assistant_ID'
+        '/integraled/central/OpenAI_API_Key',
+        '/integraled/central/IE_Business_Assistant_ID', // IE Business Assistant ID
+        '/integraled/airtable/Table_ID',                // Airtable Table ID
+        // Airtable API Key and Base ID are still fetched for future use
+        '/integraled/airtable/API_Key',
+        '/integraled/airtable/Base_ID',
       ],
       WithDecryption: true,
     };
@@ -25,7 +27,23 @@ exports.handler = async (event) => {
 
     const { Parameters } = response;
     const OpenAI_API = Parameters.find(p => p.Name.includes('OpenAI_API_Key')).Value;
-    const OpenAI_Assistant_ID = Parameters.find(p => p.Name.includes('OpenAI_Assistant_ID')).Value;
+    const IE_Business_Assistant_ID = Parameters.find(p => p.Name.includes('IE_Business_Assistant_ID')).Value;
+    const Airtable_API_Key = Parameters.find(p => p.Name.includes('airtable/API_Key')).Value;
+    const Airtable_Base_ID = Parameters.find(p => p.Name.includes('airtable/Base_ID')).Value;
+    const Airtable_Table_ID = Parameters.find(p => p.Name.includes('airtable/Table_ID')).Value;
+
+    // Initialize Airtable client (not used in code but included)
+    Airtable.configure({
+      apiKey: Airtable_API_Key,
+    });
+    // const base = Airtable.base(Airtable_Base_ID);
+    // const table = base(Airtable_Table_ID);
+
+    // Extract user message from event
+    const eventBody = event.body ? JSON.parse(event.body) : {};
+    const userMessage = eventBody.message || 'Start a new chat session';
+
+    // (Airtable code removed for MVP)
 
     // Make the API request to OpenAI
     const openAIResponse = await axios.post(
@@ -33,7 +51,8 @@ exports.handler = async (event) => {
       {
         model: 'gpt-3.5-turbo',
         messages: [{ role: 'user', content: userMessage }],
-        assistant_id: OpenAI_Assistant_ID,
+        // Use the IE Business Assistant ID
+        assistant_id: IE_Business_Assistant_ID,
       },
       {
         headers: {
@@ -43,16 +62,29 @@ exports.handler = async (event) => {
       }
     );
 
-    // Process the response
+    // Process the assistant's response
+    const assistantMessage = openAIResponse.data.choices[0].message.content.trim();
+
+    // (Airtable code removed for MVP)
+
+    // Prepare the response body
     const responseBody = {
-      response: openAIResponse.data.choices[0].message.content.trim(),
+      response: assistantMessage,
     };
+
+    const allowedOrigins = [
+      'https://bmore.softr.app',
+      'http://localhost:3000',
+    ];
+
+    const origin = event.headers.origin;
+    const allowOrigin = allowedOrigins.includes(origin) ? origin : 'https://bmore.softr.app';
 
     // Return the response
     return {
       statusCode: 200,
       headers: {
-        "Access-Control-Allow-Origin": "https://integraled.github.io",
+        "Access-Control-Allow-Origin": allowOrigin,
         "Access-Control-Allow-Headers": "Content-Type",
         "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
       },
