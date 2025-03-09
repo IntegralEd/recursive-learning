@@ -1,13 +1,16 @@
 {
   "name": "lambda-function",
   "version": "1.0.0",
-  "description": "Lambda function for MVP",
+  "description": "AWS Lambda function",
   "main": "index.js",
-  "dependencies": {
-    "node-fetch": "^2.6.1"
-  },
-  "devDependencies": {},
   "scripts": {
-    "build": "YOUR_BUILD_COMMAND_IF_NEEDED"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.759.0",
+    "axios": "^0.21.1"
   }
-} 
+}

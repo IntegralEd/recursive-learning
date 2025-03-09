@@ -1,74 +1,160 @@
-const fetch = require('node-fetch');
+const https = require('https');
+const { SSMClient, GetParametersCommand } = require('@aws-sdk/client-ssm');
 
-// CORS Headers
-const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type'
+// Initialize SSM client
+const ssmClient = new SSMClient({ region: 'us-east-2' }); // Specify your region
+
+// Parameter ARNs in SSM Parameter Store
+const PARAMETER_ARNS = {
+  OPENAI_API_KEY: 'arn:aws:ssm:us-east-2:559050208320:parameter/integraled/central/OpenAI_API_Key',
+  BUSINESS_ANALYST_ASSISTANT_ID: 'arn:aws:ssm:us-east-2:559050208320:parameter/integraled/central/OpenAI_Assistant_ID',
+  BHB_ASSISTANT_ID: 'arn:aws:ssm:us-east-2:559050208320:parameter/integraled/bmore/OpenAI_Assistant_ID',
+  IE_CENTRAL_ASSISTANT_ID: 'arn:aws:ssm:us-east-2:559050208320:parameter/integraled/central/IE_Central_OpenAI_Assistant_ID',
 };
 
-// Helper function to generate a thread ID
-function generateThreadId() {
-  return 'thread_' + Math.random().toString(36).substr(2, 9);
-}
+exports.handler = async (event) => {
+  console.log('🔄 Received event:', JSON.stringify(event, null, 2));
 
-// Main handler
-exports.handler = async (event, context) => {
-    console.log("Received event:", event);
-
-    // Handle OPTIONS request for CORS
-    if (event.requestContext?.http?.method === 'OPTIONS') {
-        return {
-            statusCode: 200,
-            headers: corsHeaders,
-            body: ''
-        };
-    }
-
-    // Parse the incoming request
-    const { message, thread_id, User_ID, Org_ID, Source, Action_ID } = event.body ? JSON.parse(event.body) : {};
-
-    if (!message) {
-        return {
-            statusCode: 400,
-            headers: corsHeaders,
-            body: JSON.stringify({ error: "Message is required" })
-        };
-    }
-
-    // Log received data
-    console.log(`Message received from user ${User_ID || 'Unknown'}: ${message}`);
-
-    // Generate synthetic response
-    const assistantResponse = `You said: "${message}". This is a synthetic response.`;
-
-    // Return the synthetic response
+  // Parse the body
+  let body = {};
+  try {
+    body = event.body ? JSON.parse(event.body) : {};
+  } catch (parseError) {
+    console.error('❌ Error parsing event body:', parseError);
     return {
-        statusCode: 200,
-        headers: corsHeaders,
-        body: JSON.stringify({
-            message: assistantResponse,
-            thread_id: thread_id || generateThreadId(),
-            assistant_id: 'synthetic_assistant'
-        })
+      statusCode: 400,
+      body: JSON.stringify({ error: 'Invalid request body' }),
     };
-};
-
-async function processAction(actionId, message) {
-  if (actionId === 'BMORE_MATERNAL_HEALTH') {
-    return `You asked: "${message}". Here's information about maternal health in Baltimore...`;
   }
 
-  // Fallback response
-  return "Sorry, I couldn't process your request.";
+  const userMessage = body.message || 'Hello';
+
+  // Determine the assistant type (e.g., 'ie_central', 'bhb', etc.)
+  const assistantType = body.assistantType || 'ie_central'; // Default to 'ie_central' if not specified
+
+  try {
+    // Retrieve parameters from SSM Parameter Store
+    const { openaiApiKey, assistantId } = await getOpenAIParameters(assistantType);
+
+    // Send user message to OpenAI and get assistant's response
+    const assistantResponse = await getOpenAIResponse(userMessage, openaiApiKey, assistantId);
+
+    // Return response to client
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: assistantResponse,
+      }),
+    };
+  } catch (error) {
+    console.error('❌ Error:', error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Internal server error', message: error.message }),
+    };
+  }
+};
+
+async function getOpenAIParameters(assistantType) {
+  // Determine the assistant ID parameter ARN based on assistant type
+  let assistantIdArn;
+  if (assistantType === 'ie_central') {
+    assistantIdArn = PARAMETER_ARNS.IE_CENTRAL_ASSISTANT_ID;
+  } else if (assistantType === 'bhb') {
+    assistantIdArn = PARAMETER_ARNS.BHB_ASSISTANT_ID;
+  } else {
+    // Fallback to Business Analyst assistant for unknown assistant types
+    assistantIdArn = PARAMETER_ARNS.BUSINESS_ANALYST_ASSISTANT_ID;
+    console.warn(`Unknown assistant type: '${assistantType}'. Falling back to Business Analyst assistant.`);
+  }
+
+  // Fetch the OpenAI API key and assistant ID from SSM
+  const params = {
+    Names: [PARAMETER_ARNS.OPENAI_API_KEY, assistantIdArn],
+    WithDecryption: true,
+  };
+
+  const command = new GetParametersCommand(params);
+  const response = await ssmClient.send(command);
+  const parameters = {};
+
+  for (const param of response.Parameters) {
+    switch (param.ARN) {
+      case PARAMETER_ARNS.OPENAI_API_KEY:
+        parameters.openaiApiKey = param.Value;
+        break;
+      case assistantIdArn:
+        parameters.assistantId = param.Value;
+        break;
+      default:
+        break;
+    }
+  }
+
+  // Validate that the essential parameters are retrieved
+  if (!parameters.openaiApiKey) {
+    throw new Error('Failed to retrieve OpenAI API key from SSM Parameter Store.');
+  }
+  if (!parameters.assistantId) {
+    throw new Error('Failed to retrieve OpenAI Assistant ID from SSM Parameter Store.');
+  }
+
+  return parameters;
 }
 
-// Function to get context from Airtable
-async function getContextFromAirtable(actionId) {
-  // Implement Airtable API call to fetch context
-}
+function getOpenAIResponse(message, apiKey, assistantId) {
+  return new Promise((resolve, reject) => {
+    const data = JSON.stringify({
+      model: 'gpt-3.5-turbo', // Replace with your desired model
+      messages: [
+        {
+          role: 'user',
+          content: message,
+        },
+      ],
+      // Include the assistant ID
+      assistant_id: assistantId,
+    });
 
-// Fetch variables from Airtable
-async function getVariablesFromAirtable(actionId) {
-  // Implement Airtable API call to fetch variables based on Action_ID
-} 
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Length': Buffer.byteLength(data),
+    };
+
+    const options = {
+      hostname: 'api.openai.com',
+      path: '/v1/chat/completions',
+      method: 'POST',
+      headers: headers,
+    };
+
+    const req = https.request(options, (res) => {
+      let responseData = '';
+
+      res.on('data', (chunk) => {
+        responseData += chunk;
+      });
+
+      res.on('end', () => {
+        if (res.statusCode === 200) {
+          const responseJson = JSON.parse(responseData);
+          const assistantMessage = responseJson.choices[0].message.content.trim();
+          resolve(assistantMessage);
+        } else {
+          console.error(`❌ OpenAI API error: ${res.statusCode} ${res.statusMessage}`);
+          console.error('Response body:', responseData);
+          reject(new Error(`OpenAI API error: ${res.statusCode} ${res.statusMessage}`));
+        }
+      });
+    });
+
+    req.on('error', (e) => {
+      console.error('❌ Request error:', e);
+      reject(e);
+    });
+
+    req.write(data);
+    req.end();
+  });
+}
