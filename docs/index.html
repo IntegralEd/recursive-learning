@@ -2,82 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BHB Maternal Health Chat</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .warning {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            margin: 20px 0;
-        }
-        .client-list {
-            margin-top: 20px;
-        }
-        .client-item {
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #eee;
-            border-radius: 4px;
-        }
-        code {
-            background: #f0f0f0;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-        #chat-container {
-            width: 100%;
-            height: 100vh;
-        }
-    </style>
     <link rel="stylesheet" href="https://integraled.github.io/recursive-learning/docs/assets/css/ie-central.css">
     <link rel="stylesheet" href="https://integraled.github.io/recursive-learning/docs/clients/BHB/css/style.css">
+    <style>
+        html, body, #chat-container {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🤖 RAG Chat Assistant Directory</h1>
-        
-        <div class="warning">
-            <h3>⚠️ Direct Access Not Supported</h3>
-            <p>This appears to be a direct access to the RAG Chat system. The chat assistant should be accessed through your organization's Softr application with proper authentication and context.</p>
-        </div>
-
-        <h2>Active Client Instances</h2>
-        <div class="client-list">
-            <div class="client-item">
-                <h3>Baltimore Maternal Health</h3>
-                <p>Production: <code>bmore.softr.app</code></p>
-            </div>
-            <!-- Additional clients will be added here -->
-        </div>
-
-        <h2>For Developers</h2>
-        <p>If you're a developer looking to implement the RAG Chat Assistant:</p>
-        <ol>
-            <li>Visit our <a href="https://github.com/IntegralEd/recursive-learning/">GitHub repository</a> for documentation</li>
-            <li>Check out the client-specific branches for implementation details</li>
-            <li>Contact the development team for API keys and access</li>
-        </ol>
-
-        <h2>Support</h2>
-        <p>For support or questions about implementing RAG Chat in your organization, please contact:</p>
-        <p><code>support@integral-ed.com</code></p>
-    </div>
-
     <div id="chat-container"></div>
 
     <script>
@@ -95,29 +31,16 @@
             }
 
             // Retrieve user data from query parameters
-            const userData = getQueryParams();
-            console.log('User Data:', userData);
+            const config = getQueryParams();
+            console.log('Config:', config);
 
-            // Mapping of Action_IDs to initialization functions
-            const actionHandlers = {
-                'recan2bciV7HcjXHV': initRAGChat,         // RAG Chat Action_ID
-                'reci08vuv7qfN6D84': initBusinessAnalyst, // Business Analyst Action_ID
-                // Add additional Action_IDs and their handlers here
-            };
+            // Initialize the chat interface
+            initChat(config);
 
-            const actionHandler = actionHandlers[userData.Action_ID] || initDefaultChat;
-            actionHandler(userData);
+            function initChat(config) {
+                console.log('Initializing Chat with config:', config);
 
-            function initSystemSupportChat(config) {
-                // Code to initialize System Support chat
-                console.log('System Support Chat initialized with config:', config);
-                // Add your implementation here
-            }
-
-            function initRAGChat(config) {
-                console.log('Initializing RAG Chat with config:', config);
-
-                // Construct the Make.com webhook URL for RAG Chat
+                // Construct the webhook URL
                 const webhookUrl = `https://hook.us1.make.com/oh4b9kqlf1gnlypxasliklmc0jkwoi2t?User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}&Thread_ID=${encodeURIComponent(config.Thread_ID)}&Action_ID=${encodeURIComponent(config.Action_ID)}&Source=${encodeURIComponent(config.source)}`;
 
                 // Make the webhook call
@@ -127,57 +50,26 @@
                         // Handle the response
                         if (data && data.Thread_ID) {
                             console.log('Received Thread_ID:', data.Thread_ID);
-                            // Continue with chat initialization using the received Thread_ID
-                            initializeChatInterface(data.Thread_ID, config);
+                            // Initialize chat interface with the received Thread_ID
+                            loadChatInterface(data.Thread_ID, config);
                         } else {
                             console.warn('No Thread_ID received from the webhook.');
-                            // Handle this scenario appropriately
+                            // Fallback to Business Analyst Chat
+                            config.Action_ID = 'reci08vuv7qfN6D84'; // Business Analyst Action_ID
+                            initChat(config);
                         }
                     })
                     .catch(error => {
-                        console.error('Error initializing RAG Chat:', error);
-                        // Handle the error appropriately
+                        console.error('Error initializing chat:', error);
+                        alert('An error occurred while initializing chat. Please try again later.');
                     });
             }
 
-            function initBusinessAnalyst(config) {
-                console.log('Initializing Business Analyst Chat with config:', config);
-
-                // Construct the Make.com webhook URL for Business Analyst
-                const webhookUrl = `https://hook.us1.make.com/huu6kvcj6t6eenynbx4t79c3wa8evfsg?User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}&Thread_ID=${encodeURIComponent(config.Thread_ID)}&Action_ID=${encodeURIComponent(config.Action_ID)}&Source=${encodeURIComponent(config.source)}`;
-
-                // Make the webhook call
-                fetch(webhookUrl)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Handle the response
-                        if (data && data.Thread_ID) {
-                            console.log('Received Thread_ID:', data.Thread_ID);
-                            // Continue with chat initialization using the received Thread_ID
-                            initializeChatInterface(data.Thread_ID, config);
-                        } else {
-                            console.warn('No Thread_ID received from the webhook.');
-                            // Handle this scenario appropriately
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error initializing Business Analyst Chat:', error);
-                        // Handle the error appropriately
-                    });
-            }
-
-            function initDefaultChat(config) {
-                console.log('Initializing Default Chat with config:', config);
-                alert('No valid Action_ID provided. Please contact support.');
-            }
-
-            // Function to initialize the chat interface using the Thread_ID
-            function initializeChatInterface(threadId, config) {
-                console.log('Initializing chat interface with Thread_ID:', threadId);
-                // Implement your chat interface initialization here
-                // For example, load the chat application into the container
+            // Function to load the chat interface
+            function loadChatInterface(threadId, config) {
+                console.log('Loading chat interface with Thread_ID:', threadId);
                 const chatContainer = document.getElementById('chat-container');
-                const chatAppUrl = `https://integraled.github.io/recursive-learning/docs/clients/BHB/index.html?Thread_ID=${encodeURIComponent(threadId)}&User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}`;
+                const chatAppUrl = `https://integraled.github.io/recursive-learning/docs/clients/BHB/chat.html?Thread_ID=${encodeURIComponent(threadId)}&User_ID=${encodeURIComponent(config.User_ID)}&Org_ID=${encodeURIComponent(config.Org_ID)}`;
 
                 // Create and configure iframe
                 const iframe = document.createElement('iframe');
@@ -188,12 +80,11 @@
                 iframe.allow = 'camera; microphone; autoplay; encrypted-media';
                 iframe.title = 'Chat Application';
 
-                // Append the iframe to the chat container
+                // Clear any existing content and append the iframe
+                chatContainer.innerHTML = '';
                 chatContainer.appendChild(iframe);
             }
         });
     </script>
-    <script src="https://integraled.github.io/recursive-learning/docs/assets/js/chat.js"></script>
-    <img src="https://integraled.github.io/recursive-learning/docs/clients/BHB/assets/logo.png" alt="BHB Logo">
 </body>
 </html>
