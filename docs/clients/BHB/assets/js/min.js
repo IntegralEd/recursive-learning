@@ -18,7 +18,7 @@
     // Function to open the chat modal
     function openChat() {
         try {
-            // Open a new tab with the Business Analyst assistant
+            // (where do we want to send them for support)
             window.open('https://integral-mothership.softr.app/chat', '_blank');
         } catch (error) {
             console.error('Failed to open chat:', error);

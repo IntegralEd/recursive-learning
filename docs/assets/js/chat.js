@@ -149,24 +149,33 @@ function sendDataToWebhook(type, data) {
     let webhookURL = '';
 
     if (type === 'businessAnalyst') {
+        // Business Analyst User Support Tickets
         webhookURL = 'https://hook.us1.make.com/huu6kvcj6t6eenynbx4t79c3wa8evfsg';
-    } else if (type === 'generalRouting') {
-        webhookURL = 'https://hook.us1.make.com/oh4b9kqlf1gnlypxasliklmc0jkwoi2t';
+    } else {
+        // General Routing for LRS Records (RAG Chat)
+        webhookURL = 'https://hook.us1.make.com/htxuau2ru7kunf336ufjqmddlfentqvf';
     }
+
+    const payload = {
+        User_ID: data.User_ID || '-----',
+        Org_ID: data.Org_ID || '-----',
+        Thread_ID: data.Thread_ID || '-----',
+        Source: data.Source || '-----',
+        Action_ID: data.Action_ID || '-----',
+    };
 
     return fetch(webhookURL, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(payload),
     })
     .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            throw new Error('Webhook response was not OK');
+        if (!response.ok) {
+            console.error('Failed to send data to webhook:', response.statusText);
         }
+        return response.json();
     })
     .catch(error => {
         console.error('Error sending data to webhook:', error);
@@ -227,3 +236,58 @@ function createIframe(context) {
 const GITHUB_PAGES_URL = 'https://integraled.github.io/recursive-learning/';
 
 // ... rest of your code ... 
+
+// Adjusting when to invoke the LRS endpoints
+// Introduce a save/send trigger function
+
+function saveConversation() {
+    const contextData = {
+        User_ID: context.User_ID || '-----',
+        Org_ID: context.Org_ID || '-----',
+        Thread_ID: context.Thread_ID || '-----',
+        Source: context.Source || '-----',
+        Action_ID: context.Action_ID || '-----',
+    };
+
+    // Determine the type of webhook based on context or user interaction
+    const webhookType = determineWebhookType(); // Implement this function based on your logic
+
+    sendDataToWebhook(webhookType, contextData)
+        .then(responseData => {
+            console.log('Conversation saved successfully:', responseData);
+        })
+        .catch(error => {
+            console.error('Error saving conversation:', error);
+        });
+}
+
+// Example triggers to save conversation
+function onConversationEnd() {
+    // Call this function when the conversation ends
+    saveConversation();
+}
+
+function onUserSaysSave() {
+    // Call this function when the user explicitly says 'save'
+    saveConversation();
+}
+
+// Implement logic to invoke saveConversation based on user input or conversation flow
+function handleUserMessage(userInput) {
+    // Existing code to handle user message...
+
+    // Check if the user wants to save the conversation
+    if (userInput.trim().toLowerCase() === 'save') {
+        onUserSaysSave();
+    }
+
+    // Existing code...
+}
+
+// Existing code... 
+
+// Function to open the chat modal
+function openChat() {
+    // (Previous suggestion was incorrect)
+    window.open('https://integral-mothership.softr.app/chat', '_blank');
+} 

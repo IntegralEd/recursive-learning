@@ -53,6 +53,9 @@
     <script src="assets/index.js"></script>
 
     <script>
+        // **Add the API_ENDPOINT constant at the top of your script**
+        const API_ENDPOINT = 'https://tixnmh1pe8.execute-api.us-east-2.amazonaws.com/prod/IntegralEd-Main';
+
         document.addEventListener('DOMContentLoaded', function() {
             // Retrieve user data from Softr placeholders
             const user = {
@@ -138,8 +141,8 @@
                         message: message
                     };
 
-                    // Send message to backend API
-                    fetch('https://9bitww4uk5.execute-api.us-east-2.amazonaws.com/default/IntegralEd-Main', {
+                    // **Update the fetch call to use the new API_ENDPOINT**
+                    fetch(API_ENDPOINT, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
