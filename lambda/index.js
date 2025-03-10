@@ -5,20 +5,22 @@ const Airtable = require('airtable');
 // Initialize the SSM client
 const ssmClient = new SSMClient({ region: 'us-east-2' });
 
+const allowedOrigins = [
+  'https://bmore.softr.app',
+  'https://integral-mothership.softr.app',
+  'http://localhost:3000',
+  'https://integraled.github.io',
+];
+
 exports.handler = async (event) => {
   console.log('🔄 Received event:', JSON.stringify(event, null, 2));
 
-  // Add this block to handle OPTIONS requests
+  const origin = event.headers.origin;
+  const allowOrigin = allowedOrigins.includes(origin) ? origin : 'https://bmore.softr.app';
+
+  // Handling OPTIONS requests
   if (event.requestContext.http.method === 'OPTIONS') {
     console.log('Handling OPTIONS preflight request');
-    const allowedOrigins = [
-      'https://bmore.softr.app',
-      'https://integral-mothership.softr.app',
-      'http://localhost:3000',
-      'https://integraled.github.io',
-    ];
-    const origin = event.headers.origin;
-    const allowOrigin = allowedOrigins.includes(origin) ? origin : 'https://bmore.softr.app';
 
     return {
       statusCode: 200,
@@ -95,22 +97,13 @@ exports.handler = async (event) => {
       response: assistantMessage,
     };
 
-    const allowedOrigins = [
-      'https://bmore.softr.app',
-      'http://localhost:3000',
-      'https://integraled.github.io',
-    ];
-
-    const origin = event.headers.origin;
-    const allowOrigin = allowedOrigins.includes(origin) ? origin : 'https://bmore.softr.app';
-
-    // Return the response
+    // Return the response with CORS headers
     return {
       statusCode: 200,
       headers: {
-        "Access-Control-Allow-Origin": allowOrigin,
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        'Access-Control-Allow-Origin': allowOrigin,
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
       },
       body: JSON.stringify(responseBody),
     };
