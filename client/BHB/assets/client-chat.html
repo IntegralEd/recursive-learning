@@ -2,16 +2,85 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>BHB Maternal Health Chat</title>
-    <!-- Commented out custom CSS links -->
-    <!--
-    <link rel="stylesheet" href="assets/css/ie-central.css">
-    <link rel="stylesheet" href="clients/BHB/css/style.css">
-    -->
-    <!-- Remove inline styles if not necessary -->
+    <title>Chat Assistant</title>
+    <!-- Inline neutral styles -->
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+        }
+        #chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }
+        #chat-header {
+            background-color: #4a76a8; /* Neutral color */
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        #messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+        }
+        .message.user {
+            align-self: flex-end;
+            background-color: #dcf8c6;
+            border-radius: 10px 10px 0 10px;
+            padding: 10px;
+        }
+        .message.assistant {
+            align-self: flex-start;
+            background-color: #f1f0f0;
+            border-radius: 10px 10px 10px 0;
+            padding: 10px;
+        }
+        #input-area {
+            display: flex;
+            padding: 10px;
+            background-color: #eee;
+        }
+        #user-input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            font-size: 16px;
+        }
+        #send-button {
+            background-color: #4a76a8;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #send-button:hover {
+            background-color: #3b5c7e;
+        }
+    </style>
 </head>
 <body>
     <div id="chat-container">
+        <div id="chat-header">
+            <h2>Chat Assistant</h2>
+        </div>
         <div id="messages"></div>
         <div id="input-area">
             <input type="text" id="user-input" placeholder="Type your message...">
@@ -23,23 +92,19 @@
     <script src="https://integraled.github.io/recursive-learning/index.js"></script>
 
     <script>
-        // **Add the API_ENDPOINT constant if needed**
+        // Parse URL parameters to get user data
+        const params = new URLSearchParams(window.location.search);
         const API_ENDPOINT = 'https://tixnmh1pe8.execute-api.us-east-2.amazonaws.com/prod/IntegralEd-Main';
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Simplify user data handling for MVP
+            // Hardcode assistant and organization IDs
             const user = {
                 User_ID: 'anonymous',
                 Thread_ID: null,
-                Assistant_ID: 'BHB', // Hardcoded Assistant_ID for MVP
-                Org_ID: 'BHB',
-                Next_Greeting_Text: '',
-                Context_01: '',
-                Context_02: '',
-                Context_03: ''
+                Assistant_ID: 'asst_IA5PsJxdShVPTAv2xeXTr4Ma', // Your hardcoded Assistant_ID
+                Org_ID: 'recjUGiOT65lwgBtm', // Your hardcoded Org_ID
             };
 
-            // Initialize chat interface
             initChatInterface(user);
 
             function initChatInterface(config) {
@@ -47,11 +112,8 @@
                 const userInput = document.getElementById('user-input');
                 const sendButton = document.getElementById('send-button');
 
-                // Display a personalized welcome message
-                const welcomeMessage = config.Next_Greeting_Text
-                    ? config.Next_Greeting_Text
-                    : 'Hello! How can I help you today?';
-                displayAssistantMessage(welcomeMessage);
+                // Display welcome message
+                displayAssistantMessage('Hello! How can I assist you today?');
 
                 // Send message on button click
                 sendButton.addEventListener('click', function() {
@@ -62,7 +124,7 @@
                     }
                 });
 
-                // Send message on Enter key press
+                // Send message on Enter key
                 userInput.addEventListener('keydown', function(event) {
                     if (event.key === 'Enter') {
                         sendButton.click();
@@ -70,22 +132,16 @@
                 });
 
                 function sendMessage(message) {
-                    // Display user's message
                     displayUserMessage(message);
 
-                    // Prepare payload for backend API
                     const payload = {
                         User_ID: config.User_ID,
                         Thread_ID: config.Thread_ID,
                         Org_ID: config.Org_ID,
                         Assistant_ID: config.Assistant_ID,
-                        Context_01: config.Context_01,
-                        Context_02: config.Context_02,
-                        Context_03: config.Context_03,
                         message: message
                     };
 
-                    // **Update the fetch call to use the new API_ENDPOINT**
                     fetch(API_ENDPOINT, {
                         method: 'POST',
                         headers: {
@@ -95,7 +151,6 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        // Display assistant's response
                         if (data && data.response) {
                             displayAssistantMessage(data.response);
                         } else {
@@ -103,36 +158,28 @@
                         }
                     })
                     .catch(error => {
-                        console.error('Error sending message:', error);
+                        console.error('Error:', error);
                         displayAssistantMessage('An error occurred. Please try again later.');
                     });
                 }
 
                 function displayUserMessage(message) {
                     const messageElement = document.createElement('div');
-                    messageElement.style.textAlign = 'right';
-                    messageElement.innerHTML = `<strong>You:</strong> ${message}`;
+                    messageElement.classList.add('message', 'user');
+                    messageElement.innerText = message;
                     messagesDiv.appendChild(messageElement);
                     messagesDiv.scrollTop = messagesDiv.scrollHeight;
                 }
 
                 function displayAssistantMessage(message) {
                     const messageElement = document.createElement('div');
-                    messageElement.style.textAlign = 'left';
-                    messageElement.innerHTML = `<strong>Assistant:</strong> ${message}`;
+                    messageElement.classList.add('message', 'assistant');
+                    messageElement.innerText = message;
                     messagesDiv.appendChild(messageElement);
                     messagesDiv.scrollTop = messagesDiv.scrollHeight;
                 }
-
-                // **Remove or comment out code that dynamically loads client-specific CSS**
-                /*
-                const clientCssLink = document.createElement('link');
-                clientCssLink.rel = 'stylesheet';
-                clientCssLink.href = `assets/css/${config.Org_ID}-custom.css`;
-                document.head.appendChild(clientCssLink);
-                */
             }
         });
     </script>
 </body>
-</html>
+</html> 
