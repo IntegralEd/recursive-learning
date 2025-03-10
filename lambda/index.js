@@ -6,85 +6,69 @@ const Airtable = require('airtable');
 const ssmClient = new SSMClient({ region: 'us-east-2' });
 
 exports.handler = async (event) => {
-  console.log('🔄 Received event:', JSON.stringify(event, null, 2));
+  const method = event.requestContext.http.method;
 
-  try {
-    // Retrieve parameters from SSM
-    const params = {
-      Names: [
-        '/integraled/central/OpenAI_API_Key',
-        '/integraled/central/IE_Business_Assistant_ID', // IE Business Assistant ID
-        '/integraled/airtable/Table_ID',                // Airtable Table ID
-        // Airtable API Key and Base ID are still fetched for future use
-        '/integraled/airtable/API_Key',
-        '/integraled/airtable/Base_ID',
-      ],
-      WithDecryption: true,
-    };
+  if (method === 'POST') {
+    // Handle POST request
+    try {
+      // Parse the request body
+      const body = JSON.parse(event.body);
+      const { messages } = body;
 
-    const command = new GetParametersCommand(params);
-    const response = await ssmClient.send(command);
-
-    const { Parameters } = response;
-    const OpenAI_API = Parameters.find(p => p.Name.includes('OpenAI_API_Key')).Value;
-    const IE_Business_Assistant_ID = Parameters.find(p => p.Name.includes('IE_Business_Assistant_ID')).Value;
-    const Airtable_API_Key = Parameters.find(p => p.Name.includes('airtable/API_Key')).Value;
-    const Airtable_Base_ID = Parameters.find(p => p.Name.includes('airtable/Base_ID')).Value;
-    const Airtable_Table_ID = Parameters.find(p => p.Name.includes('airtable/Table_ID')).Value;
-
-    // Initialize Airtable client (not used in code but included)
-    Airtable.configure({
-      apiKey: Airtable_API_Key,
-    });
-    // const base = Airtable.base(Airtable_Base_ID);
-    // const table = base(Airtable_Table_ID);
-
-    // Extract user message from event
-    const eventBody = event.body ? JSON.parse(event.body) : {};
-    const userMessage = eventBody.message || 'Start a new chat session';
-
-    // (Airtable code removed for MVP)
-
-    // Make the API request to OpenAI
-    const openAIResponse = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        model: 'gpt-3.5-turbo',
-        messages: [{ role: 'user', content: userMessage }],
-        // Use the IE Business Assistant ID
-        assistant_id: IE_Business_Assistant_ID,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${OpenAI_API}`,
-        },
+      if (!messages) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: 'Missing messages in request body' }),
+        };
       }
-    );
 
-    // Process the assistant's response
-    const assistantMessage = openAIResponse.data.choices[0].message.content.trim();
+      // Fetch parameters from SSM
+      const command = new GetParametersCommand({
+        Names: ['OPENAI_API_KEY'], // Add other parameter names if needed
+        WithDecryption: true,
+      });
+      const response = await ssmClient.send(command);
+      const OPENAI_API_KEY = response.Parameters.find(p => p.Name === 'OPENAI_API_KEY')?.Value;
 
-    // (Airtable code removed for MVP)
+      if (!OPENAI_API_KEY) {
+        return {
+          statusCode: 500,
+          body: JSON.stringify({ error: 'Server configuration error' }),
+        };
+      }
 
-    // Prepare the response body
-    const responseBody = {
-      response: assistantMessage,
-    };
+      // Make the API request to OpenAI
+      const openaiResponse = await axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          model: 'gpt-3.5-turbo',
+          messages,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${OPENAI_API_KEY}`,
+          },
+        }
+      );
 
-    // Return the response without CORS headers
+      // Return the response from OpenAI
+      return {
+        statusCode: 200,
+        body: JSON.stringify(openaiResponse.data),
+      };
+    } catch (error) {
+      console.error('Error processing request:', error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: 'Internal server error' }),
+      };
+    }
+  } else {
+    // Method Not Allowed
     return {
-      statusCode: 200,
-      body: JSON.stringify(responseBody),
-    };
-  } catch (error) {
-    console.error('❌ Error:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        error: 'Internal server error',
-        message: error.message,
-      }),
+      statusCode: 405,
+      body: JSON.stringify({ message: 'Method Not Allowed' }),
     };
   }
 };
