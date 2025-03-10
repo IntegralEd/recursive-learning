@@ -291,3 +291,15 @@ function openChat() {
     // (Previous suggestion was incorrect)
     window.open('https://integral-mothership.softr.app/chat', '_blank');
 } 
+
+// Remove or comment out code that dynamically loads client-specific CSS
+/*
+// This code generates a 404 error due to unreplaced placeholders
+const clientCssLink = document.createElement('link');
+clientCssLink.rel = 'stylesheet';
+clientCssLink.href = `assets/css/${config.Org_ID}-custom.css`;
+document.head.appendChild(clientCssLink);
+*/
+
+// Ensure that the rest of your chat functionality remains intact
+// ... existing code ... 
