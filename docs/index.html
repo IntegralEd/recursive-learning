@@ -48,9 +48,9 @@
         </div>
     </div>
 
-    <script src="/recursive-platform/assets/js/chat.js"></script>
-    <script src="/recursive-platform/assets/js/ie-support-embed-min.js"></script>
-    <script src="/recursive-platform/assets/index.js"></script>
+    <script src="assets/js/chat.js"></script>
+    <script src="assets/js/ie-support-embed-min.js"></script>
+    <script src="assets/index.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -176,6 +176,12 @@
                     messagesDiv.appendChild(messageElement);
                     messagesDiv.scrollTop = messagesDiv.scrollHeight;
                 }
+
+                // Load client-specific CSS dynamically
+                const clientCssLink = document.createElement('link');
+                clientCssLink.rel = 'stylesheet';
+                clientCssLink.href = `assets/css/${config.Org_ID}-custom.css`;
+                document.head.appendChild(clientCssLink);
             }
         });
     </script>

@@ -8,6 +8,29 @@ const ssmClient = new SSMClient({ region: 'us-east-2' });
 exports.handler = async (event) => {
   console.log('🔄 Received event:', JSON.stringify(event, null, 2));
 
+  // Add this block to handle OPTIONS requests
+  if (event.requestContext.http.method === 'OPTIONS') {
+    console.log('Handling OPTIONS preflight request');
+    const allowedOrigins = [
+      'https://bmore.softr.app',
+      'https://integral-mothership.softr.app',
+      'http://localhost:3000',
+      'https://integraled.github.io',
+    ];
+    const origin = event.headers.origin;
+    const allowOrigin = allowedOrigins.includes(origin) ? origin : 'https://bmore.softr.app';
+
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': allowOrigin,
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
+      },
+      body: '',
+    };
+  }
+
   try {
     // Retrieve parameters from SSM
     const params = {
@@ -75,6 +98,7 @@ exports.handler = async (event) => {
     const allowedOrigins = [
       'https://bmore.softr.app',
       'http://localhost:3000',
+      'https://integraled.github.io',
     ];
 
     const origin = event.headers.origin;
