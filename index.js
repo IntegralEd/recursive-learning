@@ -2,7 +2,7 @@ const { SSMClient, GetParametersCommand } = require('@aws-sdk/client-ssm');
 const axios = require('axios');
 // Additional requires if needed
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
   const headers = {
     'Access-Control-Allow-Origin': 'https://your-frontend-domain.com',
     'Access-Control-Allow-Methods': 'POST',
