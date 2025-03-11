@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BHB Chat Assistant</title>
+    <!-- Include any client-specific styles -->
+    <link rel="stylesheet" href="../../shared/css/style.css">
+    <!-- Optional: Include client-specific styles -->
+    <!-- <link rel="stylesheet" href="style.css"> -->
+</head>
+<body>
+    <!-- Chat Interface Container -->
+    <div id="chat-container">
+        <h2>Welcome to the BHB Chat Assistant!</h2>
+        <div id="messages"></div>
+        <div id="input-area">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <!-- Include shared scripts -->
+    <script src="../../shared/js/chat.js"></script>
+
+    <script>
+        // Hardcoded values for BHB assistant
+        const assistantConfig = {
+            Assistant_ID: 'asst_BHB_ID', // Replace with actual BHB Assistant ID
+            Org_ID: 'org_BHB', // Replace with BHB's organization ID
+            source: 'BHB',
+        };
+
+        // Initialize chat with URL parameters if available
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = new URLSearchParams(window.location.search);
+            const user = {
+                User_ID: params.get('User_ID') || 'anonymous',
+                Thread_ID: params.get('Thread_ID') || null,
+                ...assistantConfig
+            };
+
+            if (user.Thread_ID) {
+                // Offer to restore chat or start a new thread
+                const restore = confirm('Would you like to restore your previous chat session?');
+                if (!restore) {
+                    user.Thread_ID = null;
+                }
+            }
+
+            initChatInterface(user);
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BHB Chat Assistant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <img src="media/logo.png" alt="BHB Logo" class="logo">
+        <h1>BHB Chat Assistant</h1>
+        <button id="menu-button">&#9776;</button>
+    </header>
+
+    <div id="tool-panel" class="hidden">
+        <!-- Tool panel content -->
+        <ul>
+            <li><a href="#" id="settings-link">Settings</a></li>
+            <li><a href="#" id="faq-link">FAQs</a></li>
+            <li><a href="#" id="upload-link">Upload Document</a></li>
+        </ul>
+    </div>
+
+    <main>
+        <div id="messages"></div>
+    </main>
+
+    <footer>
+        <button id="attachment-button" title="Attach File">
+            <img src="media/attachment-icon.png" alt="Attach">
+        </button>
+        <button id="emoji-button" title="Insert Emoji">
+            <img src="media/emoji-icon.png" alt="Emoji">
+        </button>
+        <input type="text" id="user-input" placeholder="Type your message...">
+        <button id="send-button">
+            <img src="media/send-icon.png" alt="Send">
+        </button>
+    </footer>
+
+    <!-- Include external JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.2/dist/index.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html> 

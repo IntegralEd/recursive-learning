@@ -2,31 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chat Assistant</title>
+    <title>BHB Chat Assistant</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Include neutral styles -->
     <style>
-        /* Basic Reset */
-        * {
-            box-sizing: border-box;
-        }
-        html, body {
-            height: 100%;
+        /* Basic styles */
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f0f2f5;
-        }
-        #chat-container {
             display: flex;
             flex-direction: column;
-            height: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            border: 1px solid #ccc;
-            background-color: #fff;
-            border-radius: 8px;
-            overflow: hidden;
+            height: 100vh;
         }
         #chat-header {
             background-color: #007AFF;
@@ -34,50 +20,50 @@
             padding: 15px;
             text-align: center;
         }
+        #chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            background-color: #f2f2f2;
+        }
         #messages {
             flex: 1;
-            padding: 10px;
             overflow-y: auto;
-            background-color: #f9f9f9;
+            margin-bottom: 10px;
         }
         .message {
-            margin-bottom: 15px;
-            max-width: 80%;
+            margin-bottom: 10px;
+            max-width: 70%;
             word-wrap: break-word;
+            padding: 10px;
+            border-radius: 10px;
         }
         .message.user {
             align-self: flex-end;
             background-color: #dcf8c6;
-            border-radius: 15px 15px 0 15px;
-            padding: 10px;
-            color: #000;
         }
         .message.assistant {
             align-self: flex-start;
             background-color: #fff;
-            border-radius: 15px 15px 15px 0;
-            padding: 10px;
-            color: #000;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #ccc;
         }
         #input-area {
             display: flex;
-            padding: 10px;
-            background-color: #eee;
         }
         #user-input {
             flex: 1;
             padding: 10px;
-            border: none;
+            border: 1px solid #ccc;
             border-radius: 20px;
-            outline: none;
             font-size: 16px;
+            outline: none;
         }
         #send-button {
             background-color: #007AFF;
             color: #fff;
             border: none;
-            padding: 10px 20px;
+            padding: 0 20px;
             margin-left: 10px;
             border-radius: 20px;
             cursor: pointer;
@@ -89,76 +75,59 @@
     </style>
 </head>
 <body>
+    <div id="chat-header">
+        <h2>BHB Chat Assistant</h2>
+    </div>
     <div id="chat-container">
-        <div id="chat-header">
-            <h2>Chat Assistant</h2>
-        </div>
         <div id="messages"></div>
         <div id="input-area">
             <input type="text" id="user-input" placeholder="Type your message...">
             <button id="send-button">Send</button>
         </div>
     </div>
-
     <script>
-        // Initialize chat interface
+        // Simple chat interface
         document.addEventListener('DOMContentLoaded', function() {
-            const params = new URLSearchParams(window.location.search);
-            const assistantConfig = {
-                Assistant_ID: params.get('Assistant_ID') || 'asst_BHB_ID', // Default assistant ID
-                Org_ID: params.get('Org_ID') || 'org_BHB', // Default organization ID
-                User_ID: params.get('User_ID') || 'anonymous',
-                Thread_ID: params.get('Thread_ID') || null,
-                source: params.get('source') || 'public_chat',
-            };
-
-            if (assistantConfig.Thread_ID) {
-                const restore = confirm('Would you like to restore your previous chat session?');
-                if (!restore) {
-                    assistantConfig.Thread_ID = null;
-                }
-            }
-
-            initChatInterface(assistantConfig);
-        });
-
-        function initChatInterface(config) {
             const messagesDiv = document.getElementById('messages');
             const userInput = document.getElementById('user-input');
             const sendButton = document.getElementById('send-button');
+
+            // Parse URL parameters
+            const params = new URLSearchParams(window.location.search);
+            const userId = params.get('User_ID') || 'anonymous';
+            const threadId = params.get('Thread_ID') || null;
 
             // Display welcome message
             displayAssistantMessage('Hello! How can I assist you today?');
 
             // Send message on button click
-            sendButton.addEventListener('click', function() {
-                const message = userInput.value.trim();
-                if (message !== '') {
-                    sendMessage(message, config);
-                    userInput.value = '';
-                }
-            });
+            sendButton.addEventListener('click', sendMessage);
 
             // Send message on Enter key
             userInput.addEventListener('keydown', function(event) {
                 if (event.key === 'Enter') {
-                    sendButton.click();
+                    sendMessage();
                 }
             });
 
-            function sendMessage(message, config) {
-                displayUserMessage(message);
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (message === '') return;
 
+                displayUserMessage(message);
+                userInput.value = '';
+
+                // Prepare payload
                 const payload = {
-                    User_ID: config.User_ID,
-                    Assistant_ID: config.Assistant_ID,
-                    Org_ID: config.Org_ID,
+                    User_ID: userId,
+                    Assistant_ID: 'asst_IA5PsJxdShVPTAv2xeXTr4Ma',
+                    Org_ID: 'recjUGiOT65lwgBtm',
                     message: message,
-                    Thread_ID: config.Thread_ID,
-                    source: config.source,
+                    Thread_ID: threadId
                 };
 
-                fetch('https://your-api-endpoint', { // Replace with your actual API endpoint
+                // Send message to backend API
+                fetch('https://tixnmh1pe8.execute-api.us-east-2.amazonaws.com/prod/IntegralEd-Main', { // Actual API endpoint
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -169,10 +138,6 @@
                 .then(data => {
                     if (data && data.response) {
                         displayAssistantMessage(data.response);
-                        // Update Thread_ID if provided
-                        if (data.Thread_ID) {
-                            config.Thread_ID = data.Thread_ID;
-                        }
                     } else {
                         displayAssistantMessage('Sorry, I did not understand that.');
                     }
@@ -186,7 +151,7 @@
             function displayUserMessage(message) {
                 const messageElement = document.createElement('div');
                 messageElement.classList.add('message', 'user');
-                messageElement.innerText = message;
+                messageElement.textContent = message;
                 messagesDiv.appendChild(messageElement);
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
             }
@@ -194,11 +159,11 @@
             function displayAssistantMessage(message) {
                 const messageElement = document.createElement('div');
                 messageElement.classList.add('message', 'assistant');
-                messageElement.innerText = message;
+                messageElement.textContent = message;
                 messagesDiv.appendChild(messageElement);
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
             }
-        }
+        });
     </script>
 </body>
 </html> 
