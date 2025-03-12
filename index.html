@@ -2,130 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>BMORE Chat</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Basic styles (optional) -->
+    <title>Recursive Learning</title>
+    <link rel="stylesheet" href="assets/css/recursive-platform.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f2f5;
-        }
-        #chat-container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-        h1 {
             text-align: center;
+            padding: 50px;
         }
-        #messages {
-            border: 1px solid #ccc;
-            height: 400px;
-            overflow-y: auto;
-            padding: 10px;
-            margin-bottom: 10px;
-            background-color: #fafafa;
-        }
-        #input-area {
-            display: flex;
-        }
-        #user-input {
-            flex: 1;
-            padding: 10px;
-            font-size: 16px;
-        }
-        #send-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #007AFF;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-        }
-        #send-button:hover {
-            background-color: #005bb5;
-        }
-        .message {
-            margin-bottom: 10px;
-        }
-        .message.user {
-            text-align: right;
-            color: #000;
-        }
-        .message.assistant {
-            text-align: left;
-            color: #000;
+        img {
+            max-width: 150px;
+            border-radius: 50%;
         }
     </style>
 </head>
 <body>
-    <div id="chat-container">
-        <h1>Welcome to BMORE Chat</h1>
-        <div id="messages"></div>
-        <div id="input-area">
-            <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off"/>
-            <button id="send-button">Send</button>
-        </div>
-    </div>
-
-    <script>
-        document.getElementById('send-button').addEventListener('click', sendMessage);
-        document.getElementById('user-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') sendMessage();
-        });
-
-        function sendMessage() {
-            var inputField = document.getElementById('user-input');
-            var message = inputField.value.trim();
-            if (!message) return;
-
-            displayMessage('You', message, 'user');
-            inputField.value = '';
-
-            // Prepare payload
-            var payload = {
-                "User_ID": "anonymous",
-                "Assistant_ID": "asst_IA5PsJxdShVPTAv2xeXTr4Ma", // BMORE assistant ID
-                "Org_ID": "recjUGiOT65lwgBtm", // BMORE organization ID
-                "message": message
-            };
-
-            // Send message to API
-            fetch('https://tixnmh1pe8.execute-api.us-east-2.amazonaws.com/prod/IntegralEd-Main', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.response) {
-                    displayMessage('Assistant', data.response, 'assistant');
-                } else {
-                    displayMessage('Assistant', 'Sorry, I did not understand that.', 'assistant');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                displayMessage('Assistant', 'An error occurred. Please try again later.', 'assistant');
-            });
-        }
-
-        function displayMessage(sender, message, type) {
-            var messagesDiv = document.getElementById('messages');
-            var messageElement = document.createElement('div');
-            messageElement.classList.add('message', type);
-            messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
-            messagesDiv.appendChild(messageElement);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-
-        // Display a welcome message from the assistant
-        displayMessage('Assistant', 'Hello! How can I assist you today?', 'assistant');
-    </script>
+    <h1>Recursive Learning</h1>
+    <p>Welcome to the site.</p>
+    <img src="assets/images/avatar.png" alt="Avatar">
 </body>
 </html> 
