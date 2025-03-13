@@ -3,6 +3,18 @@ const axios = require('axios');
 const { Configuration, OpenAIApi } = require('openai');
 // Removed DynamoDB imports
 
+const ssmClient = new SSMClient({ region: 'us-east-2' });
+
+async function getOpenAIKey() {
+  const command = new GetParametersCommand({
+    Names: ['integraled/central/OpenAI_API_Key'],
+    WithDecryption: true,
+  });
+
+  const response = await ssmClient.send(command);
+  return response.Parameters[0].Value;
+}
+
 exports.handler = async (event, context) => {
   const headers = {
     'Access-Control-Allow-Origin': '*', // For testing purposes; change to your domain in production
@@ -30,6 +42,15 @@ exports.handler = async (event, context) => {
         body: JSON.stringify({ message: 'Method Not Allowed' }),
       };
     }
+
+    // Retrieve the OpenAI API Key
+    const openAIKey = await getOpenAIKey();
+
+    // Configure OpenAI API client
+    const configuration = new Configuration({
+      apiKey: openAIKey,
+    });
+    const openai = new OpenAIApi(configuration);
 
     // Handle POST request
     // Your existing POST handling code
