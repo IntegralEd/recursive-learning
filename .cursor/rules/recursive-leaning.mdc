@@ -1,0 +1,62 @@
+---
+description: MVP Deployment & Testing Plan
+globs: 
+alwaysApply: false
+---
+# Recursive Learning MVP Deployment & Testing Plan
+
+## Overview
+
+**Hosting**: Lambda; confirm before adding CORS to code.
+
+**Parameter Management**: SSM handles parameters.
+
+**Pages Deployment**: GH-Pages at IntegralEd.
+
+**Primary Hosting Domain**: [https://recursivelearning.app](mdc:https:/recursivelearning.app)
+
+**Deployment Options**:
+
+- `index.html` standalone embed on a client’s site or inside Storyline.
+- `index.html` in Storyline for session/user variable management and routing.
+
+## MVP Testing Implementations:
+
+- **BHB Maternal Health Chat** - Hosted on client website & Softr.
+- **Customer Support ‘Business Assistant’** - Hosted on IntegralEd GH pages.
+
+**Lambda Function ARN**: `arn:aws:lambda:us-east-2:559050208320:function:IntegralEd-Main`
+
+**Lambda Server Path**: `/Users/david/recursive-learning/lambda/index.js`
+
+**Customer Support Site**: *[TBD]*
+
+**BHB Site**: *[TBD]*
+
+## Testing Path for MVP
+
+1. **Lambda Testing**
+
+   ✅ *Goal: MVP chat with Bmore RAG Assistant is live and functional.*
+
+2. **Frontend MVP Test**
+
+   ✅ *Goal: Ensure the branded MVP chat loads properly.*
+
+3. **Client-Specific CSS & Branding**
+
+   ✅ *Goal: Ensure branding styles are loaded dynamically.*
+
+4. **Load from Thread for Returning Users**
+
+   ✅ *Goal: Users can resume previous conversations via Thread ID.*
+
+## Next Steps:
+
+- Expand testing plan to include client-specific frontend implementations.
+- Review Make automation logs to ensure smooth data transfer.
+- Develop structured error handling for edge cases.
+
+---
+
+📌 *This serves as the single project plan. Reference this document in Cursor for future development.* 🚀
