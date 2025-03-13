@@ -1,7 +1,5 @@
 const { SSMClient, GetParametersCommand } = require('@aws-sdk/client-ssm');
-const axios = require('axios');
 const { Configuration, OpenAIApi } = require('openai');
-// Removed DynamoDB imports
 
 const ssmClient = new SSMClient({ region: 'us-east-2' });
 
@@ -17,7 +15,7 @@ async function getOpenAIKey() {
 
 exports.handler = async (event, context) => {
   const headers = {
-    'Access-Control-Allow-Origin': '*', // For testing purposes; change to your domain in production
+    'Access-Control-Allow-Origin': '*', // For testing purposes; change for production
     'Access-Control-Allow-Methods': 'OPTIONS,POST',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   };
@@ -44,8 +42,15 @@ exports.handler = async (event, context) => {
         };
       }
 
+      // Parse the request body
+      const requestBody = JSON.parse(event.body);
+      const { User_ID, Assistant_ID, Org_ID, message, Thread_ID } = requestBody;
+
       // Retrieve the OpenAI API Key
       const openAIKey = await getOpenAIKey();
+      if (!openAIKey) {
+        throw new Error("Failed to retrieve OpenAI API Key");
+      }
 
       // Configure OpenAI API client
       const configuration = new Configuration({
@@ -53,27 +58,34 @@ exports.handler = async (event, context) => {
       });
       const openai = new OpenAIApi(configuration);
 
-      // Handle POST request
-      // Your existing POST handling code
+      // Call the OpenAI API
+      const openaiResponse = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: message,
+        max_tokens: 150,
+        temperature: 0.7,
+      });
 
+      const assistantResponse = openaiResponse.data.choices[0].text.trim();
+
+      // Prepare the response data
       const responseData = {
-        message: "Lambda function executed successfully",
-        data: "Your response data here"
+        response: assistantResponse,
       };
 
-      console.log("Event:", JSON.stringify(event, null, 2));
-
+      // Return the response
       return {
         statusCode: 200,
         headers,
         body: JSON.stringify(responseData),
       };
+
     } else {
       // Handle the case where properties are missing
       console.error("Missing requestContext or http properties in event");
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "Bad Request" }),
+        body: JSON.stringify({ error: "Bad Request: Missing event properties" }),
       };
     }
   } catch (error) {
