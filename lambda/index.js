@@ -23,47 +23,58 @@ exports.handler = async (event, context) => {
   };
 
   try {
-    const method = event.httpMethod || event.requestContext.http.method;
+    if (event && event.requestContext && event.requestContext.http) {
+      const method = event.httpMethod || event.requestContext.http.method;
 
-    if (method === 'OPTIONS') {
-      // Handle CORS preflight request
+      if (method === 'OPTIONS') {
+        // Handle CORS preflight request
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({ message: 'CORS preflight response' }),
+        };
+      }
+
+      if (method !== 'POST') {
+        // Method Not Allowed
+        return {
+          statusCode: 405,
+          headers,
+          body: JSON.stringify({ message: 'Method Not Allowed' }),
+        };
+      }
+
+      // Retrieve the OpenAI API Key
+      const openAIKey = await getOpenAIKey();
+
+      // Configure OpenAI API client
+      const configuration = new Configuration({
+        apiKey: openAIKey,
+      });
+      const openai = new OpenAIApi(configuration);
+
+      // Handle POST request
+      // Your existing POST handling code
+
+      const responseData = {
+        // Your response data
+      };
+
+      console.log("Event:", JSON.stringify(event, null, 2));
+
       return {
         statusCode: 200,
         headers,
-        body: JSON.stringify({ message: 'CORS preflight response' }),
+        body: JSON.stringify(responseData),
       };
-    }
-
-    if (method !== 'POST') {
-      // Method Not Allowed
+    } else {
+      // Handle the case where properties are missing
+      console.error("Missing requestContext or http properties in event");
       return {
-        statusCode: 405,
-        headers,
-        body: JSON.stringify({ message: 'Method Not Allowed' }),
+        statusCode: 400,
+        body: JSON.stringify({ error: "Bad Request" }),
       };
     }
-
-    // Retrieve the OpenAI API Key
-    const openAIKey = await getOpenAIKey();
-
-    // Configure OpenAI API client
-    const configuration = new Configuration({
-      apiKey: openAIKey,
-    });
-    const openai = new OpenAIApi(configuration);
-
-    // Handle POST request
-    // Your existing POST handling code
-
-    const responseData = {
-      // Your response data
-    };
-
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify(responseData),
-    };
   } catch (error) {
     console.error('Error processing request:', error);
 
