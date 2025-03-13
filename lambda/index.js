@@ -57,7 +57,8 @@ exports.handler = async (event, context) => {
       // Your existing POST handling code
 
       const responseData = {
-        // Your response data
+        message: "Lambda function executed successfully",
+        data: "Your response data here"
       };
 
       console.log("Event:", JSON.stringify(event, null, 2));
