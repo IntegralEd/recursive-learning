@@ -1,7 +1,11 @@
 const { SSMClient, GetParametersCommand } = require('@aws-sdk/client-ssm');
 const { Configuration, OpenAIApi } = require('openai');
-const fetch = require('node-fetch');
-// Removed DynamoDB imports
+// const fetch = require('node-fetch');
+
+let fetch;
+(async () => {
+  fetch = (await import('node-fetch')).default;
+})();
 
 // Initialize AWS SSM client
 const ssmClient = new SSMClient({ region: 'us-east-2' });
