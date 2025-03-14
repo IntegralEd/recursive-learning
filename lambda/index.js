@@ -36,26 +36,26 @@ async function getOpenAIKey() {
 }
 
 // Function to get Assistant ID from SSM Parameter Store
-async function getAssistantID() {
-  const command = new GetParametersCommand({
-    Names: ['integraled/bmore/OpenAI_Assistant_ID'],
-    WithDecryption: true,
-  });
+// async function getAssistantID() {
+//   const command = new GetParametersCommand({
+//     Names: ['integraled/bmore/OpenAI_Assistant_ID'],
+//     WithDecryption: true,
+//   });
 
-  try {
-    const response = await ssmClient.send(command);
-    console.log('SSM Response for Assistant ID:', JSON.stringify(response, null, 2));
+//   try {
+//     const response = await ssmClient.send(command);
+//     console.log('SSM Response for Assistant ID:', JSON.stringify(response, null, 2));
 
-    if (!response.Parameters || response.Parameters.length === 0) {
-      throw new Error('Assistant ID not found in SSM Parameter Store');
-    }
+//     if (!response.Parameters || response.Parameters.length === 0) {
+//       throw new Error('Assistant ID not found in SSM Parameter Store');
+//     }
 
-    return response.Parameters[0].Value;
-  } catch (error) {
-    console.error('Error retrieving Assistant ID:', error);
-    throw new Error('Error retrieving Assistant ID');
-  }
-}
+//     return response.Parameters[0].Value;
+//   } catch (error) {
+//     console.error('Error retrieving Assistant ID:', error);
+//     throw new Error('Error retrieving Assistant ID');
+//   }
+// }
 
 exports.handler = async (event, context) => {
   console.log('Lambda function started');
@@ -105,12 +105,12 @@ exports.handler = async (event, context) => {
     console.log('OpenAI API Key retrieved');
 
     // Retrieve the Assistant ID
-    console.log('Retrieving Assistant ID');
-    const assistantID = await getAssistantID();
-    if (!assistantID) {
-      throw new Error('Failed to retrieve Assistant ID');
-    }
-    console.log('Assistant ID retrieved:', assistantID);
+    // console.log('Retrieving Assistant ID');
+    // const assistantID = await getAssistantID();
+    // if (!assistantID) {
+    //   throw new Error('Failed to retrieve Assistant ID');
+    // }
+    // console.log('Assistant ID retrieved:', assistantID);
 
     // Configure OpenAI API client
     console.log('Configuring OpenAI API client');
@@ -122,7 +122,7 @@ exports.handler = async (event, context) => {
     // Call the OpenAI API using the Assistant ID
     console.log('Calling OpenAI API');
     const openaiResponse = await openai.createCompletion({
-      model: assistantID, // Use the retrieved assistant ID
+      model: Assistant_ID, // Use the retrieved assistant ID
       prompt: message,
       max_tokens: 150,
       temperature: 0.7,
