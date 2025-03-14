@@ -1,0 +1,23 @@
+{
+  "name": "lambda-function",
+  "version": "1.0.0",
+  "description": "AWS Lambda function for interacting with OpenAI API",
+  "main": "index.js",
+  "scripts": {},
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.759.0",
+    "axios": "^1.8.3",
+    "openai": "^3.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IntegralEd/recursive-learning.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IntegralEd/recursive-learning/issues"
+  },
+  "homepage": "https://github.com/IntegralEd/recursive-learning#readme"
+}
