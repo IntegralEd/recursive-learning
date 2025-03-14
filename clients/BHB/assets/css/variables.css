@@ -1,33 +1,43 @@
 :root {
   /* Branding Colors */
-  --primary-color: #FF5733;
-  --secondary-color: #34C759;
-  --accent-color: #FF9500;
-  --background-color: #F5F5F7;
-  --text-color: #1A1A1A;
+  --primary-color: #5C3A8D; /* BHB Primary Purple */
+  --secondary-color: #F0A202; /* BHB Secondary Orange */
+  --accent-color: #E63946; /* BHB Red Accent */
+  --background-color: #F9F9F9; /* Light Background */
+  --text-color: #2B2B2B; /* Dark Gray Text */
 
   /* Typography */
-  --client-font-h1: 'Inter, sans-serif';
-  --client-font-h2: 'Open Sans, sans-serif';
-  --client-font-body: 'Arial, sans-serif';
-  --client-font-size-h1: 32px;
-  --client-font-size-h2: 24px;
-  --client-font-size-body: 16px;
+  --client-font-h1: 'Montserrat, sans-serif';
+  --client-font-h2: 'Lora, serif';
+  --client-font-body: 'Source Sans Pro, sans-serif';
+  --client-font-size-h1: 36px;
+  --client-font-size-h2: 28px;
+  --client-font-size-body: 18px;
 
   /* Layout */
-  --client-button-radius: 8px;
-  --client-button-padding: 12px 24px;
-  --client-card-border-radius: 12px;
-  --client-spacing-large: 32px;
-  --client-spacing-medium: 24px;
-  --client-spacing-small: 16px;
+  --client-button-radius: 10px;
+  --client-button-padding: 14px 28px;
+  --client-card-border-radius: 16px;
+  --client-spacing-large: 40px;
+  --client-spacing-medium: 28px;
+  --client-spacing-small: 18px;
 
   /* Accessibility */
-  --client-font-scale: 1.1;
+  --client-font-scale: 1.2;
+  --client-high-contrast-mode: true;
 
-  /* Update client logo path */
-  --client-logo: url('../assets/logo.png');
+  /* Client Logo */
+  --client-logo: url('../assets/bhb-logo.png');
 
-  /* Client avatar path */
-  --client-avatar: url('../assets/avatar.png');
+  /* Client Avatar */
+  --client-avatar: url('../assets/bhb-avatar.png');
+
+  /* Voice & Tone Settings */
+  --client-voice-tone: 'Empathetic, community-centered, and action-driven.';
+  --client-user-context-01: 'Supporting families to raise healthy babies.';
+  --client-user-context-02: 'Promoting social and economic justice.';
+  --client-user-context-03: 'Ensuring quality care during pregnancy.';
+  --client-case-study-01: 'How BHB reduced infant mortality in Baltimore.';
+  --client-case-study-02: 'Community partnerships improving maternal health.';
+  --client-case-study-03: 'BHB's approach to social determinants of health.';
 } 
