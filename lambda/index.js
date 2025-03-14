@@ -8,8 +8,27 @@ const ssmClient = new SSMClient({ region: 'us-east-2' });
 
 // Function to get OpenAI API Key from SSM Parameter Store
 async function getOpenAIKey() {
-  // Temporary hardcoded API key for testing
-  return 'your-openai-api-key';
+  const command = new GetParametersCommand({
+    Names: ['IE-OpenAI-API'],
+    WithDecryption: true,
+  });
+
+  try {
+    const response = await ssmClient.send(command);
+    console.log('SSM Response:', JSON.stringify(response, null, 2));
+
+    if (!response.Parameters || response.Parameters.length === 0) {
+      console.error('No parameters returned from SSM');
+      console.error('InvalidParameters:', response.InvalidParameters);
+      throw new Error('OpenAI API Key not found in SSM Parameter Store');
+    }
+
+    return response.Parameters[0].Value;
+
+  } catch (error) {
+    console.error('Error retrieving OpenAI API Key:', error);
+    throw error;
+  }
 }
 
 // Function to get Assistant ID from SSM Parameter Store
