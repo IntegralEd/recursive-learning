@@ -1,6 +1,6 @@
 const { SSMClient, GetParametersCommand } = require('@aws-sdk/client-ssm');
-const axios = require('axios');
 const { Configuration, OpenAIApi } = require('openai');
+const fetch = require('node-fetch');
 // Removed DynamoDB imports
 
 // Initialize AWS SSM client
