@@ -8,13 +8,30 @@ const ssmClient = new SSMClient({ region: 'us-east-2' });
 
 // Function to get OpenAI API Key from SSM Parameter Store
 async function getOpenAIKey() {
+  // Temporary hardcoded API key for testing
+  return 'your-openai-api-key';
+}
+
+// Function to get Assistant ID from SSM Parameter Store
+async function getAssistantID() {
   const command = new GetParametersCommand({
-    Names: ['integraled/central/OpenAI_API_Key'],
+    Names: ['integraled/bmore/OpenAI_Assistant_ID'],
     WithDecryption: true,
   });
 
-  const response = await ssmClient.send(command);
-  return response.Parameters[0].Value;
+  try {
+    const response = await ssmClient.send(command);
+    console.log('SSM Response for Assistant ID:', JSON.stringify(response, null, 2));
+
+    if (!response.Parameters || response.Parameters.length === 0) {
+      throw new Error('Assistant ID not found in SSM Parameter Store');
+    }
+
+    return response.Parameters[0].Value;
+  } catch (error) {
+    console.error('Error retrieving Assistant ID:', error);
+    throw new Error('Error retrieving Assistant ID');
+  }
 }
 
 exports.handler = async (event, context) => {
@@ -64,6 +81,14 @@ exports.handler = async (event, context) => {
     }
     console.log('OpenAI API Key retrieved');
 
+    // Retrieve the Assistant ID
+    console.log('Retrieving Assistant ID');
+    const assistantID = await getAssistantID();
+    if (!assistantID) {
+      throw new Error('Failed to retrieve Assistant ID');
+    }
+    console.log('Assistant ID retrieved:', assistantID);
+
     // Configure OpenAI API client
     console.log('Configuring OpenAI API client');
     const configuration = new Configuration({
@@ -71,10 +96,10 @@ exports.handler = async (event, context) => {
     });
     const openai = new OpenAIApi(configuration);
 
-    // Call the OpenAI API
+    // Call the OpenAI API using the Assistant ID
     console.log('Calling OpenAI API');
     const openaiResponse = await openai.createCompletion({
-      model: 'text-davinci-003',
+      model: assistantID, // Use the retrieved assistant ID
       prompt: message,
       max_tokens: 150,
       temperature: 0.7,
@@ -99,7 +124,7 @@ exports.handler = async (event, context) => {
   } catch (error) {
     console.error('Error processing request:', error);
 
-    // Internal server error response
+    // Internal server error response with detailed error message
     return {
       statusCode: 500,
       headers,

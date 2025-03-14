@@ -33,7 +33,7 @@ function initChatInterface(config) {
             Thread_ID: config.Thread_ID,
         };
 
-        fetch('https://your-api-endpoint', { // Replace with your actual API endpoint
+        fetch('https://tixnmh1pe8.execute-api.us-east-2.amazonaws.com/prod/IntegralEd-Main', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
