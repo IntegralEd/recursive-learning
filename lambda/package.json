@@ -8,5 +8,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.759.0",
+    "node-fetch": "^2.7.0",
+    "openai": "^4.87.3"
+  }
 }
