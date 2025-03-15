@@ -52,6 +52,7 @@
         <input type="email" placeholder="Your Email" id="signup-email" required />
         <textarea placeholder="How did you learn about us?" id="intake-source"></textarea>
         <textarea placeholder="How do you hope to use recursive learning app?" id="intake-usage"></textarea>
+        <textarea placeholder="How would you describe your role?" id="intake-role"></textarea>
         <button onclick="signup()">Sign Up</button>
     </div>
 
@@ -73,6 +74,7 @@
             const email = document.getElementById('signup-email').value;
             const source = document.getElementById('intake-source').value;
             const usage = document.getElementById('intake-usage').value;
+            const role = document.getElementById('intake-role').value;
 
             if (!email) {
                 alert('Please enter a valid email.');
@@ -83,8 +85,9 @@
                 User_ID: "----",
                 Thread_ID: "----",
                 Email: email,
-                Intake_Context_01: source,
-                Intake_Context_02: usage,
+                User_Intake_Item_01: source,
+                User_Intake_Item_02: usage,
+                User_Intake_Item_03: role,
                 Org_ID: "recQvZ1Xcaiw1Ey8d",
                 Source: "recursive.learning.app/index.html",
                 Action_ID: "----"
