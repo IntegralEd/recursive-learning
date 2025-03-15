@@ -17,22 +17,9 @@ async function getOpenAIKey() {
     WithDecryption: true,
   });
 
-  try {
-    const response = await ssmClient.send(command);
-    console.log('SSM Response:', JSON.stringify(response, null, 2));
-
-    if (!response.Parameters || response.Parameters.length === 0) {
-      console.error('No parameters returned from SSM');
-      console.error('InvalidParameters:', response.InvalidParameters);
-      throw new Error('OpenAI API Key not found in SSM Parameter Store');
-    }
-
-    return response.Parameters[0].Value;
-
-  } catch (error) {
-    console.error('Error retrieving OpenAI API Key:', error);
-    throw error;
-  }
+  const response = await ssmClient.send(command);
+  if (!response.Parameters.length) throw new Error('OpenAI API Key missing from SSM');
+  return response.Parameters[0].Value;
 }
 
 // Function to get Assistant ID from SSM Parameter Store
@@ -57,94 +44,58 @@ async function getOpenAIKey() {
 //   }
 // }
 
-exports.handler = async (event, context) => {
-  console.log('Lambda function started');
-  console.log('Event:', JSON.stringify(event, null, 2));
-
+exports.handler = async (event) => {
   const headers = {
-    'Access-Control-Allow-Origin': '*', // Adjust as needed for production
+    'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'OPTIONS,POST',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   };
 
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
+
   try {
-    const method = event.httpMethod || event.requestContext.http.method;
-    console.log('HTTP Method:', method);
+    const body = JSON.parse(event.body);
+    const { message, Thread_ID } = body;
 
-    if (method === 'OPTIONS') {
-      // Handle CORS preflight request
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify({ message: 'CORS preflight response' }),
-      };
-    }
-
-    if (method !== 'POST') {
-      // Method Not Allowed
-      return {
-        statusCode: 405,
-        headers,
-        body: JSON.stringify({ message: 'Method Not Allowed' }),
-      };
-    }
-
-    // Parse the request body
-    console.log('Parsing request body');
-    const requestBody = JSON.parse(event.body);
-    console.log('Request Body:', requestBody);
-
-    const { User_ID, Assistant_ID, Org_ID, message, Thread_ID } = requestBody;
-
-    // Retrieve the OpenAI API Key
-    console.log('Retrieving OpenAI API Key');
     const openAIKey = await getOpenAIKey();
-    if (!openAIKey) {
-      throw new Error('Failed to retrieve OpenAI API Key');
-    }
-    console.log('OpenAI API Key retrieved');
-
-    // Retrieve the Assistant ID
-    // console.log('Retrieving Assistant ID');
-    // const assistantID = await getAssistantID();
-    // if (!assistantID) {
-    //   throw new Error('Failed to retrieve Assistant ID');
-    // }
-    // console.log('Assistant ID retrieved:', assistantID);
-
-    // Configure OpenAI API client
-    console.log('Configuring OpenAI API client');
     const openai = new OpenAI({ apiKey: openAIKey });
 
-    // Call the OpenAI API using the Assistant ID
-    console.log('Calling OpenAI API');
-    const openaiResponse = await openai.createCompletion({
-      model: Assistant_ID, // Use the retrieved assistant ID
-      prompt: message,
-      max_tokens: 150,
-      temperature: 0.7,
+    let threadId = Thread_ID;
+
+    if (!threadId) {
+      const thread = await openai.beta.threads.create();
+      threadId = thread.id;
+    }
+
+    await openai.beta.threads.messages.create(threadId, {
+      role: 'user',
+      content: message,
     });
-    console.log('OpenAI API response received');
 
-    const assistantResponse = openaiResponse.data.choices[0].text.trim();
-    console.log('Assistant Response:', assistantResponse);
+    const run = await openai.beta.threads.runs.create(threadId, {
+      assistant_id: 'asst_IA5PsJxdShVPTAv2xeXTr4Ma',
+    });
 
-    // Prepare the response data
-    const responseData = {
-      response: assistantResponse,
-    };
-    console.log('Response Data:', responseData);
+    let runStatus;
+    do {
+      await new Promise(res => setTimeout(res, 1000));
+      runStatus = await openai.beta.threads.runs.retrieve(threadId, run.id);
+    } while (runStatus.status !== 'completed');
 
-    // Return the response
+    const messages = await openai.beta.threads.messages.list(threadId);
+    const assistantMessage = messages.data.find(msg => msg.role === 'assistant');
+
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(responseData),
+      body: JSON.stringify({
+        response: assistantMessage.content[0].text.value,
+        Thread_ID: threadId,
+      }),
     };
   } catch (error) {
-    console.error('Error processing request:', error);
-
-    // Internal server error response with detailed error message
     return {
       statusCode: 500,
       headers,

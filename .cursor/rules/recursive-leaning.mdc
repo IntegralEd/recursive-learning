@@ -43,6 +43,7 @@ alwaysApply: false
 1. **Lambda Testing**
 
    ✅ *Goal: MVP chat with Bmore RAG Assistant is live and functional.*
+   status: 
 
 2. **Frontend MVP Test**
 
