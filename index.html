@@ -79,9 +79,33 @@
                 return;
             }
 
-            // Insert customer intake webhook from Make here
-            console.log(`Email: ${email}, Source: ${source}, Usage: ${usage}`);
-            alert('Thanks for signing up!');
+            const payload = {
+                User_ID: "----",
+                Thread_ID: "----",
+                Email: email,
+                Intake_Context_01: source,
+                Intake_Context_02: usage,
+                Org_ID: "recQvZ1Xcaiw1Ey8d",
+                Source: "recursive.learning.app/index.html",
+                Action_ID: "----"
+            };
+
+            fetch('https://hook.us1.make.com/gp1ykvaa7e7q5e3xnvjym2g9dkg9vl4y', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Thanks for signing up!');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('There was an error with your signup.');
+            });
         }
     </script>
 </body>
