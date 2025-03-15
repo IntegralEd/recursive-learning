@@ -48,11 +48,21 @@
     <div id="curious-button" onclick="toggleForm()">👀 Curious?</div>
     <div style="text-align: center;">&#x25BC;</div>
     <div id="form-container">
-        <h2>Welcome to the app. We're glad you found us!</h2>
-        <input type="email" placeholder="Your Email" id="signup-email" required />
-        <textarea placeholder="How did you learn about us?" id="intake-source"></textarea>
-        <textarea placeholder="How do you hope to use recursive learning app?" id="intake-usage"></textarea>
-        <textarea placeholder="How would you describe your role?" id="intake-role"></textarea>
+        <h3>Welcome to the app. We're glad you found us!</h3>
+        <input type="email" placeholder="Your Email" id="signup-email" />
+        
+        <h3>How did you learn about us?</h3>
+        <p style="font-style: italic;">We're hiding in beta until 2026.... someone must have clued you in</p>
+        <textarea id="intake-source"></textarea>
+        
+        <h3>How do you hope to use recursive learning app?</h3>
+        <p style="font-style: italic;">We might sneak you into our beta if you're aligned in your requirements and values. 2025 we are supporting select users at various scales and stages of development. We learn, you learn, you get it...</p>
+        <textarea id="intake-usage"></textarea>
+        
+        <h3>If you think we should know, how would you describe your role?</h3>
+        <p style="font-style: italic;">Folx are obsessed with official titles on forms, but you're about to enter a context-aware platform...</p>
+        <textarea id="intake-role"></textarea>
+        
         <button onclick="signup()">Sign Up</button>
     </div>
 
@@ -76,7 +86,9 @@
             const usage = document.getElementById('intake-usage').value;
             const role = document.getElementById('intake-role').value;
 
-            if (!email) {
+            // Simple email validation
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailPattern.test(email)) {
                 alert('Please enter a valid email.');
                 return;
             }
