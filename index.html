@@ -8,9 +8,12 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
             background: radial-gradient(circle at top, #f9f9f9, #e0e0e0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
         }
         img {
             max-width: 150px;
@@ -20,12 +23,23 @@
         img:hover {
             transform: scale(1.05) rotate(5deg);
         }
+        #main-container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
         input, textarea {
             display: block;
             margin: 10px 0;
             padding: 10px;
             width: 100%;
-            max-width: 400px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
@@ -44,10 +58,6 @@
         }
         button:hover {
             background-color: #0056b3;
-        }
-        h3 {
-            margin-top: 20px;
-            color: #333;
         }
         p {
             font-style: italic;
@@ -73,32 +83,34 @@
     </style>
 </head>
 <body>
-    <h1>Recursive Learning Platform</h1>
-    <div id="learning-container">
-        <h2 id="spinner">Learning...</h2>
-    </div>
-    
-    <img src="assets/images/avatar.png" alt="Avatar">
+    <div id="main-container">
+        <h1>Recursive Learning Platform</h1>
+        <div id="learning-container">
+            <h2 id="spinner">Learning...</h2>
+        </div>
+        
+        <img src="assets/images/avatar.png" alt="Avatar">
 
-    <div id="curious-button" onclick="toggleForm()">👀 Curious?</div>
-    <div style="text-align: center;">&#x25BC;</div>
-    <div id="form-container">
-        <h3>Welcome to the app. We're glad you found us!</h3>
-        <input type="email" placeholder="Your Email" id="signup-email" />
-        
-        <h3>How did you learn about us?</h3>
-        <p style="font-style: italic;">We're hiding in beta until 2026.... someone must have clued you in</p>
-        <textarea id="intake-source" placeholder="Supports rich text"></textarea>
-        
-        <h3>How do you hope to use recursive learning app?</h3>
-        <p style="font-style: italic;">We might sneak you into our beta if you're aligned in your requirements and values. 2025 we are supporting select users at various scales and stages of development. We learn, you learn, you get it...</p>
-        <textarea id="intake-usage"></textarea>
-        
-        <h3>If you think we should know, how would you describe your role?</h3>
-        <p style="font-style: italic;">Folx are obsessed with official titles on forms, but you're about to enter a context-aware platform...</p>
-        <textarea id="intake-role"></textarea>
-        
-        <button onclick="signup()">Sign Up</button>
+        <div id="curious-button" onclick="toggleForm()">👀 Curious?</div>
+        <div style="text-align: center;">&#x25BC;</div>
+        <div id="form-container">
+            <h3>Welcome to the app. We're glad you found us!</h3>
+            <input type="email" placeholder="Your Email" id="signup-email" />
+            
+            <h3>How did you learn about us?</h3>
+            <p>We're hiding in beta until 2026.... someone must have clued you in</p>
+            <textarea id="intake-source" placeholder="Supports rich text"></textarea>
+            
+            <h3>How do you hope to use recursive learning app?</h3>
+            <p>We might sneak you into our beta if you're aligned in your requirements and values. 2025 we are supporting select users at various scales and stages of development. We learn, you learn, you get it...</p>
+            <textarea id="intake-usage"></textarea>
+            
+            <h3>If you think we should know, how would you describe your role?</h3>
+            <p>Folx are obsessed with official titles on forms, but you're about to enter a context-aware platform...</p>
+            <textarea id="intake-role"></textarea>
+            
+            <button onclick="signup()">Sign Up</button>
+        </div>
     </div>
 
     <script>
