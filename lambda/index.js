@@ -1,5 +1,5 @@
 const { SSMClient, GetParametersCommand } = require('@aws-sdk/client-ssm');
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAI = require('openai');
 // const fetch = require('node-fetch');
 
 let fetch;
@@ -114,10 +114,7 @@ exports.handler = async (event, context) => {
 
     // Configure OpenAI API client
     console.log('Configuring OpenAI API client');
-    const configuration = new Configuration({
-      apiKey: openAIKey,
-    });
-    const openai = new OpenAIApi(configuration);
+    const openai = new OpenAI({ apiKey: openAIKey });
 
     // Call the OpenAI API using the Assistant ID
     console.log('Calling OpenAI API');
