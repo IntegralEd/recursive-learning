@@ -33,7 +33,12 @@ alwaysApply: false
 
 **BHB Site**: *[TBD]*
 
-## Testing Path for MVP
+### OpenAI Assistant API Lambda Implementation:
+
+- [ ] Updated Lambda code to explicitly use Assistant API (threads and runs).
+- [ ] Deployed the updated Lambda function.
+- [ ] Verified correct responses from `asst_IA5PsJxdShVPTAv2xeXTr4Ma`.
+- [ ] Confirmed ongoing chat by tracking `Thread_ID` returned to front-end users.
 
 1. **Lambda Testing**
 
