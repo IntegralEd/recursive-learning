@@ -10,10 +10,15 @@
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 50px;
+            background: radial-gradient(circle at top, #f9f9f9, #e0e0e0);
         }
         img {
             max-width: 150px;
             border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+        img:hover {
+            transform: scale(1.05) rotate(5deg);
         }
         input, textarea {
             display: block;
@@ -22,30 +27,45 @@
             width: 80%;
             max-width: 400px;
         }
+        #form-container {
+            display: none;
+            transition: all 0.3s ease;
+        }
+        #curious-button {
+            cursor: pointer;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <h1>Recursive Learning Platform</h1>
-    <p>Welcome to the app. We're glad you found us!</p>
-    <img src="assets/images/avatar.png" alt="Avatar">
-    
     <div id="learning-container">
         <h2 id="spinner">Learning...</h2>
     </div>
+    <h2>Welcome to the app. We're glad you found us!</h2>
+    <img src="assets/images/avatar.png" alt="Avatar">
 
-    <input type="email" placeholder="Your Email" id="signup-email" required />
-    <textarea placeholder="How did you learn about us?" id="intake-source"></textarea>
-    <textarea placeholder="How do you hope to use recursive learning app?" id="intake-usage"></textarea>
-    <button onclick="signup()">Sign Up</button>
+    <div id="curious-button" onclick="toggleForm()">👀 Curious?</div>
+    <div id="form-container">
+        <input type="email" placeholder="Your Email" id="signup-email" required />
+        <textarea placeholder="How did you learn about us?" id="intake-source"></textarea>
+        <textarea placeholder="How do you hope to use recursive learning app?" id="intake-usage"></textarea>
+        <button onclick="signup()">Sign Up</button>
+    </div>
 
     <script>
-        const texts = ["Learning...", "Teaching...", "Learning...", "Teaching..."];
+        const texts = ["Learning", "Teaching", "Reflecting", "Improving"];
         let currentIndex = 0;
         
         setInterval(() => {
             currentIndex = (currentIndex + 1) % texts.length;
             document.getElementById("spinner").innerText = texts[currentIndex];
-        }, 1500); // change text every 1.5 seconds
+        }, 1000); // change text every 1 second
+
+        function toggleForm() {
+            const formContainer = document.getElementById('form-container');
+            formContainer.style.display = formContainer.style.display === 'block' ? 'none' : 'block';
+        }
 
         function signup() {
             const email = document.getElementById('signup-email').value;
