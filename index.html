@@ -146,16 +146,6 @@
             if (data.status === 110) {
                 showModal("<h2>Thanks for your note! We are glad to know you are interested and we'll be in touch.</h2>");
             }
-            // Commenting out other statuses for now
-            // else if (data.status === 120) {
-            //     showModal(data.content);
-            // }
-            // else if (data.status === 200) {
-            //     // Handle success
-            // }
-            // else if (data.status === 400) {
-            //     // Handle context loaded
-            // }
         }
 
         function signup() {
@@ -192,7 +182,6 @@
                 body: JSON.stringify(payload)
             })
             .then(() => {
-                // Show the video in a modal after successful submission
                 showModal('<iframe width="560" height="315" src="https://www.youtube.com/embed/WrOwsxskyDE?si=rOf9QaplsBRiCryd" frameborder="0" allowfullscreen></iframe>');
             })
             .catch((error) => {
@@ -200,24 +189,6 @@
                 alert('There was an error with your signup.');
             });
         }
-
-        function pollWebhookStatus() {
-            setInterval(() => {
-                fetch('https://hook.us1.make.com/status-check', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(handleWebhookResponse)
-                .catch((error) => {
-                    console.error('Error checking status:', error);
-                });
-            }, 5000); // Check every 5 seconds
-        }
-
-        pollWebhookStatus();
     </script>
 </body>
 </html> 
