@@ -40,7 +40,7 @@
         }
         input, textarea {
             display: block;
-            margin: 10px 0;
+            margin: 10px 0 20px 10px;
             padding: 10px;
             width: 100%;
             border: 1px solid #ccc;
@@ -117,7 +117,7 @@
     </div>
 
     <script>
-        const texts = ["Learning", "Teaching", "Reflecting", "Improving"];
+        const texts = ["Learning", "Listening", "Reflecting", "Explaining", "Teaching", "Reaching", "Growing", "Evolving"];
         let currentIndex = 0;
         
         setInterval(() => {
@@ -141,13 +141,31 @@
             };
         }
 
+        function handleWebhookResponse(data) {
+            switch (data.status) {
+                case 110:
+                    alert(data.message); // Form received
+                    break;
+                case 120:
+                    showModal(data.content); // Show loading content
+                    break;
+                case 200:
+                    // Handle success, e.g., redirect or show success message
+                    break;
+                case 400:
+                    // Handle context loaded, e.g., redirect to chat
+                    break;
+                default:
+                    console.error('Unknown status:', data.status);
+            }
+        }
+
         function signup() {
             const email = document.getElementById('signup-email').value;
             const source = document.getElementById('intake-source').value;
             const usage = document.getElementById('intake-usage').value;
             const role = document.getElementById('intake-role').value;
 
-            // Simple email validation
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!email || !emailPattern.test(email)) {
                 alert('Please enter a valid email.');
@@ -174,16 +192,30 @@
                 body: JSON.stringify(payload)
             })
             .then(response => response.json())
-            .then(data => {
-                if (data.status === 120) {
-                    showModal(data.content);
-                }
-            })
+            .then(handleWebhookResponse)
             .catch((error) => {
                 console.error('Error:', error);
                 alert('There was an error with your signup.');
             });
         }
+
+        function pollWebhookStatus() {
+            setInterval(() => {
+                fetch('https://hook.us1.make.com/status-check', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(handleWebhookResponse)
+                .catch((error) => {
+                    console.error('Error checking status:', error);
+                });
+            }, 5000); // Check every 5 seconds
+        }
+
+        pollWebhookStatus();
     </script>
 </body>
 </html> 
