@@ -4,7 +4,11 @@ function initChatInterface(config) {
     const sendButton = document.getElementById('send-button');
 
     // Display welcome message
-    displayAssistantMessage('Hello! How can I assist you today?');
+    if (messagesDiv) {
+        displayAssistantMessage('Hello! How can I assist you today?');
+    } else {
+        console.error('Error: messagesDiv not found');
+    }
 
     // Send message on button click
     sendButton.addEventListener('click', function() {
@@ -23,7 +27,11 @@ function initChatInterface(config) {
     });
 
     function sendMessage(message, config) {
-        displayUserMessage(message);
+        if (messagesDiv) {
+            displayUserMessage(message);
+        } else {
+            console.error('Error: messagesDiv not found');
+        }
 
         const payload = {
             User_ID: config.User_ID,
@@ -55,18 +63,26 @@ function initChatInterface(config) {
     }
 
     function displayUserMessage(message) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message', 'user');
-        messageElement.innerText = message;
-        messagesDiv.appendChild(messageElement);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        if (messagesDiv) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'user');
+            messageElement.innerText = message;
+            messagesDiv.appendChild(messageElement);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        } else {
+            console.error('Error: messagesDiv not found');
+        }
     }
 
     function displayAssistantMessage(message) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message', 'assistant');
-        messageElement.innerText = message;
-        messagesDiv.appendChild(messageElement);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        if (messagesDiv) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'assistant');
+            messageElement.innerText = message;
+            messagesDiv.appendChild(messageElement);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        } else {
+            console.error('Error: messagesDiv not found');
+        }
     }
 } 
