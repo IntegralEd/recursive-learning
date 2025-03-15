@@ -1,14 +1,24 @@
+document.addEventListener('DOMContentLoaded', function() {
+    initChatInterface({
+        User_ID: "test_user",
+        Assistant_ID: "asst_IA5PsJxdShVPTAv2xeXTr4Ma",
+        Org_ID: "recjUGiOT65lwgBtm",
+        Thread_ID: null
+    });
+});
+
 function initChatInterface(config) {
     const messagesDiv = document.getElementById('messages');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
 
-    // Display welcome message
-    if (messagesDiv) {
-        displayAssistantMessage('Hello! How can I assist you today?');
-    } else {
-        console.error('Error: messagesDiv not found');
+    if (!messagesDiv || !userInput || !sendButton) {
+        console.error('Error: Required DOM elements not found');
+        return;
     }
+
+    // Display welcome message
+    displayAssistantMessage('Hello! How can I assist you today?');
 
     // Send message on button click
     sendButton.addEventListener('click', function() {
@@ -27,11 +37,7 @@ function initChatInterface(config) {
     });
 
     function sendMessage(message, config) {
-        if (messagesDiv) {
-            displayUserMessage(message);
-        } else {
-            console.error('Error: messagesDiv not found');
-        }
+        displayUserMessage(message);
 
         const payload = {
             User_ID: config.User_ID,
@@ -63,26 +69,18 @@ function initChatInterface(config) {
     }
 
     function displayUserMessage(message) {
-        if (messagesDiv) {
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message', 'user');
-            messageElement.innerText = message;
-            messagesDiv.appendChild(messageElement);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        } else {
-            console.error('Error: messagesDiv not found');
-        }
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', 'user');
+        messageElement.innerText = message;
+        messagesDiv.appendChild(messageElement);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
     function displayAssistantMessage(message) {
-        if (messagesDiv) {
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message', 'assistant');
-            messageElement.innerText = message;
-            messagesDiv.appendChild(messageElement);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        } else {
-            console.error('Error: messagesDiv not found');
-        }
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', 'assistant');
+        messageElement.innerText = message;
+        messagesDiv.appendChild(messageElement);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 } 

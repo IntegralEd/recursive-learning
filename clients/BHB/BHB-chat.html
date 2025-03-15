@@ -1,14 +1,35 @@
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-      const config = {
-          User_ID: "test_user",
-          Assistant_ID: "asst_IA5PsJxdShVPTAv2xeXTr4Ma",
-          Org_ID: "recjUGiOT65lwgBtm",
-          Thread_ID: null
-      };
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>BHB Chat</title>
+    <link rel="stylesheet" href="/assets/css/custom.css">
+</head>
+<body>
+    <div id="chat-container">
+        <div id="loading-message">
+            <h3>Welcome to BHB Chat!</h3>
+            <p>We're preparing your personalized assistant...</p>
+        </div>
+        <div id="messages"></div>
+        <input type="text" id="user-input" placeholder="Type your message here...">
+        <button id="send-button">Send</button>
+        <iframe id="iframe-container" style="display: none;"></iframe>
+    </div>
 
-      initChatInterface(config);
-  });
-</script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const config = {
+              User_ID: "test_user",
+              Assistant_ID: "asst_IA5PsJxdShVPTAv2xeXTr4Ma",
+              Org_ID: "recjUGiOT65lwgBtm",
+              Thread_ID: null
+          };
 
-<script src="/assets/js/chat.js"></script>
+          initChatInterface(config);
+      });
+    </script>
+
+    <script src="/assets/js/chat.js"></script>
+</body>
+</html>
