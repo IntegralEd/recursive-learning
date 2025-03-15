@@ -15,11 +15,52 @@
             max-width: 150px;
             border-radius: 50%;
         }
+        input, textarea {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+        }
     </style>
 </head>
 <body>
-    <h1>Recursive Learning</h1>
-    <p>Welcome to the site.</p>
+    <h1>Recursive Learning Platform</h1>
+    <p>Welcome to the app. We're glad you found us!</p>
     <img src="assets/images/avatar.png" alt="Avatar">
+    
+    <div id="learning-container">
+        <h2 id="spinner">Learning...</h2>
+    </div>
+
+    <input type="email" placeholder="Your Email" id="signup-email" required />
+    <textarea placeholder="How did you learn about us?" id="intake-source"></textarea>
+    <textarea placeholder="How do you hope to use recursive learning app?" id="intake-usage"></textarea>
+    <button onclick="signup()">Sign Up</button>
+
+    <script>
+        const texts = ["Learning...", "Teaching...", "Learning...", "Teaching..."];
+        let currentIndex = 0;
+        
+        setInterval(() => {
+            currentIndex = (currentIndex + 1) % texts.length;
+            document.getElementById("spinner").innerText = texts[currentIndex];
+        }, 1500); // change text every 1.5 seconds
+
+        function signup() {
+            const email = document.getElementById('signup-email').value;
+            const source = document.getElementById('intake-source').value;
+            const usage = document.getElementById('intake-usage').value;
+
+            if (!email) {
+                alert('Please enter a valid email.');
+                return;
+            }
+
+            // Insert customer intake webhook from Make here
+            console.log(`Email: ${email}, Source: ${source}, Usage: ${usage}`);
+            alert('Thanks for signing up!');
+        }
+    </script>
 </body>
 </html> 
