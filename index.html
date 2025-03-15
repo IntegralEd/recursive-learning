@@ -182,15 +182,19 @@
                 Action_ID: "----"
             };
 
-            fetch('https://hook.us1.make.com/gp1ykvaa7e7q5e3xnvjym2g9dkg9vl4y', {
+            const webhookUrl = 'arn:aws:ssm:us-east-2:559050208320:parameter/integraled/central/webhook/recursive-landing-page-form';
+
+            fetch(webhookUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(payload)
             })
-            .then(response => response.json())
-            .then(handleWebhookResponse)
+            .then(() => {
+                // Show the video in a modal after successful submission
+                showModal('<iframe width="560" height="315" src="https://www.youtube.com/embed/WrOwsxskyDE?si=rOf9QaplsBRiCryd" frameborder="0" allowfullscreen></iframe>');
+            })
             .catch((error) => {
                 console.error('Error:', error);
                 alert('There was an error with your signup.');
