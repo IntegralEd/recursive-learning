@@ -3,162 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BHB Chat</title>
+    <title>BHB Chat Assistant</title>
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="/clients/BHB/assets/css/variables.css">
     <link rel="stylesheet" href="/clients/BHB/assets/css/custom.css">
-    <style>
-        /* General Reset */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
 
+    <style>
         body {
+            font-family: var(--client-font-body);
+            background-color: var(--background-color);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: var(--background-color);
+            margin: 0;
         }
 
-        /* Main Chat Layout */
-        #chat-wrapper {
+        /* Main Chat Container */
+        .chat-container {
             display: flex;
-            width: 80%;
+            width: 70%;
             max-width: 1200px;
-            height: 90vh;
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: var(--client-card-border-radius);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
 
-        /* Sidebar (Tool Tray) */
-        #sidebar {
+        /* Sidebar */
+        .sidebar {
             width: 250px;
-            background: var(--primary-color);
-            padding: 20px;
+            background-color: var(--primary-color);
+            padding: var(--client-spacing-medium);
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            transition: width 0.3s;
         }
 
-        .sidebar-button {
-            display: block;
+        .sidebar button {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            text-align: center;
-            background-color: var(--secondary-color);
-            color: white;
-            font-weight: bold;
+            margin: var(--client-spacing-small) 0;
+            padding: var(--client-button-padding);
+            background: var(--secondary-color);
             border: none;
-            border-radius: 5px;
+            color: white;
+            font-size: 16px;
             cursor: pointer;
-            transition: background 0.3s;
+            border-radius: var(--client-button-radius);
         }
 
-        .sidebar-button:hover {
-            background-color: var(--button-hover-color);
+        .sidebar button:hover {
+            background: var(--accent-color);
         }
 
-        /* Collapsible Sidebar */
-        #toggle-sidebar {
-            cursor: pointer;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Chat Section */
-        #chat-container {
+        /* Chat Window */
+        .chat-window {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            padding: 20px;
+            padding: var(--client-spacing-medium);
+            background: var(--background-color);
         }
 
-        #messages {
+        .messages {
             flex-grow: 1;
             overflow-y: auto;
-            padding: 10px;
-            background: #fafafa;
-            border-radius: 5px;
-            height: 70vh;
+            padding: var(--client-spacing-small);
+            background: white;
+            border-radius: var(--client-card-border-radius);
+            height: 400px;
         }
 
         .message {
-            padding: 8px;
-            margin: 8px 0;
-            border-radius: 5px;
+            padding: var(--client-spacing-small);
+            border-radius: var(--client-button-radius);
+            margin: var(--client-spacing-small) 0;
+            width: fit-content;
             max-width: 80%;
         }
 
-        .user-message {
-            background: #007bff;
+        .message.assistant {
+            background: var(--primary-color);
+            color: white;
+            align-self: flex-start;
+        }
+
+        .message.user {
+            background: var(--secondary-color);
             color: white;
             align-self: flex-end;
         }
 
-        .assistant-message {
-            background: #e0e0e0;
-            align-self: flex-start;
-        }
-
-        /* Input Box */
-        #input-area {
+        /* Input Area */
+        .input-area {
             display: flex;
-            align-items: center;
-            padding: 10px;
+            padding: var(--client-spacing-small);
             background: white;
+            border-top: 1px solid #ddd;
         }
 
-        #user-input {
+        .input-area input {
             flex-grow: 1;
-            padding: 10px;
+            padding: var(--client-spacing-small);
             border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-right: 10px;
+            border-radius: var(--client-button-radius);
         }
 
-        #send-button {
-            background-color: #007bff;
-            color: white;
+        .input-area button {
+            padding: var(--client-button-padding);
+            background: var(--secondary-color);
             border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
+            color: white;
             cursor: pointer;
-            transition: background 0.3s;
+            margin-left: var(--client-spacing-small);
+            border-radius: var(--client-button-radius);
         }
 
-        #send-button:hover {
-            background-color: #0056b3;
+        .input-area button:hover {
+            background: var(--accent-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .chat-container {
+                flex-direction: column;
+                width: 90%;
+            }
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                justify-content: space-around;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="chat-wrapper">
-        <div id="sidebar">
-            <div id="toggle-sidebar">▶</div>
-            <button class="sidebar-button">Option 1</button>
-            <button class="sidebar-button">Option 2</button>
+
+    <div class="chat-container">
+        <!-- Sidebar for utilities -->
+        <div class="sidebar">
+            <button onclick="saveChat()">📄 Save Chat</button>
+            <button onclick="exportPDF()">📄 Export to PDF</button>
+            <button onclick="exportSlides()">📄 Export to Slides</button>
+            <button onclick="restartChat()">🔄 Start Over</button>
         </div>
-        <div id="chat-container">
-            <div id="messages"></div>
-            <div id="input-area">
+
+        <!-- Chat window -->
+        <div class="chat-window">
+            <div class="messages" id="messages">
+                <div class="message assistant">Hello! How can I assist you today?</div>
+            </div>
+            <div class="input-area">
                 <input type="text" id="user-input" placeholder="Type your message here...">
                 <button id="send-button">Send</button>
             </div>
@@ -166,31 +162,40 @@
     </div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-          const config = {
-              User_ID: "test_user",
-              Assistant_ID: "asst_IA5PsJxdShVPTAv2xeXTr4Ma",
-              Org_ID: "recjUGiOT65lwgBtm",
-              Thread_ID: null
-          };
+        function saveChat() {
+            alert("Saving chat... (Functionality to be implemented)");
+        }
 
-          initChatInterface(config);
+        function exportPDF() {
+            alert("Exporting to PDF... (Functionality to be implemented)");
+        }
 
-          // Toggle sidebar
-          const sidebar = document.getElementById('sidebar');
-          const toggleSidebar = document.getElementById('toggle-sidebar');
-          toggleSidebar.addEventListener('click', function() {
-              if (sidebar.style.width === '50px') {
-                  sidebar.style.width = '250px';
-                  toggleSidebar.textContent = '▶';
-              } else {
-                  sidebar.style.width = '50px';
-                  toggleSidebar.textContent = '◀';
-              }
-          });
-      });
+        function exportSlides() {
+            alert("Exporting to Google Slides... (Functionality to be implemented)");
+        }
+
+        function restartChat() {
+            document.getElementById("messages").innerHTML = '<div class="message assistant">Hello! How can I assist you today?</div>';
+        }
+
+        document.getElementById("send-button").addEventListener("click", function() {
+            const userInput = document.getElementById("user-input").value;
+            if (!userInput.trim()) return;
+
+            const userMessage = document.createElement("div");
+            userMessage.classList.add("message", "user");
+            userMessage.textContent = userInput;
+
+            document.getElementById("messages").appendChild(userMessage);
+            document.getElementById("user-input").value = "";
+
+            setTimeout(() => {
+                const botReply = document.createElement("div");
+                botReply.classList.add("message", "assistant");
+                botReply.textContent = "Thanks for your message! (Demo bot response)";
+                document.getElementById("messages").appendChild(botReply);
+            }, 1000);
+        });
     </script>
-
-    <script src="/assets/js/chat.js"></script>
 </body>
 </html>
