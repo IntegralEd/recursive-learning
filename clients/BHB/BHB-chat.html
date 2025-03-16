@@ -184,45 +184,102 @@
     </div>
 
     <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('expanded');
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const config = {
+                User_ID: "test_user",
+                Assistant_ID: "asst_IA5PsJxdShVPTAv2xeXTr4Ma",
+                Org_ID: "recjUGiOT65lwgBtm",
+                Thread_ID: null
+            };
 
-        function saveChat() {
-            alert("Saving chat... (Functionality to be implemented)");
-        }
-
-        function exportPDF() {
-            alert("Exporting to PDF... (Functionality to be implemented)");
-        }
-
-        function exportSlides() {
-            alert("Exporting to Google Slides... (Functionality to be implemented)");
-        }
-
-        function restartChat() {
-            document.getElementById("messages").innerHTML = '<div class="message assistant">Welcome to the B\'more Healthy Babies Maternal Health Chat</div>';
-        }
-
-        document.getElementById("send-button").addEventListener("click", function() {
-            const userInput = document.getElementById("user-input").value;
-            if (!userInput.trim()) return;
-
-            const userMessage = document.createElement("div");
-            userMessage.classList.add("message", "user");
-            userMessage.textContent = userInput;
-
-            document.getElementById("messages").appendChild(userMessage);
-            document.getElementById("user-input").value = "";
-
-            setTimeout(() => {
-                const botReply = document.createElement("div");
-                botReply.classList.add("message", "assistant");
-                botReply.textContent = "Thanks for your message! (Demo bot response)";
-                document.getElementById("messages").appendChild(botReply);
-            }, 1000);
+            initChatInterface(config);
         });
+
+        function initChatInterface(config) {
+            const messagesDiv = document.getElementById('messages');
+            const userInput = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-button');
+
+            if (!messagesDiv || !userInput || !sendButton) {
+                console.error('Error: Required DOM elements not found.');
+                return;
+            }
+
+            displayAssistantMessage('Hello! How can I assist you today?');
+
+            sendButton.addEventListener('click', function() {
+                sendMessage(userInput.value.trim(), config);
+                userInput.value = '';
+            });
+
+            userInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    sendButton.click();
+                }
+            });
+        }
+
+        function sendMessage(message, config) {
+            if (!message) return;
+
+            displayUserMessage(message);
+
+            const payload = {
+                User_ID: config.User_ID,
+                Assistant_ID: config.Assistant_ID,
+                Org_ID: config.Org_ID,
+                message: message,
+                Thread_ID: config.Thread_ID
+            };
+
+            fetch('https://tixnmh1pe8.execute-api.us-east-2.amazonaws.com/prod/IntegralEd-Main', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.response) {
+                    displayAssistantMessage(data.response);
+                } else {
+                    displayAssistantMessage('Sorry, I did not understand that.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                displayAssistantMessage('An error occurred. Please try again later.');
+            });
+        }
+
+        function displayUserMessage(message) {
+            const messagesDiv = document.getElementById('messages');
+            if (!messagesDiv) {
+                console.error('Error: messagesDiv not found.');
+                return;
+            }
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'user');
+            messageElement.innerText = message;
+            messagesDiv.appendChild(messageElement);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function displayAssistantMessage(message) {
+            const messagesDiv = document.getElementById('messages');
+            if (!messagesDiv) {
+                console.error('Error: messagesDiv not found.');
+                return;
+            }
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'assistant');
+            messageElement.innerText = message;
+            messagesDiv.appendChild(messageElement);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
     </script>
+
+    <script src="/assets/js/chat.js"></script>
 </body>
 </html>
