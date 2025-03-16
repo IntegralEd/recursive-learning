@@ -1,10 +1,17 @@
 :root {
   /* Branding Colors */
-  --primary-color: #5C3A8D; /* BHB Primary Purple */
-  --secondary-color: #F0A202; /* BHB Secondary Orange */
-  --accent-color: #E63946; /* BHB Red Accent */
-  --background-color: #F9F9F9; /* Light Background */
-  --text-color: #2B2B2B; /* Dark Gray Text */
+  --primary-color: #5255a5; /* BHB Primary Blue */
+  --secondary-color: #e6184e; /* BHB Primary Red */
+  --accent-color: #0cb189; /* BHB Primary Green */
+  --background-color: #f9f9f9; /* Light Background */
+  --text-color: #2b2b2b; /* Dark Gray Text */
+
+  /* Additional Colors */
+  --additional-color-1: #7d5c48;
+  --additional-color-2: #e0c9a8;
+  --additional-color-3: #f1e8db;
+  --additional-color-4: #e7f5f7;
+  --additional-color-5: #3c3b3d;
 
   /* Typography */
   --client-font-h1: 'Montserrat, sans-serif';

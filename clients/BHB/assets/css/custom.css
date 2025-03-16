@@ -1,7 +1,7 @@
 /* Bmore-specific overrides or additional styles */
 
 .footer {
-  background-color: var(--client-primary-color);
+  background-color: var(--primary-color);
   color: #fff;
 }
 
