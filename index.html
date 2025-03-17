@@ -69,7 +69,8 @@
             margin: 10px auto;
             padding: 10px;
             width: 100%;
-            border: 1px solid #ccc;
+            border: 1px solid var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
             border-radius: 4px;
             box-sizing: border-box;
         }
@@ -140,19 +141,18 @@
     <div id="page-title">Recursive Learning Platform</div>
     <div id="main-container">
         <img src="assets/images/avatar.png" alt="Avatar">
-        <h3>Recursive Learning Platform</h3>
         <div class="verb-container" id="verb-container">Listening...</div>
         <div id="curious-button" onclick="toggleForm()">👀 Curious?</div>
         <div style="text-align: center;">&#x25BC;</div>
     </div>
 
     <div id="form-container">
-        <h3>Oh Hello! Who might you be?</h3>
+        <h3 style="color: var(--accent-color);">Oh Hello! Who might you be?</h3>
         <p><strong>Enter a valid email to receive a reply:</strong></p>
         <input type="email" id="signup-email" placeholder="Your Email" required />
         <p><em>Helper: I'll need your email, so I can check the 'official guest list.'</em></p>
 
-        <h3>EEK! You weren't supposed to find us until 2026.</h3>
+        <h3 style="color: var(--accent-color);">EEK! You weren't supposed to find us until 2026.</h3>
         <p><strong>We're in limited "friends and family" beta this year. How did you hear about us?</strong></p>
         <p><em>Helper: Context-aware systems can handle traditional form field inputs, which can be nice when you want multiple-choice.</em></p>
 
