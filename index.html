@@ -46,53 +46,23 @@
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        #top-section {
             text-align: center;
-            margin-bottom: 20px;
-        }
-        h1 {
-            color: var(--primary-color);
-            font-weight: bold;
-            display: inline-block;
-            position: relative;
-        }
-        .dot-container {
-            display: inline-block;
-            margin-left: 5px;
-        }
-        .dot {
-            width: 8px;
-            height: 8px;
-            margin: 0 1px;
-            background-color: var(--primary-color);
-            border-radius: 50%;
-            display: inline-block;
-            animation: dot-blink 1.4s infinite both;
-        }
-        .dot:nth-child(1) {
-            animation-delay: 0s;
-        }
-        .dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        .dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-        @keyframes dot-blink {
-            0%, 80%, 100% {
-                opacity: 0;
-            }
-            40% {
-                opacity: 1;
-            }
-        }
-        h2 {
-            color: var(--dark-text-color);
-            font-weight: bold;
         }
         h3 {
-            color: #333;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+        .verb-container {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        @keyframes ticker {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
         }
         input, textarea, select {
             display: block;
@@ -167,84 +137,75 @@
     </style>
 </head>
 <body>
-    <div id="page-title">Recursive Learning App</div>
+    <div id="page-title">Recursive Learning Platform</div>
     <div id="main-container">
-        <div id="top-section">
-            <h1>Listening
-                <div class="dot-container">
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                    <div class="dot"></div>
+        <img src="assets/images/avatar.png" alt="Avatar">
+        <h3>Recursive Learning Platform</h3>
+        <div class="verb-container" id="verb-container">Listening...</div>
+        <div id="curious-button" onclick="toggleForm()">👀 Curious?</div>
+        <div style="text-align: center;">&#x25BC;</div>
+    </div>
+
+    <div id="form-container">
+        <h3>Oh Hello! Who might you be?</h3>
+        <p><strong>Enter a valid email to receive a reply:</strong></p>
+        <input type="email" id="signup-email" placeholder="Your Email" required />
+        <p><em>Helper: I'll need your email, so I can check the 'official guest list.'</em></p>
+
+        <h3>EEK! You weren't supposed to find us until 2026.</h3>
+        <p><strong>We're in limited "friends and family" beta this year. How did you hear about us?</strong></p>
+        <p><em>Helper: Context-aware systems can handle traditional form field inputs, which can be nice when you want multiple-choice.</em></p>
+
+        <div class="form-group">
+            <label>How did you learn about us?</label>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <div class="checkbox-space"></div>
+                    <input type="checkbox" name="source" value="friend" id="source-friend">
+                    <label for="source-friend">Friend of Integral Ed</label>
+                    <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
                 </div>
-            </h1>
-            <img src="assets/images/avatar.png" alt="Avatar">
-            <div id="learning-container">
-                <h2 id="spinner">Learning</h2>
-            </div>
-            <div id="curious-button" onclick="toggleForm()">👀 Curious?</div>
-            <div style="text-align: center;">&#x25BC;</div>
-        </div>
-        <div id="form-container">
-            <h3>Oh Hello! Who might you be?</h3>
-            <p><strong>Enter a valid email to receive a reply:</strong></p>
-            <input type="email" id="signup-email" placeholder="Your Email" required />
-            <p><em>Helper: I'll need your email, so I can check the 'official guest list.'</em></p>
-
-            <h3>EEK! You weren't supposed to find us until 2026.</h3>
-            <p><strong>We're in limited "friends and family" beta this year. How did you hear about us?</strong></p>
-            <p><em>Helper: Context-aware systems can handle traditional form field inputs, which can be nice when you want multiple-choice.</em></p>
-
-            <div class="form-group">
-                <label>How did you learn about us?</label>
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <div class="checkbox-space"></div>
-                        <input type="checkbox" name="source" value="friend" id="source-friend">
-                        <label for="source-friend">Friend of Integral Ed</label>
-                        <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
-                    </div>
-                    <div class="checkbox-item">
-                        <div class="checkbox-space"></div>
-                        <input type="checkbox" name="source" value="client" id="source-client">
-                        <label for="source-client">Client of Integral Ed</label>
-                        <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
-                    </div>
-                    <div class="checkbox-item">
-                        <div class="checkbox-space"></div>
-                        <input type="checkbox" name="source" value="alt_lms" id="source-alt_lms">
-                        <label for="source-alt_lms">Seeking alternatives to traditional LMS</label>
-                        <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
-                    </div>
-                    <div class="checkbox-item">
-                        <div class="checkbox-space"></div>
-                        <input type="checkbox" name="source" value="other" id="source-other">
-                        <label for="source-other">Other</label>
-                        <input type="text" id="intake-other-source" placeholder="Describe here" class="details-input" style="display: none;">
-                    </div>
+                <div class="checkbox-item">
+                    <div class="checkbox-space"></div>
+                    <input type="checkbox" name="source" value="client" id="source-client">
+                    <label for="source-client">Client of Integral Ed</label>
+                    <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
+                </div>
+                <div class="checkbox-item">
+                    <div class="checkbox-space"></div>
+                    <input type="checkbox" name="source" value="alt_lms" id="source-alt_lms">
+                    <label for="source-alt_lms">Seeking alternatives to traditional LMS</label>
+                    <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
+                </div>
+                <div class="checkbox-item">
+                    <div class="checkbox-space"></div>
+                    <input type="checkbox" name="source" value="other" id="source-other">
+                    <label for="source-other">Other</label>
+                    <input type="text" id="intake-other-source" placeholder="Describe here" class="details-input" style="display: none;">
                 </div>
             </div>
-
-            <div class="form-group">
-                <label for="intake-usage">How do you hope to use the recursive learning app?</label>
-                <textarea id="intake-usage"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="intake-role">If you think we should know, how would you describe your role?</label>
-                <textarea id="intake-role"></textarea>
-            </div>
-            
-            <button onclick="signup()">Sign Up</button>
         </div>
+
+        <div class="form-group">
+            <label for="intake-usage">How do you hope to use the recursive learning app?</label>
+            <textarea id="intake-usage"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="intake-role">If you think we should know, how would you describe your role?</label>
+            <textarea id="intake-role"></textarea>
+        </div>
+        
+        <button onclick="signup()">Sign Up</button>
     </div>
 
     <script>
-        const texts = ["Learning", "Listening", "Reflecting", "Explaining", "Teaching", "Reaching", "Growing", "Evolving"];
+        const verbs = ["Listening...", "Reflecting...", "Explaining...", "Teaching...", "Reaching...", "Growing...", "Evolving..."];
         let currentIndex = 0;
-        
+
         setInterval(() => {
-            currentIndex = (currentIndex + 1) % texts.length;
-            document.getElementById("spinner").innerText = texts[currentIndex];
+            currentIndex = (currentIndex + 1) % verbs.length;
+            document.getElementById("verb-container").innerText = verbs[currentIndex];
         }, 2000);
 
         function toggleForm() {
