@@ -157,12 +157,7 @@
 
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!email || !emailPattern.test(email)) {
-                alert('Not a valid email');
-                return;
-            }
-
-            if (!source && !usage && !role) {
-                alert("You didn't tell us very much. Put a little more effort into your profile and we'll swipe you right into our secret beta!");
+                alert('Please enter a valid email.');
                 return;
             }
 
@@ -178,7 +173,7 @@
                 Action_ID: "----"
             };
 
-            const webhookUrl = 'https://hook.us1.make.com/gp1ykvaa7e7q5e3xnvjym2g9dkg9vl4y';
+            const webhookUrl = 'arn:aws:ssm:us-east-2:559050208320:parameter/integraled/central/webhook/recursive-landing-page-form';
 
             fetch(webhookUrl, {
                 method: 'POST',
@@ -187,12 +182,8 @@
                 },
                 body: JSON.stringify(payload)
             })
-            .then(response => {
-                if (response.ok) {
-                    showModal("We just got your form, hang tight, relax and have a look at the alternatives. We'll call you - maybe!");
-                } else {
-                    throw new Error('Network response was not ok.');
-                }
+            .then(() => {
+                showModal('<iframe width="560" height="315" src="https://www.youtube.com/embed/WrOwsxskyDE?si=rOf9QaplsBRiCryd" frameborder="0" allowfullscreen></iframe>');
             })
             .catch((error) => {
                 console.error('Error:', error);
