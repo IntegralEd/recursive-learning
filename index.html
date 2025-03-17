@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="assets/css/recursive-platform.css">
     <link rel="icon" href="assets/images/logo.ico" type="image/x-icon">
     <style>
+        :root {
+            --primary-color: #007BFF; /* Example primary color */
+            --accent-color: #0056b3; /* Example accent color */
+            --dark-text-color: #111; /* Nearly black for contrast */
+        }
+
         body {
             font-family: Arial, sans-serif;
             background: radial-gradient(circle at top, #f9f9f9, #e0e0e0);
@@ -36,7 +42,17 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        h1, h2, h3 {
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+        h2 {
+            color: var(--dark-text-color);
+            font-weight: bold;
+        }
+        h3 {
             color: #333;
         }
         input, textarea, select {
@@ -49,12 +65,12 @@
             box-sizing: border-box;
         }
         input:focus, textarea:focus, select:focus {
-            border-color: #007BFF;
+            border-color: var(--primary-color);
             outline: none;
         }
         button {
             padding: 10px 20px;
-            background-color: #007BFF;
+            background-color: var(--primary-color);
             color: #fff;
             border: none;
             border-radius: 4px;
@@ -63,7 +79,7 @@
             width: 100%;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: var(--accent-color);
         }
         p {
             font-style: italic;
@@ -86,7 +102,7 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-            color: #333;
+            color: var(--dark-text-color);
         }
         .form-group input[type="checkbox"] {
             width: auto;
@@ -104,6 +120,41 @@
         .details-input {
             grid-column: 2 / span 2;
             margin-top: 5px;
+            border: 1px solid var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            font-style: italic;
+        }
+        .dot-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            margin: 0 4px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            animation: dot-blink 1.4s infinite both;
+        }
+        .dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes dot-blink {
+            0%, 80%, 100% {
+                opacity: 0;
+            }
+            40% {
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -113,7 +164,12 @@
             <h1>Recursive Learning Platform</h1>
             <img src="assets/images/avatar.png" alt="Avatar">
             <div id="learning-container">
-                <h2 id="spinner">Learning...</h2>
+                <h2 id="spinner">Learning</h2>
+                <div class="dot-container">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
             </div>
             <div id="curious-button" onclick="toggleForm()">👀 Curious?</div>
             <div style="text-align: center;">&#x25BC;</div>
@@ -134,25 +190,26 @@
                     <div class="checkbox-item">
                         <div class="checkbox-space"></div>
                         <input type="checkbox" name="source" value="friend" id="source-friend">
-                        <label for="source-friend">Friend of Integral Ed (mention below)</label>
-                        <input type="text" class="details-input" placeholder="Details" style="display: none;">
+                        <label for="source-friend">Friend of Integral Ed</label>
+                        <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
                     </div>
                     <div class="checkbox-item">
                         <div class="checkbox-space"></div>
                         <input type="checkbox" name="source" value="client" id="source-client">
-                        <label for="source-client">Client of Integral Ed (describe below if you'd like your site connected)</label>
-                        <input type="text" class="details-input" placeholder="Details" style="display: none;">
+                        <label for="source-client">Client of Integral Ed</label>
+                        <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
                     </div>
                     <div class="checkbox-item">
                         <div class="checkbox-space"></div>
                         <input type="checkbox" name="source" value="alt_lms" id="source-alt_lms">
                         <label for="source-alt_lms">Seeking alternatives to traditional LMS</label>
-                        <input type="text" class="details-input" placeholder="Details" style="display: none;">
+                        <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
                     </div>
                     <div class="checkbox-item">
                         <div class="checkbox-space"></div>
                         <input type="checkbox" name="source" value="other" id="source-other">
-                        <label for="source-other">Other: <input type="text" id="intake-other-source" placeholder="Describe here"></label>
+                        <label for="source-other">Other</label>
+                        <input type="text" id="intake-other-source" placeholder="Describe here" class="details-input" style="display: none;">
                     </div>
                 </div>
             </div>
