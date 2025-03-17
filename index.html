@@ -94,9 +94,16 @@
         }
         .checkbox-group {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 20px auto 1fr;
             gap: 10px;
             align-items: center;
+        }
+        .checkbox-item {
+            display: contents;
+        }
+        .details-input {
+            grid-column: 2 / span 2;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -117,17 +124,36 @@
             <input type="email" id="signup-email" placeholder="Your Email" required />
             <p><em>Helper: I'll need your email, so I can check the 'official guest list.'</em></p>
 
-            <h3>EEK! You weren’t supposed to find us until 2026.</h3>
-            <p><strong>We’re in limited "friends and family" beta this year. How did you hear about us?</strong></p>
+            <h3>EEK! You weren't supposed to find us until 2026.</h3>
+            <p><strong>We're in limited "friends and family" beta this year. How did you hear about us?</strong></p>
             <p><em>Helper: Context-aware systems can handle traditional form field inputs, which can be nice when you want multiple-choice.</em></p>
 
             <div class="form-group">
                 <label>How did you learn about us?</label>
                 <div class="checkbox-group">
-                    <label><input type="checkbox" name="source" value="friend"> Friend of Integral Ed (mention below)</label>
-                    <label><input type="checkbox" name="source" value="client"> Client of Integral Ed (describe below if you'd like your site connected)</label>
-                    <label><input type="checkbox" name="source" value="alt_lms"> Seeking alternatives to traditional LMS</label>
-                    <label><input type="checkbox" name="source" value="other"> Other: <input type="text" id="intake-other-source" placeholder="Describe here"></label>
+                    <div class="checkbox-item">
+                        <div class="checkbox-space"></div>
+                        <input type="checkbox" name="source" value="friend" id="source-friend">
+                        <label for="source-friend">Friend of Integral Ed (mention below)</label>
+                        <input type="text" class="details-input" placeholder="Details" style="display: none;">
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="checkbox-space"></div>
+                        <input type="checkbox" name="source" value="client" id="source-client">
+                        <label for="source-client">Client of Integral Ed (describe below if you'd like your site connected)</label>
+                        <input type="text" class="details-input" placeholder="Details" style="display: none;">
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="checkbox-space"></div>
+                        <input type="checkbox" name="source" value="alt_lms" id="source-alt_lms">
+                        <label for="source-alt_lms">Seeking alternatives to traditional LMS</label>
+                        <input type="text" class="details-input" placeholder="Details" style="display: none;">
+                    </div>
+                    <div class="checkbox-item">
+                        <div class="checkbox-space"></div>
+                        <input type="checkbox" name="source" value="other" id="source-other">
+                        <label for="source-other">Other: <input type="text" id="intake-other-source" placeholder="Describe here"></label>
+                    </div>
                 </div>
             </div>
 
@@ -190,7 +216,7 @@
 
             console.log("Submitting payload:", payload);
 
-            fetch('arn:aws:ssm:us-east-2:559050208320:parameter/integraled/central/webhook/recursive-landing-page-form', {
+            fetch('https://hook.us1.make.com/gp1ykvaa7e7q5e3xnvjym2g9dkg9vl4y', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -205,6 +231,17 @@
                 alert('There was an error with your signup.');
             });
         }
+
+        document.querySelectorAll('.checkbox-group input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const detailsInput = this.parentElement.querySelector('.details-input');
+                if (this.checked) {
+                    detailsInput.style.display = 'block';
+                } else {
+                    detailsInput.style.display = 'none';
+                }
+            });
+        });
     </script>
 </body>
 </html>
