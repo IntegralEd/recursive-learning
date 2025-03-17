@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recursive Learning</title>
     <link rel="stylesheet" href="assets/css/recursive-platform.css">
-    <link rel="icon" href="clients/BHB/assets/images/logo.ico" type="image/x-icon">
+    <link rel="icon" href="assets/images/logo.ico" type="image/x-icon">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -78,6 +78,28 @@
             cursor: pointer;
             margin-top: 20px;
         }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
     </style>
 </head>
 <body>
@@ -93,19 +115,25 @@
         </div>
         <div id="form-container">
             <h3>Welcome to the app. We're glad you found us!</h3>
-            <input type="email" placeholder="Your Email" id="signup-email" />
+            <div class="form-group">
+                <label for="signup-email">Your Email</label>
+                <input type="email" id="signup-email" placeholder="Enter your email" />
+            </div>
             
-            <h3>How did you learn about us?</h3>
-            <p>We're hiding in beta until 2026.... someone must have clued you in</p>
-            <textarea id="intake-source" placeholder="Supports rich text"></textarea>
+            <div class="form-group">
+                <label for="intake-source">How did you learn about us?</label>
+                <textarea id="intake-source" placeholder="Supports rich text"></textarea>
+            </div>
             
-            <h3>How do you hope to use recursive learning app?</h3>
-            <p>We might sneak you into our beta if you're aligned in your requirements and values. 2025 we are supporting select users at various scales and stages of development. We learn, you learn, you get it...</p>
-            <textarea id="intake-usage"></textarea>
+            <div class="form-group">
+                <label for="intake-usage">How do you hope to use the recursive learning app?</label>
+                <textarea id="intake-usage"></textarea>
+            </div>
             
-            <h3>If you think we should know, how would you describe your role?</h3>
-            <p>Folx are obsessed with official titles on forms, but you're about to enter a context-aware platform...</p>
-            <textarea id="intake-role"></textarea>
+            <div class="form-group">
+                <label for="intake-role">If you think we should know, how would you describe your role?</label>
+                <textarea id="intake-role"></textarea>
+            </div>
             
             <button onclick="signup()">Sign Up</button>
         </div>
