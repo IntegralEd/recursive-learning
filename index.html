@@ -25,24 +25,17 @@
         }
         #layout-wrapper {
             display: flex;
-            flex-direction: row;
+            flex-direction: column; /* Stack containers vertically */
             justify-content: center;
-            align-items: flex-start;
-            gap: 30px; /* Space between image section and form */
-            max-width: 1200px;
+            align-items: center;
+            gap: 30px; /* Space between main and form containers */
+            max-width: 600px;
             width: 90%;
             margin: 40px auto;
         }
-        #main-container {
-            width: 40%;
+        #main-container, #form-container {
+            width: 100%;
             text-align: center;
-        }
-        #form-container {
-            width: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            text-align: left;
         }
         img {
             max-width: 150px;
@@ -150,28 +143,20 @@
                 <label>How did you learn about us?</label>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <div class="checkbox-space"></div>
                         <input type="checkbox" name="source" value="friend" id="source-friend">
                         <label for="source-friend">Friend of Integral Ed</label>
-                        <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
                     </div>
                     <div class="checkbox-item">
-                        <div class="checkbox-space"></div>
                         <input type="checkbox" name="source" value="client" id="source-client">
                         <label for="source-client">Client of Integral Ed</label>
-                        <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
                     </div>
                     <div class="checkbox-item">
-                        <div class="checkbox-space"></div>
                         <input type="checkbox" name="source" value="alt_lms" id="source-alt_lms">
                         <label for="source-alt_lms">Seeking alternatives to traditional LMS</label>
-                        <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
                     </div>
                     <div class="checkbox-item">
-                        <div class="checkbox-space"></div>
                         <input type="checkbox" name="source" value="other" id="source-other">
                         <label for="source-other">Other</label>
-                        <input type="text" id="intake-other-source" placeholder="Describe here" class="details-input" style="display: none;">
                     </div>
                 </div>
             </div>
@@ -209,16 +194,11 @@
             const source = Array.from(document.querySelectorAll('input[name="source"]:checked')).map(cb => cb.value);
             const usage = document.getElementById('intake-usage').value;
             const role = document.getElementById('intake-role').value;
-            const otherSource = document.getElementById('intake-other-source').value;
 
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!email || !emailPattern.test(email)) {
                 alert('Please enter a valid email.');
                 return;
-            }
-
-            if (otherSource) {
-                source.push(`Other: ${otherSource}`);
             }
 
             const payload = {
