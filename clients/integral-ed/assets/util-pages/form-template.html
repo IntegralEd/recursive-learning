@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intake Form Template</title>
+    <style>
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursive Learning App</title>
+    <link rel="stylesheet" href="assets/css/recursive-platform.css">
+    <link rel="icon" href="assets/images/logo.ico" type="image/x-icon">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --accent-color: #0056b3;
+            --dark-text-color: #111;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: radial-gradient(circle at top, #f9f9f9, #e0e0e0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #container {
+            display: flex;
+            width: 90vw;
+            height: 80vh;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        #sidebar {
+            width: 20%;
+            background: var(--primary-color);
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #sidebar button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            font-size: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        #content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid var(--primary-color);
+            border-radius: 4px;
+        }
+
+        button {
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="sidebar">
+            <button onclick="showSection(0)">Welcome</button>
+            <button onclick="showSection(1)">Your Info</button>
+            <button onclick="showSection(2)">Context</button>
+            <button onclick="showSection(3)">Submit</button>
+        </div>
+        <div id="content">
+            <div class="section active">
+                <h2>Welcome</h2>
+                <p>Oh Hello! Who might you be?</p>
+                <p>Click next to begin.</p>
+                <button onclick="showSection(1)">Next</button>
+            </div>
+            <div class="section">
+                <h2>Your Info</h2>
+                <label>Email:</label>
+                <input type="email" id="signup-email" placeholder="Your Email" required />
+                <button onclick="showSection(2)">Next</button>
+            </div>
+            <div class="section">
+                <h2>Context</h2>
+                <label>How did you learn about us?</label>
+                <textarea id="intake-source"></textarea>
+                <button onclick="showSection(3)">Next</button>
+            </div>
+            <div class="section">
+                <h2>Submit</h2>
+                <button onclick="signup()">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 0;
+        function showSection(index) {
+            document.querySelectorAll('.section').forEach((section, i) => {
+                section.classList.toggle('active', i === index);
+            });
+            currentSection = index;
+        }
+
+        function signup() {
+            const email = document.getElementById('signup-email').value;
+            const source = document.getElementById('intake-source').value;
+            
+            const payload = {
+                Email: email,
+                User_Intake_Source: source,
+                Org_ID: "recQvZ1Xcaiw1Ey8d"
+            };
+
+            fetch('https://hook.us1.make.com/gp1ykvaa7e7q5e3xnvjym2g9dkg9vl4y', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(() => alert("Thank you! We've received your request."))
+            .catch(() => alert("There was an error validating your form."));
+        }
+    </script>
+</body>
+</html>
