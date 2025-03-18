@@ -126,118 +126,129 @@ This analogy helps illustrate how each component of the platform works together 
 ## License
 Copyright © 2024 IntegralEd. All rights reserved.
 
-# RAG Document Application
+# Recursive Learning MVP Deployment & Testing Plan
 
-An end-to-end RAG application (from scratch) based on FastAPI that processes PDFs, images, and web pages to obtain OCR data, generates embeddings using OpenAI's embedding models, and utilizes Pinecone as a vector database for search. It answers questions based on search results using OpenAI Chat Completion!
+### Overview
 
-<img src="assets/architecture.gif" width=80%>
+**Hosting**: AWS Lambda; confirm before adding CORS.
 
-## Contents
-- [Checklist](#checklist)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [Endpoints](#endpoints)
+**Parameter Management**: SSM decrypts API keys.
 
-## Checklist
-- [x] Basic API authentication
-- [ ] End-2-End API authentication/authorization (coming)
-- [x] Rate limiting to prevent abuse.
-- [x] Asynchronous processing.
-- [x] File uploading (AWS S3) including validation and sanitization.
-- [x] OCR processing (from mock files), Embedding generation using OpenAI.
-- [ ] End-2-End OCR (Model Serving) and Google APIs, Mathpix API Integrations
-- [x] processes PDFs, Images
-- [ ] processes Web Pages
-- [x] Storage and search of embeddings with Pinecone.
-- [x] Search from the document
-- [x] Applied Tokenizers for better search performance. 
-- [x] Talk to your data! Chat and generate the answer from the search results using OpenAI's chat completions.
-- [ ] OpenAPI chat completion streaming support
-- [x] Dockerize App.
-- [x] Implemented Redis for caching and frequent queries.
-- [x] The detailed comments, docstrings, lint checks, pip8. 
-- [ ] CD (GitHub actions)
-- [ ] CI & PyTest codes
-- [ ] Chat Interface 
+**Pages Deployment**: GitHub Pages at IntegralEd.
 
+**Primary Hosting Domain**: [https://recursivelearning.app](https://recursivelearning.app)
 
-## Prerequisites
-- Python 3.11 
-- Docker
-- Docker Compose (v2.20.2)
-- AWS S3 Credentials (API-Keys)
-- OpenAI API-Key
-- Pinecone API-Key
-- Prepare your .env file, learn in [Configuration](#configuration)
+### Deployment Options:
 
+- `index.html` standalone embed on a client's site or inside Storyline.
+- `index.html` in Storyline for session/user variable management and routing.
 
-## Installation
+### MVP Milestones Achieved
 
- ```bash
- git clone https://github.com/teamunitlab/rag-document-app.git
- cd rag-document-app/
- docker-compose up -d --build
- ```
+✅ **Branded MVP chat UX fully deployed** – Same script across assistants with client-specific CSS.
+✅ **Context-aware intake form built & tested** – Hardcoded for now, future integrations planned.
+✅ **Hardcoded OpenAI Assistant IDs per page** – Passed via URL parameters or Softr wrapper.
+✅ **Thread loading for returning users** – Fetching historical chat when `Thread_ID` exists.
+✅ **Softr & Make webhooks are used to build context asynchronously**
+✅ **Form for context-aware intake achieved in Recursive MVP example**
 
+### Assistant API Lambda Implementation
 
-## Configuration
-1. Fill a `.env` file in the root directory and add the following environment variables:
-    ```env
-    API_KEY=your_api_key_here
-    OPENAI_API_KEY=your_openai_api_key_here
-    PINECONE_API_KEY=your_pinecone_api_key_here
-    PINECONE_INDEX_NAME=your_pinecone_index_name
-    AWS_ACCESS_KEY_ID=your_aws_access_key_id
-    AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
-    AWS_DEFAULT_REGION=your_aws_region
-    BUCKET_NAME=your_s3_bucket_name
-    ```
+### Routing Approach
 
-2. Ensure AWS credentials and bucket policies are correctly configured to allow S3 access.
+- **Support Chat** → `asst_support_chat`
+- **BMore Chat (Maternal Health Assistant)** → `asst_IA5PsJxdShVPTAv2xeXTr4Ma`
+- **Sales Leads** → `asst_sales_assistant`
+- **More Assistants in Future** → Airtable-controlled per org/user.
 
-## Usage
-1. Run the FastAPI application:
-    ```bash
-    docker-compose up -d
-    ```
+### Required URL Parameters
 
-2. Access the API documentation at `http://localhost:8000/docs`.
+Each chat session will be initialized with:
 
-## Endpoints
-### Upload File
-- **URL**: `/upload`
-- **Method**: `POST`
-- **Description**: Upload files to S3. Limited to 10 requests per minute.
-- **Request**:
-    - `files`: List of files to upload.
-    - `API-Key`: Header for API key authentication.
-- **Response**: JSON containing file IDs and URLs.
+- `Source` (e.g., referral page or Softr wrapper)
+- `Org_ID`
+- `Assistant_ID`
+- `User_ID` (if returning)
+- `Thread_ID` (if returning)
+- `Action_ID` (if applicable)
 
-### Process OCR
-- **URL**: `/ocr`
-- **Method**: `POST`
-- **Description**: Process OCR for a given file URL. Limited to 10 requests per minute.
-- **Request**:
-    - `url`: URL of the file to process, it is obtained during file (ducument) uploading.
-    - `API-Key`: Header for API key authentication.
-- **Response**: JSON containing information about the processing status.
+### Lambda Deployment Path
 
-### Extract Data
-- **URL**: `/extract`
-- **Method**: `POST`
-- **Description**: Reply to a query using OpenAI chat completions and search based on the given File ID from Pinecone, Limited to 10 requests per minute.
-- **Request**:
-    - `file_id`: The file ID, it is obtained during file (ducument) uploading.
-    - `query`: Ask a question from your document!
-    - `API-Key`: Header for API key authentication.
-- **Response**: JSON containing information about a reply to the question and the three top search results. 
+**Lambda Function ARN**:\
+`arn:aws:lambda:us-east-2:559050208320:function:IntegralEd-Main`
 
-### References
-1. http://unitlab.ai/
-2. https://blog.unitlab.ai/unitlab-ai-data-collection-and-annotation-for-llms-and-generative-ai/
-3. https://docs.unitlab.ai/ai-models/model-integration
-4. https://blog.unitlab.ai/
+**Lambda Server Path**:\
+`/Users/david/recursive-learning/lambda/index.js`
+
+## Upcoming Work: AirTable Integration
+
+- **Move `Assistant_ID` logic to AirTable** instead of `index.html` hardcoding.
+- **AirTable variables drive assistant selection** per user/org.
+- **Store `Thread_IDs` in AirTable** for better persistence.
+- **Build Node modules for AirTable API calls in Lambda.**
+
+## Testing Status & Goals
+
+### ✅ 1. Lambda Testing
+
+**Goal**: MVP chat with **Bmore RAG Assistant** is live and functional.\
+**Status**: ✅ Tested and working.
+
+### ✅ 2. Frontend MVP Test
+
+**Goal**: Ensure the **branded chat loads properly**.\
+**Status**: ✅ Verified across pages.
+
+### ✅ 3. Client-Specific CSS & Branding
+
+**Goal**: Ensure branding styles are **dynamically loaded**.\
+**Status**: ✅ Confirmed per client.
+
+### ✅ 4. Load from Thread for Returning Users
+
+**Goal**: Ensure **users can resume conversations** with `Thread_ID`.\
+**Status**: ✅ Works with stored IDs.
+
+## Next Steps
+
+### **Phase 1 (Hardcoded Assistants)**
+
+✅ **Ship current Assistants via `index.html` parameter passing.**\
+✅ **Finalize and deploy branded BMore Chat & Support Chat.**\
+🔲 **Confirm user response handling in Make/AirTable.**
+
+### **Phase 2 (Move to AirTable)**
+
+🔲 **Refactor Lambda to fetch `Assistant_ID` from Airtable, not HTML.**\
+🔲 **Store & retrieve `Thread_ID` via Airtable.**\
+🔲 **Optimize OpenAI API invocation order in Lambda.**\
+🔲 **Handle multiple orgs seamlessly via Airtable records.**
+
+### **Phase 3 (Automated Chat Deployment)**
+
+🔲 **Automate assistant onboarding in Airtable.**\
+🔲 **Make UI config in Softr to let clients add new assistants dynamically.**\
+🔲 **Expand client usage beyond current test cases.**
+
+## Punch List for UI & Workflow Improvements
+
+🔲 **Improve Intake Form UI**
+   - Enhance form layout and readability.
+   - Improve error handling and field validation.
+   - Optimize mobile responsiveness.
+
+🔲 **Chat Tools for Export & Summary**
+   - Add chat export to PDF and CSV.
+   - Implement summary generation for chat logs.
+
+🔲 **User & Client-Side Tools for Branding**
+   - Allow users to manage `variables.css` dynamically.
+   - Provide an option for clients to generate a brand book.
+
+🔲 **Business Analyst Support & Ticketing**
+   - Log issues and track customer support requests.
+   - Implement Make automation to route tickets to Airtable.
+   - Enable customer support to escalate and track recurring issues.
 
 ## Recent Updates
 
@@ -254,6 +265,7 @@ An end-to-end RAG application (from scratch) based on FastAPI that processes PDF
 - Region: `us-east-2`
 - Runtime: `nodejs18.x`
 - CORS handling: Managed via Lambda URL configuration
+
 ## Architecture Flow
 
 ┌─────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────┐
