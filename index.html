@@ -23,19 +23,13 @@
             margin: 0;
             position: relative;
         }
-        #layout-wrapper {
-            display: flex;
-            flex-direction: column; /* Stack containers vertically */
-            justify-content: center;
-            align-items: center;
-            gap: 30px; /* Space between main and form containers */
-            max-width: 600px;
-            width: 90%;
-            margin: 40px auto;
-        }
-        #main-container, #form-container {
+        #page-title {
+            position: absolute;
+            top: 10px;
             width: 100%;
             text-align: center;
+            color: var(--accent-color);
+            font-size: 1.2em;
         }
         img {
             max-width: 150px;
@@ -44,6 +38,15 @@
         }
         img:hover {
             transform: scale(1.05) rotate(5deg);
+        }
+        #main-container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
         h3 {
             color: var(--accent-color);
@@ -92,6 +95,16 @@
             font-style: italic;
             color: #666;
         }
+        #form-container {
+            display: none;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+        #curious-button {
+            cursor: pointer;
+            margin-top: 20px;
+        }
         .form-group {
             margin-bottom: 15px;
         }
@@ -125,54 +138,65 @@
     </style>
 </head>
 <body>
-    <div id="layout-wrapper">
-        <div id="main-container">
-            <img src="assets/images/avatar.png" alt="Avatar">
-            <div class="verb-container" id="verb-container">Listening...</div>
-            <div id="curious-button" onclick="toggleForm()">👀 Curious? Think you may have a use for the platform?</div>
-        </div>
+    <div id="page-title">Recursive Learning Platform</div>
+    <div id="main-container">
+        <img src="assets/images/avatar.png" alt="Avatar">
+        <div class="verb-container" id="verb-container">Listening...</div>
+        <div id="curious-button" onclick="toggleForm()">👀 Curious?</div>
+        <div style="text-align: center;">&#x25BC;</div>
+    </div>
 
-        <div id="form-container">
-            <h3 style="color: var(--accent-color);">Oh Hello! Who might you be?</h3>
-            <input type="email" id="signup-email" placeholder="Enter your email to receive a reply" required />
+    <div id="form-container">
+        <h3 style="color: var(--accent-color);">Oh Hello! Who might you be?</h3>
+        <p><strong>Enter a valid email to receive a reply:</strong></p>
+        <input type="email" id="signup-email" placeholder="Your Email" required />
+        <p><em>Helper: I'll need your email, so I can check the 'official guest list.'</em></p>
 
-            <h3 style="color: var(--accent-color);">EEK! You weren't supposed to find us until 2026.</h3>
-            <p><strong>We're in limited "friends and family" beta this year. How did you hear about us?</strong></p>
+        <h3 style="color: var(--accent-color);">EEK! You weren't supposed to find us until 2026.</h3>
+        <p><strong>We're in limited "friends and family" beta this year. How did you hear about us?</strong></p>
+        <p><em>Helper: Context-aware systems can handle traditional form field inputs, which can be nice when you want multiple-choice.</em></p>
 
-            <div class="form-group">
-                <label>How did you learn about us?</label>
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="source" value="friend" id="source-friend">
-                        <label for="source-friend">Friend of Integral Ed</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="source" value="client" id="source-client">
-                        <label for="source-client">Client of Integral Ed</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="source" value="alt_lms" id="source-alt_lms">
-                        <label for="source-alt_lms">Seeking alternatives to traditional LMS</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" name="source" value="other" id="source-other">
-                        <label for="source-other">Other</label>
-                    </div>
+        <div class="form-group">
+            <label>How did you learn about us?</label>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <div class="checkbox-space"></div>
+                    <input type="checkbox" name="source" value="friend" id="source-friend">
+                    <label for="source-friend">Friend of Integral Ed</label>
+                    <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
+                </div>
+                <div class="checkbox-item">
+                    <div class="checkbox-space"></div>
+                    <input type="checkbox" name="source" value="client" id="source-client">
+                    <label for="source-client">Client of Integral Ed</label>
+                    <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
+                </div>
+                <div class="checkbox-item">
+                    <div class="checkbox-space"></div>
+                    <input type="checkbox" name="source" value="alt_lms" id="source-alt_lms">
+                    <label for="source-alt_lms">Seeking alternatives to traditional LMS</label>
+                    <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
+                </div>
+                <div class="checkbox-item">
+                    <div class="checkbox-space"></div>
+                    <input type="checkbox" name="source" value="other" id="source-other">
+                    <label for="source-other">Other</label>
+                    <input type="text" id="intake-other-source" placeholder="Describe here" class="details-input" style="display: none;">
                 </div>
             </div>
-
-            <div class="form-group">
-                <label for="intake-usage">How do you hope to use the recursive learning app?</label>
-                <textarea id="intake-usage" placeholder="Describe your intended use"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="intake-role">If you think we should know, how would you describe your role?</label>
-                <textarea id="intake-role" placeholder="Describe your role"></textarea>
-            </div>
-            
-            <button onclick="signup()">Sign Up</button>
         </div>
+
+        <div class="form-group">
+            <label for="intake-usage">How do you hope to use the recursive learning app?</label>
+            <textarea id="intake-usage"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="intake-role">If you think we should know, how would you describe your role?</label>
+            <textarea id="intake-role"></textarea>
+        </div>
+        
+        <button onclick="signup()">Sign Up</button>
     </div>
 
     <script>
@@ -194,11 +218,16 @@
             const source = Array.from(document.querySelectorAll('input[name="source"]:checked')).map(cb => cb.value);
             const usage = document.getElementById('intake-usage').value;
             const role = document.getElementById('intake-role').value;
+            const otherSource = document.getElementById('intake-other-source').value;
 
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!email || !emailPattern.test(email)) {
                 alert('Please enter a valid email.');
                 return;
+            }
+
+            if (otherSource) {
+                source.push(`Other: ${otherSource}`);
             }
 
             const payload = {
