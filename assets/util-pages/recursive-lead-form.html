@@ -25,6 +25,7 @@
 
         #container {
             display: flex;
+            flex-direction: column;
             width: 90vw;
             height: 80vh;
             background: white;
@@ -68,15 +69,19 @@
             display: flex;
             flex-direction: column;
             padding: 20px;
+            justify-content: space-between;
         }
 
         .section {
             display: none;
             padding: 10px;
+            flex: 1;
         }
 
         .section.active {
-            display: block;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         input, textarea {
@@ -96,10 +101,12 @@
             border-radius: 4px;
             cursor: pointer;
             margin-top: 10px;
+            border: 3px solid transparent;
         }
 
         button:hover {
             background: var(--accent-color);
+            border-color: var(--primary-color);
         }
 
         button:disabled {
@@ -113,15 +120,17 @@
         <div id="sidebar">
             <button onclick="showSection(0)" id="nav-welcome">Welcome</button>
             <button onclick="showSection(1)" id="nav-info">Email</button>
-            <button onclick="showSection(2)" id="nav-context">Context</button>
-            <button onclick="showSection(3)" id="nav-submit" disabled>Submit</button>
+            <button onclick="showSection(2)" id="nav-role">What's your role?</button>
+            <button onclick="showSection(3)" id="nav-goal">What's your goal?</button>
+            <button onclick="showSection(4)" id="nav-context">How did you hear about us?</button>
+            <button onclick="showSection(5)" id="nav-submit" disabled>Submit</button>
         </div>
         <div id="content">
             <div class="section active">
                 <h1>Welcome!</h1>
-                <p>You weren't supposed to find us until 2026. We're hiding out in a friends and family beta. If you have a great use for this platform, fill out the info below. If you are aligned to our values and your needs match our early-release features, you may be invited to join our 2025 learning community.</p>
-                <button onclick="showSection(1)">Next</button>
+                <h2>You weren't supposed to find us until 2026. We're hiding out in a friends and family beta. If you have a great use for this platform, fill out the info below. If you are aligned with our values and your needs match our early-release features, you may be invited to join our 2025 learning community.</h2>
             </div>
+            <button onclick="showSection(1)">Next</button>
             <div class="section">
                 <h1>Email</h1>
                 <h2>We'll use this email to get in touch and to share preview access if you are approved for a beta account.</h2>
@@ -129,10 +138,24 @@
                 <button onclick="showSection(2)">Next</button>
             </div>
             <div class="section">
-                <h1>Context</h1>
-                <h2>How did you learn about us?</h2>
+                <h1>What's your role?</h1>
+                <h2>You can give us your title, role, organization – or even your big dreams. Context-aware systems do not require that you define every possibility into a dropdown menu.</h2>
+                <p><em>Helper: Share what you do, how you see yourself, or what you'd like us to know about your professional or personal identity.</em></p>
+                <textarea id="intake-role"></textarea>
+                <button onclick="showSection(3)">Next</button>
+            </div>
+            <div class="section">
+                <h1>What's your goal?</h1>
+                <h2>What type of learning are you hoping to host or deploy on this platform?</h2>
+                <p><em>Helper: Tell us what kinds of assets you may have or want to author, and what kinds of learners and community you want to support.</em></p>
+                <textarea id="intake-goal"></textarea>
+                <button onclick="showSection(4)">Next</button>
+            </div>
+            <div class="section">
+                <h1>How did you hear about us?</h1>
+                <h2>Context-aware systems can manage a range of form fields and assessment item types as well as open-ended and multimodal inputs.</h2>
+                <p><em>Helper: Choose one or more, then add details if applicable.</em></p>
                 <div class="form-group">
-                    <p><em>Helper: Context-aware systems can handle traditional form field inputs, which can be nice when you want multiple-choice.</em></p>
                     <div class="checkbox-group">
                         <label><input type="checkbox" name="source" value="friend"> Friend of Integral Ed</label>
                         <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
@@ -144,15 +167,7 @@
                         <input type="text" id="intake-other-source" placeholder="Describe here" class="details-input" style="display: none;">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="intake-usage">How do you hope to use the recursive learning app?</label>
-                    <textarea id="intake-usage"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="intake-role">If you think we should know, how would you describe your role?</label>
-                    <textarea id="intake-role"></textarea>
-                </div>
-                <button onclick="showSection(3)">Next</button>
+                <button onclick="showSection(5)">Next</button>
             </div>
             <div class="section">
                 <h1>Submit</h1>
@@ -160,5 +175,62 @@
             </div>
         </div>
     </div>
+    <script>
+        function showSection(index) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach((section, i) => {
+                section.classList.toggle('active', i === index);
+            });
+            document.querySelectorAll('#sidebar button').forEach((button, i) => {
+                button.classList.toggle('active', i === index);
+            });
+        }
+
+        function validateForm() {
+            const email = document.getElementById('signup-email').value;
+            const role = document.getElementById('intake-role').value.trim();
+            const goal = document.getElementById('intake-goal').value.trim();
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const isValid = emailPattern.test(email) && role.length > 0 && goal.length > 0;
+            document.getElementById('submit-button').disabled = !isValid;
+        }
+
+        function signup() {
+            const email = document.getElementById('signup-email').value;
+            const role = document.getElementById('intake-role').value;
+            const goal = document.getElementById('intake-goal').value;
+            const source = Array.from(document.querySelectorAll('input[name="source"]:checked')).map(cb => cb.value).join('; ');
+
+            const payload = {
+                Email: email,
+                Intake_Token: "recursive.learning.app/index.html",
+                User_Status: "Lead",
+                User_Intake_Item_01: role,
+                User_Intake_Item_02: goal,
+                User_Intake_Item_03: source,
+                User_Intake_Item_04: null,
+                User_Intake_Item_05: null
+            };
+
+            fetch('https://hook.us1.make.com/gp1ykvaa7e7q5e3xnvjym2g9dkg9vl4y', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                window.location.href = '/integral-ed/util-pages/integral-landing.html';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('There was an error with your signup.');
+            });
+        }
+
+        document.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('input', validateForm);
+        });
+    </script>
 </body>
 </html>

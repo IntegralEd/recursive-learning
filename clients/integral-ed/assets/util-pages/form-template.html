@@ -25,6 +25,7 @@
 
         #container {
             display: flex;
+            flex-direction: column;
             width: 90vw;
             height: 80vh;
             background: white;
@@ -68,15 +69,19 @@
             display: flex;
             flex-direction: column;
             padding: 20px;
+            justify-content: space-between;
         }
 
         .section {
             display: none;
             padding: 10px;
+            flex: 1;
         }
 
         .section.active {
-            display: block;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         input, textarea {
@@ -96,10 +101,12 @@
             border-radius: 4px;
             cursor: pointer;
             margin-top: 10px;
+            border: 3px solid transparent;
         }
 
         button:hover {
             background: var(--accent-color);
+            border-color: var(--primary-color);
         }
 
         button:disabled {
@@ -120,8 +127,8 @@
             <div class="section active">
                 <h1>Welcome!</h1>
                 <p>You weren't supposed to find us until 2026. We're hiding out in a friends and family beta. If you have a great use for this platform, fill out the info below. If you are aligned to our values and your needs match our early-release features, you may be invited to join our 2025 learning community.</p>
-                <button onclick="showSection(1)">Next</button>
             </div>
+            <button onclick="showSection(1)">Next</button>
             <div class="section">
                 <h1>Email</h1>
                 <h2>We'll use this email to get in touch and to share preview access if you are approved for a beta account.</h2>
@@ -143,6 +150,14 @@
                         <label><input type="checkbox" name="source" value="other"> Other</label>
                         <input type="text" id="intake-other-source" placeholder="Describe here" class="details-input" style="display: none;">
                     </div>
+                </div>
+                <div class="form-group">
+                    <label for="intake-usage">How do you hope to use the recursive learning app?</label>
+                    <textarea id="intake-usage"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="intake-role">If you think we should know, how would you describe your role?</label>
+                    <textarea id="intake-role"></textarea>
                 </div>
                 <button onclick="showSection(3)">Next</button>
             </div>
