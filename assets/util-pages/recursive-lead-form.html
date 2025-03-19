@@ -26,12 +26,14 @@
         #container {
             display: flex;
             flex-direction: column;
-            width: 90vw;
-            height: 80vh;
+            width: 80vw;
+            height: 70vh;
             background: white;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            position: relative;
+            padding: 20px;
         }
 
         #sidebar {
@@ -68,29 +70,35 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
             padding: 20px;
-            justify-content: space-between;
         }
 
         .section {
             display: none;
-            padding: 10px;
             flex: 1;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
         .section.active {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
+            align-items: center;
         }
 
         input, textarea {
-            width: calc(100% - 20px);
+            width: 80%;
             padding: 10px;
-            margin: 5px 10px;
+            margin: 10px 0;
             border: 1px solid var(--primary-color);
             border-radius: 4px;
             box-sizing: border-box;
+            background: transparent;
         }
 
         button {
@@ -100,7 +108,10 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-top: 10px;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
             border: 3px solid transparent;
         }
 
