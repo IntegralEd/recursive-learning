@@ -1,0 +1,136 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+🏗 Recursive Learning - UX & Layout Specification
+📌 Purpose
+This document defines the HTML and CSS structure for our learning layout pages to ensure a consistent UX across:
+
+Intake Forms
+Learning Chat (Roleplay, AI Interviews)
+Export & Review Functions
+Embedded Storyline & Slide-based Content
+The design prioritizes:
+
+Consistency: UI elements behave the same across different layouts.
+Accessibility: High contrast, scalable fonts, and semantic structure.
+Embed Compatibility: Maintains an aspect ratio optimized for Storyline, slides, and web embeds.
+🎨 Layout Framework
+Each page type follows a common wireframe structure:
+
+Left Navigation Column (20%): Provides progress indicators and navigation.
+Main Content Area (80%): Displays form fields, chat UI, or export tools.
+🔳 Left Navigation (20%)
+Stays fixed across all layouts.
+Tabs/Stages:
+📌 Welcome (Form intro / Chat preface)
+💬 Interview (Chat UI)
+🛠 Tools (Save, Export, Restart)
+Active tab is bold, underlined, and primary accent color.
+🖥 Main Content Area (80%)
+Welcome/Form Pages
+
+H1: Large, bold title
+H2: Context or instructions
+Helper Text: Small italicized explanation above input fields
+Fields & Buttons: Spaced and accessible (min 48px touch target)
+Chat Pages
+
+No title (Avatar and status bar instead)
+Chat Window (Scrollable)
+Message Bubbles:
+🟦 Assistant → Left-aligned, primary color
+🟨 User → Right-aligned, secondary color
+Input Bar (Appears only in chat pages)
+"Send" button styled as a paper airplane in accent color
+Export Pages
+
+Similar to forms, but with summary blocks and download buttons.
+🖼 Aspect Ratio & Embed Guidelines
+Platform	Ideal Aspect Ratio	Max Width
+Storyline	16:10	1280px
+Google Slides	16:10	1200px
+Web App	16:10	1000px
+Mobile Adaptation	Full width	Auto
+🎯 Key CSS Rules
+css
+Copy
+Edit
+/* General Styles */
+:root {
+    --primary-color: #007BFF;
+    --accent-color: #0056b3;
+    --dark-text-color: #111;
+}
+
+/* Sidebar */
+#sidebar {
+    width: 20%;
+    background: white;
+    border-right: 2px solid var(--primary-color);
+}
+
+/* Active Tab */
+#sidebar button.active {
+    font-weight: bold;
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    color: var(--primary-color);
+}
+
+/* Chat UI */
+.chat-container {
+    display: none;
+    flex-direction: column;
+}
+.section.chat-active .chat-container {
+    display: flex;
+}
+
+/* Message Bubbles */
+.message {
+    padding: 10px;
+    border-radius: 12px;
+    max-width: 70%;
+}
+.message.assistant {
+    background: var(--primary-color);
+    color: white;
+    align-self: flex-start;
+}
+.message.user {
+    background: var(--accent-color);
+    color: white;
+    align-self: flex-end;
+}
+
+/* Input Bar - Only visible in chat */
+.input-area {
+    display: flex;
+    padding: 10px;
+    background: white;
+    border-top: 1px solid #ddd;
+}
+.input-area input {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 8px;
+}
+.send-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-color);
+    font-size: 24px;
+}
+🔄 Future Integrations
+✅ Storyline Content Embeds
+✅ LTI & LMS Data Hooks
+✅ AI-Generated Summary Reports
+
+✅ Implementation Notes
+Use this framework for all learning pages to maintain visual & functional consistency.
+Future features (e.g., Storyline integrations) should conform to this 16:10 embed-safe layout.
+Chat, Forms, and Export UIs should be interchangeable, preserving UX cohesion.
+This MDC ensures a scalable, accessible, and Storyline-friendly UX for learners and facilitators.
