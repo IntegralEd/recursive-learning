@@ -156,19 +156,8 @@
             <div class="section">
                 <h1>How did you hear about us?</h1>
                 <h2>Context-aware systems can manage a range of form fields and assessment item types as well as open-ended and multimodal inputs.</h2>
-                <p><em>Helper: Choose one or more, then add details if applicable.</em></p>
-                <div class="form-group">
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" name="source" value="friend" onclick="toggleDetailInput(this)"> Friend of Integral Ed</label>
-                        <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
-                        <label><input type="checkbox" name="source" value="client" onclick="toggleDetailInput(this)"> Client of Integral Ed</label>
-                        <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
-                        <label><input type="checkbox" name="source" value="alt_lms" onclick="toggleDetailInput(this)"> Seeking alternatives to traditional LMS</label>
-                        <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
-                        <label><input type="checkbox" name="source" value="other" onclick="toggleDetailInput(this)"> Other</label>
-                        <input type="text" id="intake-other-source" placeholder="Describe here" class="details-input" style="display: none;">
-                    </div>
-                </div>
+                <p><em>Helper: Let us know how you found us.</em></p>
+                <textarea id="intake-source" placeholder="Tell us about it"></textarea>
                 <button onclick="showSection(5)">Next</button>
             </div>
             <div class="section">
@@ -194,11 +183,10 @@
         }
 
         function validateForm() {
-            const email = document.getElementById('signup-email').value;
-            const role = document.getElementById('intake-role').value.trim();
-            const goal = document.getElementById('intake-goal').value.trim();
+            const email = document.getElementById('signup-email').value.trim();
+            const source = document.getElementById('intake-source').value.trim();
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const isValid = emailPattern.test(email) && role.length > 0 && goal.length > 0;
+            const isValid = emailPattern.test(email) && source.length > 0;
             document.getElementById('submit-button').disabled = !isValid;
         }
 
@@ -206,7 +194,7 @@
             const email = document.getElementById('signup-email').value;
             const role = document.getElementById('intake-role').value;
             const goal = document.getElementById('intake-goal').value;
-            const source = Array.from(document.querySelectorAll('input[name="source"]:checked')).map(cb => cb.value).join('; ');
+            const source = document.getElementById('intake-source').value;
 
             const payload = {
                 Email: email,
