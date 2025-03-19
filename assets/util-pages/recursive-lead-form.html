@@ -42,7 +42,7 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
             border-right: 2px solid var(--primary-color);
             box-sizing: border-box;
         }
@@ -51,12 +51,13 @@
             background: none;
             border: none;
             color: var(--dark-text-color);
-            padding: 10px;
+            padding: 10px 0;
             cursor: pointer;
             width: 100%;
             text-align: left;
             font-size: 16px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            line-height: 2;
         }
 
         #sidebar button.active {
@@ -70,9 +71,9 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+            justify-content: flex-start;
+            align-items: flex-start;
+            text-align: left;
             padding: 20px;
             box-sizing: border-box;
         }
@@ -80,16 +81,22 @@
         .section {
             display: none;
             flex: 1;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+            justify-content: flex-start;
+            align-items: flex-start;
+            text-align: left;
         }
 
         .section.active {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        h2 {
+            font-size: 1rem;
+            font-weight: normal;
+            margin-top: 10px;
         }
 
         input, textarea {
@@ -169,13 +176,13 @@
                 <p><em>Helper: Choose one or more, then add details if applicable.</em></p>
                 <div class="form-group">
                     <div class="checkbox-group">
-                        <label><input type="checkbox" name="source" value="friend"> Friend of Integral Ed</label>
+                        <label><input type="checkbox" name="source" value="friend" onclick="toggleDetailInput(this)"> Friend of Integral Ed</label>
                         <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
-                        <label><input type="checkbox" name="source" value="client"> Client of Integral Ed</label>
+                        <label><input type="checkbox" name="source" value="client" onclick="toggleDetailInput(this)"> Client of Integral Ed</label>
                         <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
-                        <label><input type="checkbox" name="source" value="alt_lms"> Seeking alternatives to traditional LMS</label>
+                        <label><input type="checkbox" name="source" value="alt_lms" onclick="toggleDetailInput(this)"> Seeking alternatives to traditional LMS</label>
                         <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
-                        <label><input type="checkbox" name="source" value="other"> Other</label>
+                        <label><input type="checkbox" name="source" value="other" onclick="toggleDetailInput(this)"> Other</label>
                         <input type="text" id="intake-other-source" placeholder="Describe here" class="details-input" style="display: none;">
                     </div>
                 </div>
@@ -196,6 +203,11 @@
             document.querySelectorAll('#sidebar button').forEach((button, i) => {
                 button.classList.toggle('active', i === index);
             });
+        }
+
+        function toggleDetailInput(checkbox) {
+            const detailInput = checkbox.nextElementSibling;
+            detailInput.style.display = checkbox.checked ? 'block' : 'none';
         }
 
         function validateForm() {
