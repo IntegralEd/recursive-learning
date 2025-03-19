@@ -76,6 +76,7 @@
         }
 
         .section {
+            position: relative;
             display: none;
             padding: 10px;
             flex: 1;
@@ -84,7 +85,9 @@
         .section.active {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-start;
+            align-items: flex-start;
+            height: 100%;
         }
 
         input, textarea {
@@ -96,18 +99,19 @@
             box-sizing: border-box;
         }
 
-        button {
+        .next-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
             background: var(--primary-color);
             color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            align-self: flex-end;
-            margin-top: 10px;
         }
 
-        button:hover {
+        .next-button:hover {
             background: var(--accent-color);
         }
 
@@ -115,9 +119,20 @@
             background: #ccc;
             cursor: not-allowed;
         }
+
+        .client-logo {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
+    <img src="/assets/images/client-logo.png" alt="Client Logo" class="client-logo">
     <div id="container">
         <div id="sidebar">
             <button onclick="showSection(0)" id="nav-welcome">Welcome</button>
@@ -131,34 +146,34 @@
             <div class="section active">
                 <h1>Welcome!</h1>
                 <p>You weren't supposed to find us until 2026. We're hiding out in a friends and family beta. If you have a great use for this platform, fill out the info below. If you are aligned with our values and your needs match our early-release features, you may be invited to join our 2025 learning community.</p>
-                <button onclick="showSection(1)">Next</button>
+                <button class="next-button" onclick="showSection(1)">Next</button>
             </div>
             <div class="section">
                 <h1>Email</h1>
                 <h2>We'll use this email to get in touch and to share preview access if you are approved for a beta account.</h2>
                 <input type="email" id="signup-email" placeholder="Your Email" required oninput="validateForm()" />
-                <button onclick="showSection(2)">Next</button>
+                <button class="next-button" onclick="showSection(2)">Next</button>
             </div>
             <div class="section">
                 <h1>What's your role?</h1>
                 <h2>You can give us your title, role, organization – or even your big dreams. Context-aware systems do not require that you define every possibility into a dropdown menu.</h2>
                 <p><em>Helper: Share what you do, how you see yourself, or what you'd like us to know about your professional or personal identity.</em></p>
                 <textarea id="intake-role"></textarea>
-                <button onclick="showSection(3)">Next</button>
+                <button class="next-button" onclick="showSection(3)">Next</button>
             </div>
             <div class="section">
                 <h1>What's your goal?</h1>
                 <h2>What type of learning are you hoping to host or deploy on this platform?</h2>
                 <p><em>Helper: Tell us what kinds of assets you may have or want to author, and what kinds of learners and community you want to support.</em></p>
                 <textarea id="intake-goal"></textarea>
-                <button onclick="showSection(4)">Next</button>
+                <button class="next-button" onclick="showSection(4)">Next</button>
             </div>
             <div class="section">
                 <h1>How did you hear about us?</h1>
                 <h2>Context-aware systems can manage a range of form fields and assessment item types as well as open-ended and multimodal inputs.</h2>
                 <p><em>Helper: Let us know how you found us.</em></p>
                 <textarea id="intake-source" placeholder="Tell us about it"></textarea>
-                <button onclick="showSection(5)">Next</button>
+                <button class="next-button" onclick="showSection(5)">Next</button>
             </div>
             <div class="section">
                 <h1>Submit</h1>

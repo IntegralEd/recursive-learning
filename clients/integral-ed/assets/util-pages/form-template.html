@@ -73,6 +73,7 @@
         }
 
         .section {
+            position: relative;
             display: none;
             padding: 10px;
             flex: 1;
@@ -81,7 +82,9 @@
         .section.active {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-start;
+            align-items: flex-start;
+            height: 100%;
         }
 
         input, textarea {
@@ -93,29 +96,40 @@
             box-sizing: border-box;
         }
 
-        button {
+        .next-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
             background: var(--primary-color);
             color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-top: 10px;
-            border: 3px solid transparent;
         }
 
-        button:hover {
+        .next-button:hover {
             background: var(--accent-color);
-            border-color: var(--primary-color);
         }
 
         button:disabled {
             background: #ccc;
             cursor: not-allowed;
         }
+
+        .client-logo {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
+    <img src="/clients/integral-ed/assets/images/client-logo.png" alt="Client Logo" class="client-logo">
     <div id="container">
         <div id="sidebar">
             <button onclick="showSection(0)" id="nav-welcome">Welcome</button>
@@ -127,29 +141,20 @@
             <div class="section active">
                 <h1>Welcome!</h1>
                 <p>You weren't supposed to find us until 2026. We're hiding out in a friends and family beta. If you have a great use for this platform, fill out the info below. If you are aligned to our values and your needs match our early-release features, you may be invited to join our 2025 learning community.</p>
+                <button class="next-button" onclick="showSection(1)">Next</button>
             </div>
-            <button onclick="showSection(1)">Next</button>
             <div class="section">
                 <h1>Email</h1>
                 <h2>We'll use this email to get in touch and to share preview access if you are approved for a beta account.</h2>
                 <input type="email" id="signup-email" placeholder="Your Email" required oninput="validateForm()" />
-                <button onclick="showSection(2)">Next</button>
+                <button class="next-button" onclick="showSection(2)">Next</button>
             </div>
             <div class="section">
                 <h1>Context</h1>
                 <h2>How did you learn about us?</h2>
                 <div class="form-group">
                     <p><em>Helper: Context-aware systems can handle traditional form field inputs, which can be nice when you want multiple-choice.</em></p>
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" name="source" value="friend"> Friend of Integral Ed</label>
-                        <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
-                        <label><input type="checkbox" name="source" value="client"> Client of Integral Ed</label>
-                        <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
-                        <label><input type="checkbox" name="source" value="alt_lms"> Seeking alternatives to traditional LMS</label>
-                        <input type="text" class="details-input" placeholder="Add detail" style="display: none;">
-                        <label><input type="checkbox" name="source" value="other"> Other</label>
-                        <input type="text" id="intake-other-source" placeholder="Describe here" class="details-input" style="display: none;">
-                    </div>
+                    <textarea id="intake-source" placeholder="Tell us about it"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="intake-usage">How do you hope to use the recursive learning app?</label>
@@ -159,7 +164,7 @@
                     <label for="intake-role">If you think we should know, how would you describe your role?</label>
                     <textarea id="intake-role"></textarea>
                 </div>
-                <button onclick="showSection(3)">Next</button>
+                <button class="next-button" onclick="showSection(3)">Next</button>
             </div>
             <div class="section">
                 <h1>Submit</h1>
@@ -167,5 +172,61 @@
             </div>
         </div>
     </div>
+    <script>
+        function showSection(index) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach((section, i) => {
+                section.classList.toggle('active', i === index);
+            });
+            document.querySelectorAll('#sidebar button').forEach((button, i) => {
+                button.classList.toggle('active', i === index);
+            });
+        }
+
+        function validateForm() {
+            const email = document.getElementById('signup-email').value.trim();
+            const source = document.getElementById('intake-source').value.trim();
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const isValid = emailPattern.test(email) && source.length > 0;
+            document.getElementById('submit-button').disabled = !isValid;
+        }
+
+        function signup() {
+            const email = document.getElementById('signup-email').value;
+            const role = document.getElementById('intake-role').value;
+            const usage = document.getElementById('intake-usage').value;
+            const source = document.getElementById('intake-source').value;
+
+            const payload = {
+                Email: email,
+                Intake_Token: "recursive.learning.app/index.html",
+                User_Status: "Lead",
+                User_Intake_Item_01: role,
+                User_Intake_Item_02: usage,
+                User_Intake_Item_03: source,
+                User_Intake_Item_04: null,
+                User_Intake_Item_05: null
+            };
+
+            fetch('https://hook.us1.make.com/gp1ykvaa7e7q5e3xnvjym2g9dkg9vl4y', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                window.location.href = '/integral-ed/util-pages/integral-landing.html';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('There was an error with your signup.');
+            });
+        }
+
+        document.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('input', validateForm);
+        });
+    </script>
 </body>
 </html>
