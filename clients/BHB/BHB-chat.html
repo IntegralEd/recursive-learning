@@ -144,7 +144,7 @@
             font-size: 24px;
         }
 
-        .next-button {
+        .next-button, .account-button {
             background: #ccc;
             color: white;
             padding: 10px 20px;
@@ -153,7 +153,7 @@
             cursor: not-allowed;
         }
 
-        .next-button.enabled {
+        .next-button.enabled, .account-button.enabled {
             background: var(--primary-color);
             cursor: pointer;
         }
@@ -190,7 +190,7 @@
             </div>
             <div class="section">
                 <h1>Tools (not available in anonymous public accounts)</h1>
-                <button onclick="redirectToIntake()">Create Account to Save Chat</button>
+                <button id="account-button" class="account-button" onclick="redirectToIntake()" disabled>Create Account to Save Chat</button>
                 <button onclick="exportPDF()">Export to PDF</button>
                 <button onclick="restartChat()">Start Over</button>
             </div>
@@ -228,14 +228,72 @@
             const norms = document.getElementById('norms').checked;
             const acknowledge = document.getElementById('acknowledge').checked;
             const nextButton = document.getElementById('next-button');
+            const accountButton = document.getElementById('account-button');
 
             if (tos && norms && acknowledge) {
                 nextButton.classList.add('enabled');
                 nextButton.disabled = false;
+                accountButton.classList.add('enabled');
+                accountButton.disabled = false;
             } else {
                 nextButton.classList.remove('enabled');
                 nextButton.disabled = true;
+                accountButton.classList.remove('enabled');
+                accountButton.disabled = true;
             }
+        }
+
+        function saveChat() {
+            const threadId = window.threadId || 'new';
+            const assistantId = 'asst_8Akizj8qAc3itsBD6ypTyO5q';
+            const timestamp = new Date().toISOString();
+            const chatSummary = {
+                event_type: "rag_chat",
+                session: {
+                    id: threadId,
+                    timestamp: timestamp,
+                    source_url: "https://integraled.org/bmore/maternal-health",
+                    entry_point: "community_support"
+                },
+                persona: {
+                    role: "community_health_worker",
+                    context_source: "bmore_health_resources",
+                    interaction_style: "empathetic_guidance"
+                },
+                interaction_log: {
+                    initial_query: "I need help finding maternal health support",
+                    location_context: "Baltimore",
+                    identified_needs: ["prenatal_care", "transportation"],
+                    resources_shared: [
+                        {
+                            type: "program",
+                            name: "B'more for Healthy Babies",
+                            url: "https://integraled.org/bmore/programs/healthy-babies"
+                        }
+                    ]
+                },
+                outcome: {
+                    primary_action: "user_signup",
+                    redirect_path: "/user-intake",
+                    context_preservation: {
+                        needs_assessment: true,
+                        location: true,
+                        program_interest: ["maternal_health", "transportation"]
+                    },
+                    instructional_intent: "Guide user through maternal health resource discovery and program enrollment"
+                }
+            };
+
+            fetch('YOUR_WEBHOOK_URL', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(chatSummary)
+            })
+            .then(response => response.json())
+            .then(data => console.log('Success:', data))
+            .catch((error) => console.error('Error:', error));
         }
     </script>
 </body>
