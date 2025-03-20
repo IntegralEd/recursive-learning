@@ -143,6 +143,20 @@
             color: var(--primary-color);
             font-size: 24px;
         }
+
+        .next-button {
+            background: #ccc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: not-allowed;
+        }
+
+        .next-button.enabled {
+            background: var(--primary-color);
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -156,7 +170,12 @@
             <div class="section active">
                 <h1>Welcome!</h1>
                 <p>Access maternal health resources as a public user. Please note that this is an agreement for public use and not medical advice, in line with our style guide.</p>
-                <button onclick="showSection(1)">Next</button>
+                <div>
+                    <input type="checkbox" id="tos" onclick="checkAffirmations()"> I affirm the terms of service.<br>
+                    <input type="checkbox" id="norms" onclick="checkAffirmations()"> I affirm the community norms and guidelines.<br>
+                    <input type="checkbox" id="acknowledge" onclick="checkAffirmations()"> I acknowledge this is a monitored public health resource.<br>
+                </div>
+                <button id="next-button" class="next-button" onclick="showSection(1)" disabled>Next</button>
             </div>
             <div class="section chat-active">
                 <div class="chat-container">
@@ -201,7 +220,22 @@
 
         function redirectToIntake() {
             const threadId = window.threadId || 'new';
-                window.location.href = `https://bmore.softr.app/user-intake?thread_id=${threadId}`;
+            window.location.href = `https://bmore.softr.app/user-intake?thread_id=${threadId}`;
+        }
+
+        function checkAffirmations() {
+            const tos = document.getElementById('tos').checked;
+            const norms = document.getElementById('norms').checked;
+            const acknowledge = document.getElementById('acknowledge').checked;
+            const nextButton = document.getElementById('next-button');
+
+            if (tos && norms && acknowledge) {
+                nextButton.classList.add('enabled');
+                nextButton.disabled = false;
+            } else {
+                nextButton.classList.remove('enabled');
+                nextButton.disabled = true;
+            }
         }
     </script>
 </body>
