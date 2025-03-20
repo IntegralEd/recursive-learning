@@ -10,8 +10,14 @@
     <link rel="stylesheet" href="/clients/BHB/assets/css/custom.css">
 
     <style>
+        :root {
+            --primary-color: #007BFF;
+            --accent-color: #0056b3;
+            --dark-text-color: #111;
+        }
+
         body {
-            font-family: var(--client-font-body);
+            font-family: Arial, sans-serif;
             background-color: var(--background-color);
             display: flex;
             justify-content: center;
@@ -20,88 +26,87 @@
             margin: 0;
         }
 
-        /* Main Chat Container */
-        .chat-container {
+        #container {
             display: flex;
-            width: 70%;
-            max-width: 1200px;
+            width: 90vw;
+            height: 80vh;
             background: white;
-            border-radius: var(--client-card-border-radius);
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
 
-        /* Sidebar */
-        .sidebar {
-            width: 50px; /* Start collapsed */
-            background-color: var(--primary-color);
-            padding: var(--client-spacing-medium);
+        #sidebar {
+            width: 20%;
+            background: white;
+            color: var(--dark-text-color);
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            transition: width 0.3s;
+            align-items: flex-start;
+            border-right: 2px solid var(--primary-color);
         }
 
-        .sidebar.expanded {
-            width: 250px; /* Expanded width */
-        }
-
-        .sidebar button {
+        #sidebar button {
+            background: none;
+            border: none;
+            color: var(--dark-text-color);
+            padding: 10px 0;
+            cursor: pointer;
             width: 100%;
-            margin: var(--client-spacing-small) 0;
-            padding: var(--client-button-padding);
-            background: var(--secondary-color);
-            border: none;
-            color: white;
+            text-align: left;
             font-size: 16px;
-            cursor: pointer;
-            border-radius: var(--client-button-radius);
-            display: none; /* Hidden when collapsed */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            line-height: 2;
         }
 
-        .sidebar.expanded button {
-            display: block; /* Show when expanded */
+        #sidebar button.active {
+            font-weight: bold;
+            text-decoration: underline;
+            text-decoration-thickness: 3px;
+            color: var(--primary-color);
         }
 
-        .toggle-button {
-            background: var(--secondary-color);
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            margin-bottom: 10px;
+        #content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
         }
 
-        .sidebar button:hover, .toggle-button:hover {
-            background: var(--accent-color);
+        .section {
+            display: none;
+            padding: 10px;
         }
 
-        /* Chat Window */
+        .section.active {
+            display: block;
+        }
+
+        .chat-container {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .section.chat-active .chat-container {
+            display: flex;
+        }
+
         .chat-window {
             flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            padding: var(--client-spacing-medium);
-            background: var(--background-color);
-        }
-
-        .messages {
-            flex-grow: 1;
             overflow-y: auto;
-            padding: var(--client-spacing-small);
-            background: white;
-            border-radius: var(--client-card-border-radius);
-            height: 400px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
         }
 
         .message {
-            padding: var(--client-spacing-small);
-            border-radius: var(--client-button-radius);
-            margin: var(--client-spacing-small) 0;
-            width: fit-content;
-            max-width: 80%;
+            padding: 10px;
+            border-radius: 12px;
+            margin: 5px 0;
+            max-width: 70%;
         }
 
         .message.assistant {
@@ -111,175 +116,87 @@
         }
 
         .message.user {
-            background: var(--secondary-color);
+            background: var(--accent-color);
             color: white;
             align-self: flex-end;
         }
 
-        /* Input Area */
         .input-area {
             display: flex;
-            padding: var(--client-spacing-small);
+            align-items: center;
+            padding: 10px;
             background: white;
             border-top: 1px solid #ddd;
         }
 
         .input-area input {
             flex-grow: 1;
-            padding: var(--client-spacing-small);
+            padding: 10px;
             border: 1px solid #ccc;
-            border-radius: var(--client-button-radius);
+            border-radius: 8px;
         }
 
-        .input-area button {
-            padding: var(--client-button-padding);
-            background: var(--secondary-color);
+        .send-button {
+            background: none;
             border: none;
-            color: white;
             cursor: pointer;
-            margin-left: var(--client-spacing-small);
-            border-radius: var(--client-button-radius);
-        }
-
-        .input-area button:hover {
-            background: var(--accent-color);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .chat-container {
-                flex-direction: column;
-                width: 90%;
-            }
-            .sidebar {
-                width: 100%;
-                flex-direction: row;
-                justify-content: space-around;
-            }
+            margin-left: 10px;
+            color: var(--primary-color);
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
-
-    <div class="chat-container">
-        <!-- Sidebar for utilities -->
-        <div class="sidebar" id="sidebar">
-            <button class="toggle-button" onclick="toggleSidebar()">☰</button>
-            <button onclick="saveChat()">📄 Save Chat</button>
-            <button onclick="exportPDF()">📄 Export to PDF</button>
-            <button onclick="exportSlides()">📄 Export to Slides</button>
-            <button onclick="restartChat()">🔄 Start Over</button>
+    <div id="container">
+        <div id="sidebar">
+            <button onclick="showSection(0)" id="nav-welcome">Welcome</button>
+            <button onclick="showSection(1)" id="nav-public-chat">Public Chat</button>
+            <button onclick="showSection(2)" id="nav-account-creation" disabled>Account Creation</button>
         </div>
-
-        <!-- Chat window -->
-        <div class="chat-window">
-            <div class="messages" id="messages">
-                <div class="message assistant">Welcome to the B'more Healthy Babies Maternal Health Chat</div>
+        <div id="content">
+            <div class="section active">
+                <h1>Welcome!</h1>
+                <p>Access maternal health resources as a public use. Please note that this is an agreement for public use and not medical advice, in line with our style guide.</p>
+                <button onclick="showSection(1)">Next</button>
             </div>
-            <div class="input-area">
-                <input type="text" id="user-input" placeholder="Type your message here...">
-                <button id="send-button">Send</button>
+            <div class="section chat-active">
+                <div class="chat-container">
+                    <div class="chat-window" id="chat-window">
+                        <div class="message assistant">Welcome to the B'more Healthy Babies Maternal Health Chat</div>
+                    </div>
+                    <div class="input-area">
+                        <input type="text" id="chat-input" placeholder="Type your message here...">
+                        <button class="send-button" onclick="sendMessage()">✈</button>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <h1>Account Creation</h1>
+                <p>Access to tools is not open in the MVP.</p>
             </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const config = {
-                User_ID: "test_user",
-                Assistant_ID: "asst_IA5PsJxdShVPTAv2xeXTr4Ma",
-                Org_ID: "recjUGiOT65lwgBtm",
-                Thread_ID: null
-            };
-
-            initChatInterface(config);
-        });
-
-        function initChatInterface(config) {
-            const messagesDiv = document.getElementById('messages');
-            const userInput = document.getElementById('user-input');
-            const sendButton = document.getElementById('send-button');
-
-            if (!messagesDiv || !userInput || !sendButton) {
-                console.error('Error: Required DOM elements not found.');
-                return;
-            }
-
-            displayAssistantMessage('Hello! How can I assist you today?');
-
-            sendButton.addEventListener('click', function() {
-                sendMessage(userInput.value.trim(), config);
-                userInput.value = '';
-            });
-
-            userInput.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    sendButton.click();
-                }
+        function showSection(index) {
+            document.querySelectorAll('.section').forEach((section, i) => {
+                section.classList.toggle('active', i === index);
+                section.classList.toggle('chat-active', i === 1);
             });
         }
 
-        function sendMessage(message, config) {
-            if (!message) return;
-
-            displayUserMessage(message);
-
-            const payload = {
-                User_ID: config.User_ID,
-                Assistant_ID: config.Assistant_ID,
-                Org_ID: config.Org_ID,
-                message: message,
-                Thread_ID: config.Thread_ID
-            };
-
-            fetch('https://tixnmh1pe8.execute-api.us-east-2.amazonaws.com/prod/IntegralEd-Main', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.response) {
-                    displayAssistantMessage(data.response);
-                } else {
-                    displayAssistantMessage('Sorry, I did not understand that.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                displayAssistantMessage('An error occurred. Please try again later.');
-            });
-        }
-
-        function displayUserMessage(message) {
-            const messagesDiv = document.getElementById('messages');
-            if (!messagesDiv) {
-                console.error('Error: messagesDiv not found.');
-                return;
-            }
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message', 'user');
-            messageElement.innerText = message;
-            messagesDiv.appendChild(messageElement);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-
-        function displayAssistantMessage(message) {
-            const messagesDiv = document.getElementById('messages');
-            if (!messagesDiv) {
-                console.error('Error: messagesDiv not found.');
-                return;
-            }
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message', 'assistant');
-            messageElement.innerText = message;
-            messagesDiv.appendChild(messageElement);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        function sendMessage() {
+            const input = document.getElementById("chat-input");
+            if (input.value.trim() === "") return;
+            
+            const chatWindow = document.getElementById("chat-window");
+            const message = document.createElement("div");
+            message.classList.add("message", "user");
+            message.textContent = input.value;
+            chatWindow.appendChild(message);
+            input.value = "";
+            chatWindow.scrollTop = chatWindow.scrollHeight;
         }
     </script>
-
-    <script src="/assets/js/chat.js"></script>
 </body>
 </html>
