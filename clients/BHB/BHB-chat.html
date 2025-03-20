@@ -18,7 +18,7 @@
 
         body {
             font-family: Arial, sans-serif;
-            background-color: var(--background-color);
+            background: radial-gradient(circle at top, #f9f9f9, #e0e0e0);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -43,7 +43,7 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
+            align-items: center;
             border-right: 2px solid var(--primary-color);
         }
 
@@ -51,13 +51,12 @@
             background: none;
             border: none;
             color: var(--dark-text-color);
-            padding: 10px 0;
+            padding: 10px;
             cursor: pointer;
             width: 100%;
             text-align: left;
             font-size: 16px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            line-height: 2;
         }
 
         #sidebar button.active {
@@ -150,13 +149,13 @@
     <div id="container">
         <div id="sidebar">
             <button onclick="showSection(0)" id="nav-welcome">Welcome</button>
-            <button onclick="showSection(1)" id="nav-public-chat">Public Chat</button>
-            <button onclick="showSection(2)" id="nav-account-creation" disabled>Account Creation</button>
+            <button onclick="showSection(1)" id="nav-public-chat">Anonymous Public Chat</button>
+            <button onclick="showSection(2)" id="nav-tools">Tools</button>
         </div>
         <div id="content">
             <div class="section active">
                 <h1>Welcome!</h1>
-                <p>Access maternal health resources as a public use. Please note that this is an agreement for public use and not medical advice, in line with our style guide.</p>
+                <p>Access maternal health resources as a public user. Please note that this is an agreement for public use and not medical advice, in line with our style guide.</p>
                 <button onclick="showSection(1)">Next</button>
             </div>
             <div class="section chat-active">
@@ -171,8 +170,10 @@
                 </div>
             </div>
             <div class="section">
-                <h1>Account Creation</h1>
-                <p>Access to tools is not open in the MVP.</p>
+                <h1>Tools (not available in anonymous public accounts)</h1>
+                <button onclick="saveChat()">Save Chat</button>
+                <button onclick="exportPDF()">Export to PDF</button>
+                <button onclick="restartChat()">Start Over</button>
             </div>
         </div>
     </div>
