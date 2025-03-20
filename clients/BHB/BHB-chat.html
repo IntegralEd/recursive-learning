@@ -171,7 +171,7 @@
             </div>
             <div class="section">
                 <h1>Tools (not available in anonymous public accounts)</h1>
-                <button onclick="saveChat()">Save Chat</button>
+                <button onclick="redirectToIntake()">Create Account to Save Chat</button>
                 <button onclick="exportPDF()">Export to PDF</button>
                 <button onclick="restartChat()">Start Over</button>
             </div>
@@ -197,6 +197,11 @@
             chatWindow.appendChild(message);
             input.value = "";
             chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function redirectToIntake() {
+            const threadId = window.threadId || 'new';
+            window.location.href = `https://bmore.softr.app/user-intake?thread_id=${threadId}`;
         }
     </script>
 </body>
