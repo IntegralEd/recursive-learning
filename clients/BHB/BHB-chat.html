@@ -129,7 +129,7 @@
         .chat-container {
             display: none;
             flex-direction: column;
-            height: 700px; /* Reduce from 900px */
+            height: 700px; /* Ensure this is set */
         }
 
         .section.chat-active .chat-container {
@@ -292,7 +292,7 @@
         function showSection(index) {
             document.querySelectorAll('.section').forEach((section, i) => {
                 section.classList.toggle('active', i === index);
-                section.classList.toggle('chat-active', i === 1 && index !== 0);
+                section.classList.toggle('chat-active', i === 1);
             });
 
             const buttons = document.querySelectorAll('#sidebar button');
