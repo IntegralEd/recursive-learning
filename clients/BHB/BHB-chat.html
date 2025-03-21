@@ -11,7 +11,7 @@
 
     <style>
         :root {
-            --primary-color: #007BFF;
+            --primary-color: #6A6DB3;
             --accent-color: #0056b3;
             --dark-text-color: #111;
         }
@@ -88,14 +88,18 @@
             display: block;
         }
 
+        .section.chat-active .chat-container {
+            display: flex;
+        }
+
+        .section:not(.chat-active) .chat-container {
+            display: none;
+        }
+
         .chat-container {
             display: none;
             flex-direction: column;
             height: 100%;
-        }
-
-        .section.chat-active .chat-container {
-            display: flex;
         }
 
         .chat-window {
@@ -179,16 +183,31 @@
             flex-direction: column;
             height: 100%;
         }
+
+        .next-button {
+            background: url('/clients/BHB/assets/images/noun-next-5654311-FFFFFF.png') no-repeat right center;
+            background-size: 20px; /* Adjust size as needed */
+            padding-right: 30px; /* Ensure space for the icon */
+        }
     </style>
 </head>
 <body>
     <div id="container">
+        <!-- TOC: Table of Contents -->
         <div id="sidebar">
             <button onclick="showSection(0)" id="nav-welcome">Welcome</button>
             <button onclick="showSection(1)" id="nav-public-chat">Anonymous Public Chat</button>
             <button onclick="showSection(2)" id="nav-tools">Tools</button>
         </div>
+
+        <!-- Main Content Area -->
         <div id="content">
+            <!-- Header Menu (if needed) -->
+            <div id="header-menu">
+                <!-- Placeholder for future toolbar or menu -->
+            </div>
+
+            <!-- Slide Contents -->
             <div class="section active">
                 <h1>Welcome!</h1>
                 <p>Access maternal health resources as a public user. Please note that this is an agreement for public use and not medical advice, in line with our style guide.</p>
@@ -199,6 +218,8 @@
                 </div>
                 <button id="next-button" class="next-button" onclick="showSection(1)" disabled>Next</button>
             </div>
+
+            <!-- Slide Input -->
             <div class="section chat-active">
                 <div class="chat-container">
                     <div class="chat-window" id="chat-window">
@@ -210,6 +231,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="section">
                 <h1>Tools (not available in anonymous public accounts)</h1>
                 <button id="account-button" class="account-button" onclick="redirectToIntake()" disabled>Create Account to Save Chat</button>
