@@ -35,6 +35,8 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             flex-direction: column;
+            padding-top: 40px; /* Avoid header overlap */
+            max-width: 1200px; /* Keep layout consistent */
         }
 
         #header-bar {
@@ -52,8 +54,9 @@
         }
 
         #header-logo {
-            height: 20px;
-            width: auto;
+            height: auto;
+            width: 120px; /* Adjust for better visibility */
+            max-width: 100%;
         }
 
         .main-content {
@@ -126,7 +129,7 @@
         .chat-container {
             display: none;
             flex-direction: column;
-            height: 100%;
+            height: 700px; /* Reduce from 900px */
         }
 
         .section.chat-active .chat-container {
@@ -289,7 +292,7 @@
         function showSection(index) {
             document.querySelectorAll('.section').forEach((section, i) => {
                 section.classList.toggle('active', i === index);
-                section.classList.toggle('chat-active', i === 1);
+                section.classList.toggle('chat-active', i === 1 && index !== 0);
             });
 
             const buttons = document.querySelectorAll('#sidebar button');
