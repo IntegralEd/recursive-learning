@@ -64,6 +64,12 @@
             text-decoration: underline;
             text-decoration-thickness: 3px;
             color: var(--primary-color);
+            font-size: 18px;
+        }
+
+        #sidebar button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
         }
 
         #content {
@@ -93,7 +99,9 @@
         }
 
         .chat-window {
-            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
             overflow-y: auto;
             padding: 20px;
             border: 1px solid #ddd;
@@ -126,6 +134,11 @@
             padding: 10px;
             background: white;
             border-top: 1px solid #ddd;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 30%;
+            background: var(--light-bg);
         }
 
         .input-area input {
@@ -203,6 +216,12 @@
                 section.classList.toggle('active', i === index);
                 section.classList.toggle('chat-active', i === 1);
             });
+
+            // Example logic to disable buttons
+            const buttons = document.querySelectorAll('#sidebar button');
+            buttons.forEach((button, i) => {
+                button.disabled = i > index;
+            });
         }
 
         function sendMessage() {
@@ -241,6 +260,7 @@
                 accountButton.classList.remove('enabled');
                 accountButton.disabled = true;
             }
+            console.log(nextButton.classList); // Debugging
         }
 
         function saveChat() {
