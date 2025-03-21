@@ -54,9 +54,9 @@
         }
 
         #header-logo {
+            max-width: 120px;
             height: auto;
-            width: 120px; /* Adjust for better visibility */
-            max-width: 100%;
+            padding-right: 15px;
         }
 
         .main-content {
@@ -171,7 +171,8 @@
         .input-area {
             position: fixed;
             bottom: 0;
-            width: 80%; /* Adjust to match content width */
+            width: 100%;
+            max-width: 700px;
             height: 60px;
             background: white;
             padding: 10px;
@@ -243,6 +244,11 @@
             bottom: 0;
             width: 100%;
         }
+
+        .chat-window {
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
@@ -295,11 +301,12 @@
                 section.classList.toggle('chat-active', i === 1);
             });
 
-            const buttons = document.querySelectorAll('#sidebar button');
-            buttons.forEach((button, i) => {
-                button.classList.toggle('active', i === index);
-                button.disabled = i > index;
-            });
+            const chatContainer = document.querySelector(".chat-container");
+            chatContainer.style.display = index === 1 ? "flex" : "none";
+
+            if (index === 1) {
+                document.getElementById("nav-public-chat").removeAttribute("disabled");
+            }
         }
 
         function sendMessage() {
