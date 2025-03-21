@@ -38,9 +38,9 @@
         }
 
         #header-bar {
+            background: var(--primary-color);
             height: 40px;
             width: 100%;
-            background: var(--primary-color);
             display: flex;
             justify-content: flex-end;
             align-items: center;
@@ -61,6 +61,8 @@
             flex: 1;
             overflow: hidden;
             padding-top: 40px; /* To prevent overlap with header bar */
+            max-width: 1250px;
+            margin-top: 40px; /* To prevent overlap with header bar */
         }
 
         #sidebar {
@@ -89,9 +91,8 @@
         #sidebar button.active {
             font-weight: bold;
             text-decoration: underline;
-            text-decoration-thickness: 3px;
+            text-transform: uppercase;
             color: var(--primary-color);
-            font-size: 18px;
         }
 
         #sidebar button:disabled {
@@ -139,6 +140,9 @@
             border: 1px solid #ddd;
             border-radius: 8px;
             background: #f9f9f9;
+            max-width: 700px;
+            height: 900px;
+            overflow: hidden;
         }
 
         .message {
@@ -182,10 +186,13 @@
         }
 
         .send-button {
-            background: url('/clients/BHB/assets/images/noun-send-7149925-FFFFFF.png') no-repeat center;
-            background-size: contain;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
             width: 40px;
             height: 40px;
+            background: url('/clients/BHB/assets/images/noun-send-7149925-FFFFFF.png') no-repeat center;
+            background-size: contain;
             border: none;
             cursor: pointer;
             border-radius: 20px;
@@ -212,9 +219,9 @@
         }
 
         .next-button {
-            background: url('/clients/BHB/assets/images/noun-next-5654311-FFFFFF.png') no-repeat right center;
-            background-size: 20px; /* Adjust size as needed */
-            padding-right: 30px; /* Ensure space for the icon */
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
         }
 
         .affirmation-container {
@@ -238,7 +245,7 @@
 <body>
     <div id="container">
         <div id="header-bar">
-            <img id="header-logo" src="/Users/david/recursive-learning/clients/BHB/assets/images/noun-pregnant-7264845-FFFFFF (1).png" alt="Client Logo">
+            <img id="header-logo" src="/clients/BHB/assets/images/chat_banner_white.png" alt="Client Logo">
         </div>
         <div class="main-content">
             <div id="sidebar">
