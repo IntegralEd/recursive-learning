@@ -64,6 +64,7 @@
             text-decoration: underline;
             text-decoration-thickness: 3px;
             color: var(--primary-color);
+            font-size: 18px;
         }
 
         #sidebar button:disabled {
@@ -135,9 +136,10 @@
             border-top: 1px solid #ddd;
             position: absolute;
             bottom: 0;
-            width: 100%;
+            width: calc(100% - 20px);
             height: 30%;
             background: var(--light-bg);
+            margin: 0 10px;
         }
 
         .input-area input {
@@ -170,6 +172,12 @@
         .next-button.enabled, .account-button.enabled {
             background: var(--primary-color);
             cursor: pointer;
+        }
+
+        .section.chat-active, .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
     </style>
 </head>
