@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BHB Chat Assistant</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/clients/BHB/assets/css/variables.css">
+    <link rel="stylesheet" href="/clients/BHB/assets/css/custom.css">
+
+    <style>
+        :root {
+            --primary-color: #6a6db3;
+            --secondary-color: #e6184e;
+            --accent-color: #0cb189;
+            --background-color: #f9f9f9;
+            --text-color: #2b2b2b;
+            --nav-active-color: var(--primary-color);
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #container {
+            display: flex;
+            width: 95vw;
+            height: 85vh;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        #sidebar {
+            width: 20%;
+            background: white;
+            color: var(--text-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-right: 2px solid var(--primary-color);
+        }
+
+        #sidebar button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            font-size: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        #sidebar button.active {
+            font-weight: bold;
+            text-decoration: underline;
+            text-decoration-thickness: 3px;
+            color: var(--nav-active-color);
+        }
+
+        #content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .section {
+            display: none;
+            padding: 10px;
+            flex-grow: 1;
+        }
+
+        .section.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bottom-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            background: var(--background-color);
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="sidebar">
+            <button onclick="showSection(0)" id="nav-welcome" class="active">Welcome</button>
+            <button onclick="showSection(1)" id="nav-public-chat">Anonymous Public Chat</button>
+            <button onclick="showSection(2)" id="nav-tools">Tools</button>
+        </div>
+        <div id="content">
+            <div class="section active">
+                <h1>Welcome!</h1>
+                <p>Access maternal health resources as a public user. Please note that this is an agreement for public use and not medical advice, in line with our style guide.</p>
+                <div>
+                    <input type="checkbox" id="tos" onclick="checkAffirmations()"> I affirm the terms of service.<br>
+                    <input type="checkbox" id="norms" onclick="checkAffirmations()"> I affirm the community norms and guidelines.<br>
+                    <input type="checkbox" id="acknowledge" onclick="checkAffirmations()"> I acknowledge this is a monitored public health resource.<br>
+                </div>
+                <div class="bottom-bar">
+                    <button id="next-button" class="next-button" onclick="showSection(1)" disabled>Next</button>
+                </div>
+            </div>
+            <div class="section" id="public-chat">
+                <h1>Anonymous Public Chat</h1>
+                <p>This is where users will chat.</p>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function showSection(index) {
+        document.querySelectorAll('.section').forEach((section, i) => {
+            section.classList.toggle('active', i === index);
+        });
+        document.querySelectorAll('#sidebar button').forEach((button, i) => {
+            button.classList.toggle('active', i === index);
+        });
+    }
+</script>
+</html>
