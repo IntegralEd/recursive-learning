@@ -483,24 +483,26 @@
         }
 
         function checkAffirmations() {
-            const tos = document.getElementById('tos').checked;
-            const norms = document.getElementById('norms').checked;
-            const acknowledge = document.getElementById('acknowledge').checked;
-            const nextButton = document.getElementById('next-button');
-            const accountButton = document.getElementById('account-button');
+       const tos = document.getElementById('tos').checked;
+       const norms = document.getElementById('norms').checked;
+       const acknowledge = document.getElementById('acknowledge').checked;
+       const nextButton = document.getElementById('next-button');
+       const accountButton = document.getElementById('account-button');
 
-            if (tos && norms && acknowledge) {
-                nextButton.classList.add('enabled');
-                nextButton.disabled = false;
-                accountButton.classList.add('enabled');
-                accountButton.disabled = false;
-            } else {
-                nextButton.classList.remove('enabled');
-                nextButton.disabled = true;
-                accountButton.classList.remove('enabled');
-                accountButton.disabled = true;
-            }
-        }
+       if (nextButton && accountButton) {
+           if (tos && norms && acknowledge) {
+               nextButton.classList.add('enabled');
+               nextButton.disabled = false;
+               accountButton.classList.add('enabled');
+               accountButton.disabled = false;
+           } else {
+               nextButton.classList.remove('enabled');
+               nextButton.disabled = true;
+               accountButton.classList.remove('enabled');
+               accountButton.disabled = true;
+           }
+       }
+   }
 
         function saveChat() {
             const threadId = window.threadId || 'new';
