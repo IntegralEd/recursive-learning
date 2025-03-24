@@ -35,8 +35,9 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             flex-direction: column;
-            padding-top: 40px; /* Avoid header overlap */
-            max-width: 1200px; /* Keep layout consistent */
+            padding: 10px; /* Ensure 10px border from content to edge */
+            max-width: 1200px; /* Constrain horizontal size */
+            max-height: 800px; /* Constrain vertical size */
         }
 
         #header-bar {
@@ -107,14 +108,15 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 20px;
-            aspect-ratio: 16 / 9;
+            padding: 10px; /* Ensure 10px border from content to edge */
+            overflow-y: auto; /* Allow vertical scrolling if needed */
         }
 
         .section {
             display: none;
             padding: 10px;
-            flex: 1;
+            flex-grow: 1;
+            overflow-wrap: break-word; /* Ensure text wrapping */
         }
 
         .section.active {
@@ -166,15 +168,12 @@
         }
 
         .message.assistant::before {
-            content: '';
+            content: '••';
             position: absolute;
             top: 10px;
-            left: -10px;
-            width: 0;
-            height: 0;
-            border-top: 10px solid transparent;
-            border-bottom: 10px solid transparent;
-            border-right: 10px solid var(--primary-color);
+            left: -15px;
+            color: var(--primary-color);
+            font-size: 12px;
         }
 
         .message.user {
@@ -186,15 +185,12 @@
         }
 
         .message.user::after {
-            content: '';
+            content: '••';
             position: absolute;
             top: 10px;
-            right: -10px;
-            width: 0;
-            height: 0;
-            border-top: 10px solid transparent;
-            border-bottom: 10px solid transparent;
-            border-left: 10px solid var(--accent-color);
+            right: -15px;
+            color: var(--accent-color);
+            font-size: 12px;
         }
 
         .input-area {
@@ -328,6 +324,43 @@
             align-items: center;
             border-top: 1px solid #ddd;
         }
+
+        .loading-indicator {
+            display: inline-block;
+            color: #333; /* Charcoal color */
+            font-size: 14px;
+            position: relative;
+        }
+
+        .loading-indicator::after {
+            content: '...';
+            animation: dots 1s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% {
+                color: rgba(0, 0, 0, 0);
+                text-shadow:
+                    .25em 0 0 rgba(0, 0, 0, 0),
+                    .5em 0 0 rgba(0, 0, 0, 0);
+            }
+            40% {
+                color: #333;
+                text-shadow:
+                    .25em 0 0 rgba(0, 0, 0, 0),
+                    .5em 0 0 rgba(0, 0, 0, 0);
+            }
+            60% {
+                text-shadow:
+                    .25em 0 0 #333,
+                    .5em 0 0 rgba(0, 0, 0, 0);
+            }
+            80%, 100% {
+                text-shadow:
+                    .25em 0 0 #333,
+                    .5em 0 0 #333;
+            }
+        }
     </style>
 </head>
 <body>
@@ -340,7 +373,7 @@
                 <div id="sidebar">
                     <button onclick="showSection(0)" id="nav-welcome" class="active">Welcome</button>
                     <button onclick="showSection(1)" id="nav-public-chat" disabled>Anonymous Public Chat</button>
-                    <button onclick="showSection(2)" id="nav-tools" disabled>Tools</button>
+                    <button onclick="showSection(2)" id="nav-tools" disabled>Tools (not available in anonymous chat)</button>
                 </div>
                 <div id="content">
                     <div class="section active">
