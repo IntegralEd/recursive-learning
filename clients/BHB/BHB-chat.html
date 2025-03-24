@@ -353,14 +353,17 @@
         function showSection(index) {
             document.querySelectorAll('.section').forEach((section, i) => {
                 section.classList.toggle('active', i === index);
-                section.classList.toggle('chat-active', i === 1);
+            });
+            document.querySelectorAll('#sidebar button').forEach((button, i) => {
+                button.classList.toggle('active', i === index);
             });
 
-            const chatContainer = document.querySelector(".chat-container");
-            chatContainer.style.display = index === 1 ? "flex" : "none";
-
+            const chatContainer = document.querySelector("#public-chat");
             if (index === 1) {
                 document.getElementById("nav-public-chat").removeAttribute("disabled");
+                chatContainer.style.display = "block";
+            } else {
+                chatContainer.style.display = "none";
             }
         }
 
@@ -375,6 +378,18 @@
             chatWindow.appendChild(message);
             input.value = "";
             chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            // Transmit message to Lambda endpoint
+            fetch('https://tixnmh1pe8.execute-api.us-east-2.amazonaws.com/prod/IntegralEd-Main', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: message.textContent })
+            })
+            .then(response => response.json())
+            .then(data => console.log('Success:', data))
+            .catch((error) => console.error('Error:', error));
         }
 
         function redirectToIntake() {
@@ -411,7 +426,7 @@
                 session: {
                     id: threadId,
                     timestamp: timestamp,
-                    source_url: "https://bmore.softr.app/chat",
+                    source_url: "https://recursivelearning.app/BHB-chat.html",
                     entry_point: "public_anonymous"
                 },
                 persona: {
