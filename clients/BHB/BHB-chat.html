@@ -161,12 +161,40 @@
             background: var(--primary-color);
             color: white;
             align-self: flex-start;
+            position: relative;
+            margin-left: 10px;
+        }
+
+        .message.assistant::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: -10px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-right: 10px solid var(--primary-color);
         }
 
         .message.user {
             background: var(--accent-color);
             color: white;
             align-self: flex-end;
+            position: relative;
+            margin-right: 10px;
+        }
+
+        .message.user::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: -10px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 10px solid var(--accent-color);
         }
 
         .input-area {
@@ -303,43 +331,45 @@
     </style>
 </head>
 <body>
-    <div id="container">
-        <div id="header-bar">
-            <img id="header-logo" src="/clients/BHB/assets/images/chat_banner_white.png" alt="Client Logo">
-        </div>
-        <div class="main-content">
-            <div id="sidebar">
-                <button onclick="showSection(0)" id="nav-welcome">Welcome</button>
-                <button onclick="showSection(1)" id="nav-public-chat" disabled>Anonymous Public Chat</button>
-                <button onclick="showSection(2)" id="nav-tools" disabled>Tools</button>
+    <div id="main-container" style="max-width: 1200px; margin: 0 auto;">
+        <div id="container">
+            <div id="header-bar">
+                <img id="header-logo" src="/clients/BHB/assets/images/chat_banner_white.png" alt="Client Logo">
             </div>
-            <div id="content">
-                <div class="section active">
-                    <h1>Welcome!</h1>
-                    <p>Access maternal health resources as a public user. Please note that this is an agreement for public use and not medical advice, in line with our style guide.</p>
-                    <div>
-                        <input type="checkbox" id="tos" onclick="checkAffirmations()"> I affirm the terms of service.<br>
-                        <input type="checkbox" id="norms" onclick="checkAffirmations()"> I affirm the community norms and guidelines.<br>
-                        <input type="checkbox" id="acknowledge" onclick="checkAffirmations()"> I acknowledge this is a monitored public health resource.<br>
-                    </div>
-                    <button id="next-button" class="next-button" onclick="showSection(1)" disabled>Next</button>
+            <div class="main-content">
+                <div id="sidebar">
+                    <button onclick="showSection(0)" id="nav-welcome" class="active">Welcome</button>
+                    <button onclick="showSection(1)" id="nav-public-chat" disabled>Anonymous Public Chat</button>
+                    <button onclick="showSection(2)" id="nav-tools" disabled>Tools</button>
                 </div>
-                <div class="section chat-active">
-                    <div class="chat-container">
-                        <div class="chat-window" id="chat-window">
-                            <div class="message assistant">Welcome to the B'more Healthy Babies Maternal Health Chat</div>
+                <div id="content">
+                    <div class="section active">
+                        <h1>Welcome!</h1>
+                        <p>Access maternal health resources as a public user. Please note that this is an agreement for public use and not medical advice, in line with our style guide.</p>
+                        <div>
+                            <input type="checkbox" id="tos" onclick="checkAffirmations()"> I affirm the terms of service.<br>
+                            <input type="checkbox" id="norms" onclick="checkAffirmations()"> I affirm the community norms and guidelines.<br>
+                            <input type="checkbox" id="acknowledge" onclick="checkAffirmations()"> I acknowledge this is a monitored public health resource.<br>
                         </div>
-                        <div class="input-area">
-                            <input type="text" id="chat-input" placeholder="Type your message here...">
-                            <button class="send-button" onclick="sendMessage()">✈</button>
+                        <button id="next-button" class="next-button" onclick="showSection(1)" disabled>Next</button>
+                    </div>
+                    <div class="section chat-active">
+                        <div class="chat-container">
+                            <div class="chat-window" id="chat-window">
+                                <div class="message assistant">Welcome to the B'more Healthy Babies Maternal Health Chat</div>
+                            </div>
+                            <div class="input-area">
+                                <input type="text" id="chat-input" placeholder="Type your message here...">
+                                <button class="send-button" onclick="sendMessage()">✈</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="section">
-                    <h1>Tools (not available in anonymous public accounts)</h1>
-                    <button id="account-button" class="account-button" onclick="redirectToIntake()" disabled>Create Account to Save Chat</button>
-                    <button onclick="exportPDF()">Export to PDF</button>
-                    <button onclick="restartChat()">Start Over</button>
+                    <div class="section">
+                        <h1>Tools (not available in anonymous public accounts)</h1>
+                        <button id="account-button" class="account-button" onclick="redirectToIntake()" disabled>Create Account to Save Chat</button>
+                        <button onclick="exportPDF()">Export to PDF</button>
+                        <button onclick="restartChat()">Start Over</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -350,6 +380,10 @@
     </div>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            showSection(0); // Ensure the Welcome tab is active on page load
+        });
+
         function showSection(index) {
             document.querySelectorAll('.section').forEach((section, i) => {
                 section.classList.toggle('active', i === index);
