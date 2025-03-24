@@ -358,12 +358,12 @@
                 button.classList.toggle('active', i === index);
             });
 
-            const chatContainer = document.querySelector("#public-chat");
+            const chatContainer = document.querySelector(".chat-container");
             if (index === 1) {
                 document.getElementById("nav-public-chat").removeAttribute("disabled");
-                chatContainer.style.display = "block";
+                if (chatContainer) chatContainer.style.display = "flex";
             } else {
-                chatContainer.style.display = "none";
+                if (chatContainer) chatContainer.style.display = "none";
             }
         }
 
@@ -379,6 +379,12 @@
             input.value = "";
             chatWindow.scrollTop = chatWindow.scrollHeight;
 
+            // Indicate chat is in transmission
+            const transmissionIndicator = document.createElement("div");
+            transmissionIndicator.classList.add("message", "assistant");
+            transmissionIndicator.textContent = "Sending...";
+            chatWindow.appendChild(transmissionIndicator);
+
             // Transmit message to Lambda endpoint
             fetch('https://tixnmh1pe8.execute-api.us-east-2.amazonaws.com/prod/IntegralEd-Main', {
                 method: 'POST',
@@ -388,8 +394,19 @@
                 body: JSON.stringify({ message: message.textContent })
             })
             .then(response => response.json())
-            .then(data => console.log('Success:', data))
-            .catch((error) => console.error('Error:', error));
+            .then(data => {
+                console.log('Success:', data);
+                transmissionIndicator.remove(); // Remove the "Sending..." indicator
+                const responseMessage = document.createElement("div");
+                responseMessage.classList.add("message", "assistant");
+                responseMessage.textContent = data.response;
+                chatWindow.appendChild(responseMessage);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                transmissionIndicator.textContent = "Failed to send message.";
+            });
         }
 
         function redirectToIntake() {
