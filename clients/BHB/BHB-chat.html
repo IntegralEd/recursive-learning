@@ -379,7 +379,16 @@
     </div>
 
     <div id="main-form">
-        <!-- Existing content -->
+        <div class="section active">
+            <h1>Welcome!</h1>
+            <p>Access maternal health resources as a public user. Please note that this is an agreement for public use and not medical advice, in line with our style guide.</p>
+            <div>
+                <input type="checkbox" id="tos" onclick="checkAffirmations()"> I affirm the terms of service.<br>
+                <input type="checkbox" id="norms" onclick="checkAffirmations()"> I affirm the community norms and guidelines.<br>
+                <input type="checkbox" id="acknowledge" onclick="checkAffirmations()"> I acknowledge this is a monitored public health resource.<br>
+            </div>
+            <button id="next-button" class="next-button" onclick="showSection(1)" disabled>Next</button>
+        </div>
     </div>
 
     <script>
