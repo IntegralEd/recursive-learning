@@ -105,8 +105,8 @@
     <div id="container">
         <div id="sidebar">
             <button onclick="showSection(0)" id="nav-welcome" class="active">Welcome</button>
-            <button onclick="showSection(1)" id="nav-public-chat">Anonymous Public Chat</button>
-            <button onclick="showSection(2)" id="nav-tools">Tools</button>
+            <button onclick="showSection(1)" id="nav-public-chat" disabled>Anonymous Public Chat</button>
+            <button onclick="showSection(2)" id="nav-tools" disabled>Tools</button>
         </div>
         <div id="content">
             <div class="section active">
@@ -136,6 +136,25 @@
         document.querySelectorAll('#sidebar button').forEach((button, i) => {
             button.classList.toggle('active', i === index);
         });
+
+        if (index === 1) {
+            document.getElementById("nav-public-chat").removeAttribute("disabled");
+        }
+    }
+
+    function checkAffirmations() {
+        const tos = document.getElementById('tos').checked;
+        const norms = document.getElementById('norms').checked;
+        const acknowledge = document.getElementById('acknowledge').checked;
+        const nextButton = document.getElementById('next-button');
+
+        if (tos && norms && acknowledge) {
+            nextButton.classList.add('enabled');
+            nextButton.disabled = false;
+        } else {
+            nextButton.classList.remove('enabled');
+            nextButton.disabled = true;
+        }
     }
 </script>
 </html>
