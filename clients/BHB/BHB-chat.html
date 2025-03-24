@@ -252,31 +252,26 @@
         }
 
         #main-form {
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 150px); /* Adjust for input area */
+            max-width: 1200px;
+            margin: 0 auto;
+            height: calc(100vh - 150px);
         }
 
         .main-content {
             display: flex;
             flex: 1;
-            overflow: hidden;
         }
 
         #sidebar {
-            width: 20%;
+            flex: 0 0 20%;
             max-width: 240px;
         }
 
         #content {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            max-width: 960px; /* 80% of 1200px */
+            max-width: 960px;
         }
 
         .chat-container {
