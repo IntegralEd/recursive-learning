@@ -27,4 +27,13 @@
 
 ## Goal for Today
 
-- Achieve a successful chat with the Bmore instance within 1 hour. 
+- Achieve a successful chat with the Bmore instance within 1 hour.
+
+## EL Merit RAG Chat Implementation
+
+### Branch Creation
+```bash
+git checkout -b el-merit main
+```
+
+### File Structure 
