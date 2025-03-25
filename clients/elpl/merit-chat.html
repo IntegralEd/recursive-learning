@@ -41,7 +41,7 @@
 
             /* Client Logo & Icons */
             --client-logo: url('../assets/images/logo.png');
-            --client-avatar: url('../assets/logo.png');
+            --client-avatar: url('../assets/el-education-avatar.png');
 
             /* Voice & Tone */
             --client-voice-tone: 'Reflective, academic, and adventurous.';
@@ -191,7 +191,7 @@
 
         #sidebar {
             width: 20%;
-            background: var(--secondary-color);
+            background: var(--primary-color);
             color: #fff;
             display: flex;
             flex-direction: column;
@@ -248,14 +248,14 @@
 
         /* Update the send button path */
         .send-button {
-            background: url('/clients/elpl/assets/images/noun-send-7149925-FFFFFF.png') no-repeat center;
+            background: url('../assets/images/noun-send-7149925-FFFFFF.png') no-repeat center;
             background-size: contain;
             /* Other styles */
         }
 
         /* Update the banner logo path */
         #header-logo {
-            content: url('/clients/elpl/assets/images/banner_white_logo.png'); /* Ensure this path is correct */
+            content: url('../assets/images/banner_white_logo.png'); /* Ensure this path is correct */
             /* Other styles */
         }
     </style>
@@ -263,27 +263,25 @@
 <body>
     <div id="container">
         <div id="header-bar">
-            <img id="header-logo" src="/clients/elpl/assets/images/EL_EDUCATION_logo_crimson_preferred.png" alt="Client Logo">
+            <img id="header-logo" src="/clients/elpl/assets/images/lockup_white_logo.png" alt="Client Logo" style="max-height: 50px; margin: 5px;">
         </div>
         <div class="main-content">
             <div id="sidebar">
-                <button onclick="showSection(0)" id="nav-welcome" class="active">Welcome</button>
-                <button onclick="showSection(1)" id="nav-public-chat" disabled>Anonymous Public Chat</button>
-                <button onclick="showSection(2)" id="nav-tools" disabled>Tools (not available in anonymous chat)</button>
+                <button onclick="showSection(0)" id="nav-welcome" class="active">No Chat</button>
+                <button onclick="showSection(1)" id="nav-public-chat" disabled>Load Chat</button>
             </div>
             <div id="content">
                 <div class="section active">
                     <h1>Welcome!</h1>
                     <p>Access educational resources as a public user. Please note that this is an agreement for public use and not educational advice, in line with our style guide.</p>
-                    <!-- Teacher context intake will be added here -->
                     <div id="teacher-context" class="teacher-context">
                         <p>Please check the curriculum focus for this chat:</p>
-                        <label><input type="checkbox" name="grade" value="Kindergarten"> Kindergarten</label>
-                        <label><input type="checkbox" name="grade" value="Grade 1"> Grade 1</label>
-                        <label><input type="checkbox" name="grade" value="Grade 2"> Grade 2</label>
-                        <label><input type="checkbox" name="grade" value="Grade 3"> Grade 3</label>
-                        <label><input type="checkbox" name="grade" value="Grade 4"> Grade 4</label>
-                        <label><input type="checkbox" name="grade" value="Grade 5"> Grade 5</label>
+                        <label><input type="checkbox" name="grade" value="Kindergarten" onclick="checkAffirmations()"> Kindergarten</label>
+                        <label><input type="checkbox" name="grade" value="Grade 1" onclick="checkAffirmations()"> Grade 1</label>
+                        <label><input type="checkbox" name="grade" value="Grade 2" onclick="checkAffirmations()"> Grade 2</label>
+                        <label><input type="checkbox" name="grade" value="Grade 3" onclick="checkAffirmations()"> Grade 3</label>
+                        <label><input type="checkbox" name="grade" value="Grade 4" onclick="checkAffirmations()"> Grade 4</label>
+                        <label><input type="checkbox" name="grade" value="Grade 5" onclick="checkAffirmations()"> Grade 5</label>
                     </div>
                     <button id="next-button" class="next-button" onclick="showSection(1)" disabled>Next</button>
                 </div>
@@ -297,12 +295,6 @@
                             <button class="send-button" onclick="sendMessage()">✈</button>
                         </div>
                     </div>
-                </div>
-                <div class="section">
-                    <h1>Tools (not available in anonymous public accounts)</h1>
-                    <button id="account-button" class="account-button" onclick="redirectToIntake()" disabled>Create Account to Save Chat</button>
-                    <button onclick="exportPDF()">Export to PDF</button>
-                    <button onclick="restartChat()">Start Over</button>
                 </div>
             </div>
         </div>
@@ -372,6 +364,33 @@
 
             if (index === 1) {
                 document.getElementById('nav-public-chat').removeAttribute('disabled');
+                // Load chat logic
+                const threadId = localStorage.getItem('threadId');
+                if (threadId) {
+                    // Load existing thread
+                } else {
+                    // Start new chat
+                }
+            }
+        }
+
+        function checkAffirmations() {
+            const checkboxes = document.querySelectorAll('#teacher-context input[type="checkbox"]');
+            const nextButton = document.getElementById('next-button');
+            let anyChecked = false;
+
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    anyChecked = true;
+                }
+            });
+
+            if (anyChecked) {
+                nextButton.classList.add('enabled');
+                nextButton.disabled = false;
+            } else {
+                nextButton.classList.remove('enabled');
+                nextButton.disabled = true;
             }
         }
     </script>
