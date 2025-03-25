@@ -18,7 +18,7 @@
 
         body {
             font-family: Arial, sans-serif;
-            background: radial-gradient(circle at top, #f9f9f9, #e0e0e0);
+            background: #fff; /* Remove radial gradient for better embedding */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -71,32 +71,46 @@
 
         #sidebar {
             width: 20%;
-            background: white;
-            color: var(--dark-text-color);
+            background: var(--primary-color);
+            color: #fff;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            border-right: 2px solid var(--primary-color);
+            border-right: 2px solid rgba(255, 255, 255, 0.2);
         }
 
         #sidebar button {
             background: none;
             border: none;
-            color: var(--dark-text-color);
+            color: #fff;
             padding: 10px;
             cursor: pointer;
             width: 100%;
             text-align: left;
             font-size: 16px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            transition: opacity 0.2s;
+        }
+
+        #sidebar button:hover {
+            opacity: 0.9;
         }
 
         #sidebar button.active {
+            position: relative;
             font-weight: bold;
-            text-decoration: underline;
             text-transform: uppercase;
-            color: var(--primary-color);
+        }
+
+        #sidebar button.active::after {
+            content: "";
+            position: absolute;
+            left: 10%;
+            right: 10%;
+            bottom: 0;
+            height: 3px;
+            background-color: #fff;
         }
 
         #sidebar button:disabled {
@@ -161,10 +175,11 @@
 
         .message.assistant {
             background: var(--primary-color);
-            color: white;
+            color: #fff;
             align-self: flex-start;
             position: relative;
             margin-left: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .message.assistant::before {
@@ -178,10 +193,11 @@
 
         .message.user {
             background: var(--accent-color);
-            color: white;
+            color: #fff;
             align-self: flex-end;
             position: relative;
             margin-right: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .message.user::after {
@@ -225,6 +241,16 @@
             border: none;
             cursor: pointer;
             border-radius: 20px;
+        }
+
+        @keyframes pulseSendButton {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .send-button:hover {
+            animation: pulseSendButton 0.8s infinite;
         }
 
         .next-button, .account-button {
