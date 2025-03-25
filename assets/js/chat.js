@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initChatInterface(config) {
+    // Add thread persistence
+    config.threadId = localStorage.getItem('threadId') || null;
+    
     const messagesDiv = document.getElementById('messages');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
@@ -44,7 +47,7 @@ function initChatInterface(config) {
             Assistant_ID: config.Assistant_ID,
             Org_ID: config.Org_ID,
             message: message,
-            Thread_ID: config.Thread_ID,
+            threadId: config.threadId,  // Use threadId consistently
         };
 
         fetch('https://tixnmh1pe8.execute-api.us-east-2.amazonaws.com/prod/IntegralEd-Main', {
@@ -58,6 +61,11 @@ function initChatInterface(config) {
         .then(data => {
             if (data && data.response) {
                 displayAssistantMessage(data.response);
+                // Persist threadId
+                if (data.Thread_ID) {
+                    config.threadId = data.Thread_ID;
+                    localStorage.setItem('threadId', data.Thread_ID);
+                }
             } else {
                 displayAssistantMessage('Sorry, I did not understand that.');
             }
