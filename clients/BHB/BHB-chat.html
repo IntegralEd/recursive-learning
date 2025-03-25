@@ -453,8 +453,15 @@
             if (input.value.trim() === "") return;
             
             messageCount++;
-            console.log(`Sending message ${messageCount} with existing threadId: ${window.threadId}`);
             
+            // Modify the request body based on whether it's first message
+            const requestBody = messageCount === 1 ? 
+                { message: input.value } : // First message - don't send threadId
+                { message: input.value, threadId: window.threadId }; // Subsequent messages
+            
+            console.log(`Sending message ${messageCount}${messageCount > 1 ? ` with threadId: ${window.threadId}` : ''}`);
+            
+            // Add message to UI
             const chatWindow = document.getElementById("chat-window");
             const message = document.createElement("div");
             message.classList.add("message", "user");
@@ -463,22 +470,19 @@
             input.value = "";
             chatWindow.scrollTop = chatWindow.scrollHeight;
 
-            // Indicate chat is in transmission
+            // Show loading indicator
             const transmissionIndicator = document.createElement("div");
             transmissionIndicator.classList.add("message", "assistant");
             transmissionIndicator.textContent = "Sending...";
             chatWindow.appendChild(transmissionIndicator);
 
-            // Transmit message to Lambda endpoint
+            // Send to Lambda
             fetch('https://tixnmh1pe8.execute-api.us-east-2.amazonaws.com/prod/IntegralEd-Main', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ 
-                    message: message.textContent,
-                    threadId: window.threadId 
-                })
+                body: JSON.stringify(requestBody)
             })
             .then(response => response.json())
             .then(data => {
