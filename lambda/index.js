@@ -69,8 +69,9 @@ exports.handler = async (event) => {
       content: message,
     });
 
+    const assistantId = 'asst_QoAA395ibbyMImFJERbG2hKT';
     const run = await openai.beta.threads.runs.create(currentThreadId, {
-      assistant_id: 'asst_IA5PsJxdShVPTAv2xeXTr4Ma',
+      assistant_id: assistantId,
     });
 
     let runStatus;
