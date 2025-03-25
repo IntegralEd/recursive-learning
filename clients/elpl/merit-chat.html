@@ -167,50 +167,48 @@
     </style>
 </head>
 <body>
-    <div id="embed-container" style="max-width: 1200px; margin: 0 auto;">
-        <div id="container">
-            <div id="header-bar">
-                <img id="header-logo" src="/clients/el-education/assets/images/chat_banner_white.png" alt="Client Logo">
+    <div id="container">
+        <div id="header-bar">
+            <img id="header-logo" src="/clients/el-education/assets/images/chat_banner_white.png" alt="Client Logo">
+        </div>
+        <div class="main-content">
+            <div id="sidebar">
+                <button onclick="showSection(0)" id="nav-welcome" class="active">Welcome</button>
+                <button onclick="showSection(1)" id="nav-public-chat" disabled>Anonymous Public Chat</button>
+                <button onclick="showSection(2)" id="nav-tools" disabled>Tools (not available in anonymous chat)</button>
             </div>
-            <div class="main-content">
-                <div id="sidebar">
-                    <button onclick="showSection(0)" id="nav-welcome" class="active">Welcome</button>
-                    <button onclick="showSection(1)" id="nav-public-chat" disabled>Anonymous Public Chat</button>
-                    <button onclick="showSection(2)" id="nav-tools" disabled>Tools (not available in anonymous chat)</button>
+            <div id="content">
+                <div class="section active">
+                    <h1>Welcome!</h1>
+                    <p>Access educational resources as a public user. Please note that this is an agreement for public use and not educational advice, in line with our style guide.</p>
+                    <!-- Teacher context intake will be added here -->
+                    <div id="teacher-context" class="teacher-context">
+                        <p>Please check the curriculum focus for this chat:</p>
+                        <label><input type="checkbox" name="grade" value="Kindergarten"> Kindergarten</label>
+                        <label><input type="checkbox" name="grade" value="Grade 1"> Grade 1</label>
+                        <label><input type="checkbox" name="grade" value="Grade 2"> Grade 2</label>
+                        <label><input type="checkbox" name="grade" value="Grade 3"> Grade 3</label>
+                        <label><input type="checkbox" name="grade" value="Grade 4"> Grade 4</label>
+                        <label><input type="checkbox" name="grade" value="Grade 5"> Grade 5</label>
+                    </div>
+                    <button id="next-button" class="next-button" onclick="showSection(1)" disabled>Next</button>
                 </div>
-                <div id="content">
-                    <div class="section active">
-                        <h1>Welcome!</h1>
-                        <p>Access educational resources as a public user. Please note that this is an agreement for public use and not educational advice, in line with our style guide.</p>
-                        <!-- Teacher context intake will be added here -->
-                        <div id="teacher-context" class="teacher-context">
-                            <p>Please check the curriculum focus for this chat:</p>
-                            <label><input type="checkbox" name="grade" value="Kindergarten"> Kindergarten</label>
-                            <label><input type="checkbox" name="grade" value="Grade 1"> Grade 1</label>
-                            <label><input type="checkbox" name="grade" value="Grade 2"> Grade 2</label>
-                            <label><input type="checkbox" name="grade" value="Grade 3"> Grade 3</label>
-                            <label><input type="checkbox" name="grade" value="Grade 4"> Grade 4</label>
-                            <label><input type="checkbox" name="grade" value="Grade 5"> Grade 5</label>
+                <div class="section chat-active">
+                    <div class="chat-container">
+                        <div class="chat-window" id="chat-window">
+                            <div class="message assistant">Welcome to the EL Education Merit Chat</div>
                         </div>
-                        <button id="next-button" class="next-button" onclick="showSection(1)" disabled>Next</button>
-                    </div>
-                    <div class="section chat-active">
-                        <div class="chat-container">
-                            <div class="chat-window" id="chat-window">
-                                <div class="message assistant">Welcome to the EL Education Merit Chat</div>
-                            </div>
-                            <div class="input-area">
-                                <input type="text" id="chat-input" placeholder="Type your message here...">
-                                <button class="send-button" onclick="sendMessage()">✈</button>
-                            </div>
+                        <div class="input-area">
+                            <input type="text" id="chat-input" placeholder="Type your message here...">
+                            <button class="send-button" onclick="sendMessage()">✈</button>
                         </div>
                     </div>
-                    <div class="section">
-                        <h1>Tools (not available in anonymous public accounts)</h1>
-                        <button id="account-button" class="account-button" onclick="redirectToIntake()" disabled>Create Account to Save Chat</button>
-                        <button onclick="exportPDF()">Export to PDF</button>
-                        <button onclick="restartChat()">Start Over</button>
-                    </div>
+                </div>
+                <div class="section">
+                    <h1>Tools (not available in anonymous public accounts)</h1>
+                    <button id="account-button" class="account-button" onclick="redirectToIntake()" disabled>Create Account to Save Chat</button>
+                    <button onclick="exportPDF()">Export to PDF</button>
+                    <button onclick="restartChat()">Start Over</button>
                 </div>
             </div>
         </div>
