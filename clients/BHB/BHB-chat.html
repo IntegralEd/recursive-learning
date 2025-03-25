@@ -414,8 +414,20 @@
     </div>
 
     <script>
+        let messageCount = 0; // Add at top of script
+
+        function getOrInitThreadId() {
+            let existingId = localStorage.getItem('threadId');
+            if (!existingId) {
+                existingId = 'thread_' + Date.now();
+                localStorage.setItem('threadId', existingId);
+            }
+            return existingId;
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
-            showSection(0); // Ensure the Welcome tab is active on page load
+            showSection(0);
+            window.threadId = getOrInitThreadId(); // Add thread ID initialization
         });
 
         function showSection(index) {
@@ -439,6 +451,8 @@
             const input = document.getElementById("chat-input");
             if (input.value.trim() === "") return;
             
+            messageCount++; // Increment message counter
+            
             const chatWindow = document.getElementById("chat-window");
             const message = document.createElement("div");
             message.classList.add("message", "user");
@@ -459,7 +473,10 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ message: message.textContent })
+                body: JSON.stringify({ 
+                    message: message.textContent,
+                    threadId: window.threadId 
+                })
             })
             .then(response => response.json())
             .then(data => {
@@ -470,6 +487,9 @@
                 responseMessage.textContent = data.response;
                 chatWindow.appendChild(responseMessage);
                 chatWindow.scrollTop = chatWindow.scrollHeight;
+                if (messageCount === 5) {
+                    saveChat();
+                }
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -483,26 +503,26 @@
         }
 
         function checkAffirmations() {
-       const tos = document.getElementById('tos').checked;
-       const norms = document.getElementById('norms').checked;
-       const acknowledge = document.getElementById('acknowledge').checked;
-       const nextButton = document.getElementById('next-button');
-       const accountButton = document.getElementById('account-button');
+            const tos = document.getElementById('tos').checked;
+            const norms = document.getElementById('norms').checked;
+            const acknowledge = document.getElementById('acknowledge').checked;
+            const nextButton = document.getElementById('next-button');
+            const accountButton = document.getElementById('account-button');
 
-       if (nextButton && accountButton) {
-           if (tos && norms && acknowledge) {
-               nextButton.classList.add('enabled');
-               nextButton.disabled = false;
-               accountButton.classList.add('enabled');
-               accountButton.disabled = false;
-           } else {
-               nextButton.classList.remove('enabled');
-               nextButton.disabled = true;
-               accountButton.classList.remove('enabled');
-               accountButton.disabled = true;
-           }
-       }
-   }
+            if (nextButton && accountButton) {
+                if (tos && norms && acknowledge) {
+                    nextButton.classList.add('enabled');
+                    nextButton.disabled = false;
+                    accountButton.classList.add('enabled');
+                    accountButton.disabled = false;
+                } else {
+                    nextButton.classList.remove('enabled');
+                    nextButton.disabled = true;
+                    accountButton.classList.remove('enabled');
+                    accountButton.disabled = true;
+                }
+            }
+        }
 
         function saveChat() {
             const threadId = window.threadId || 'new';
