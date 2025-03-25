@@ -267,8 +267,8 @@
         </div>
         <div class="main-content">
             <div id="sidebar">
-                <button onclick="showSection(0)" id="nav-welcome" class="active">No Chat</button>
-                <button onclick="showSection(1)" id="nav-public-chat" disabled>Load Chat</button>
+                <button onclick="showSection(0)" id="nav-welcome" class="active">Welcome</button>
+                <button onclick="showSection(1)" id="nav-chat" disabled>Chat</button>
             </div>
             <div id="content">
                 <div class="section active">
@@ -285,7 +285,7 @@
                     </div>
                     <button id="next-button" class="next-button" onclick="showSection(1)" disabled>Next</button>
                 </div>
-                <div class="section chat-active">
+                <div class="section">
                     <div class="chat-container">
                         <div class="chat-window" id="chat-window">
                             <div class="message assistant">Welcome to the EL Education Merit Chat</div>
@@ -363,7 +363,7 @@
             });
 
             if (index === 1) {
-                document.getElementById('nav-public-chat').removeAttribute('disabled');
+                document.getElementById('nav-chat').removeAttribute('disabled');
                 // Load chat logic
                 const threadId = localStorage.getItem('threadId');
                 if (threadId) {
