@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BHB Chat Assistant</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/clients/BHB/assets/css/variables.css">
+    <link rel="stylesheet" href="/clients/BHB/assets/css/custom.css">
+
+    <style>
+        :root {
+            /* Branding Colors */
+            --primary-color: #c6123f; /* EL Education Crimson */
+            --secondary-color: #211651; /* Dark Navy */
+            --tertiary-color: #ffa409; /* CTA Orange */
+            --background-color: #f9f9f9; /* Light Background */
+            --text-color: #2b2b2b; /* Dark Gray Text */
+            --cta-text-color: #ffffff; /* CTA Button Text */
+
+            /* Typography */
+            --client-font-h1: 'Lora, serif';
+            --client-font-h2: 'Montserrat, sans-serif';
+            --client-font-body: 'Source Sans Pro, sans-serif';
+            --client-font-size-h1: 36px;
+            --client-font-size-h2: 28px;
+            --client-font-size-body: 18px;
+
+            /* Layout */
+            --client-button-radius: 12px;
+            --client-button-padding: 14px 28px;
+            --client-card-border-radius: 16px;
+            --client-spacing-large: 40px;
+            --client-spacing-medium: 28px;
+            --client-spacing-small: 18px;
+
+            /* Accessibility */
+            --client-font-scale: 1.2;
+            --client-high-contrast-mode: true;
+
+            /* Client Logo & Icons */
+            --client-logo: url('../assets/el-education-logo.png');
+            --client-avatar: url('../assets/el-education-avatar.png');
+
+            /* Voice & Tone */
+            --client-voice-tone: 'Reflective, academic, and adventurous.';
+        }
+
+        /* Global Styles */
+        body {
+            font-family: var(--client-font-body);
+            background: var(--background-color);
+            color: var(--text-color);
+        }
+
+        /* Headings */
+        h1 {
+            font-family: var(--client-font-h1);
+            font-size: var(--client-font-size-h1);
+            color: var(--primary-color);
+        }
+
+        h2 {
+            font-family: var(--client-font-h2);
+            font-size: var(--client-font-size-h2);
+            color: var(--secondary-color);
+        }
+
+        /* Buttons */
+        button {
+            background: var(--tertiary-color);
+            color: var(--cta-text-color);
+            padding: var(--client-button-padding);
+            border: none;
+            border-radius: var(--client-button-radius);
+            font-size: var(--client-font-size-body);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: var(--client-card-border-radius);
+            padding: var(--client-spacing-medium);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Callout/Icon Styling */
+        .callout {
+            display: flex;
+            align-items: center;
+            background: var(--secondary-color);
+            color: white;
+            padding: var(--client-spacing-small);
+            border-radius: 12px;
+        }
+
+        .callout img {
+            width: 48px;
+            height: 48px;
+            margin-right: 12px;
+        }
+
+        /* Teacher Context Form on the Welcome Tab */
+        .teacher-context {
+            margin-top: var(--client-spacing-medium);
+            padding: var(--client-spacing-small);
+            background-color: var(--background-color);
+            border: 1px solid var(--secondary-color);
+            border-radius: var(--client-card-border-radius);
+        }
+
+        .teacher-context p {
+            font-family: var(--client-font-h2);
+            font-size: var(--client-font-size-body);
+            margin-bottom: var(--client-spacing-small);
+            color: var(--secondary-color);
+        }
+
+        .teacher-context label {
+            display: block;
+            font-family: var(--client-font-body);
+            font-size: var(--client-font-size-body);
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .teacher-context input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        /* Full-page Teacher Chat Reflection Styles */
+        .fullpage-chat {
+            padding: var(--client-spacing-large);
+            background: var(--background-color);
+        }
+
+        .fullpage-chat .chat-window {
+            border: 2px solid var(--secondary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Minimal Embed Chat (for Storyline iframe) */
+        .embed-chat {
+            margin: 0;
+            padding: var(--client-spacing-small);
+            font-size: calc(var(--client-font-size-body) * var(--client-font-scale));
+        }
+
+        /* Accessibility Enhancements */
+        @media (prefers-contrast: high) {
+            body {
+                background: white;
+                color: black;
+            }
+            button {
+                background: black;
+                color: white;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="embed-container" style="max-width: 1200px; margin: 0 auto;">
+        <div id="container">
+            <div id="header-bar">
+                <img id="header-logo" src="/clients/BHB/assets/images/chat_banner_white.png" alt="Client Logo">
+            </div>
+            <div class="main-content">
+                <div id="sidebar">
+                    <button onclick="showSection(0)" id="nav-welcome" class="active">Welcome</button>
+                    <button onclick="showSection(1)" id="nav-public-chat" disabled>Anonymous Public Chat</button>
+                    <button onclick="showSection(2)" id="nav-tools" disabled>Tools (not available in anonymous chat)</button>
+                </div>
+                <div id="content">
+                    <div class="section active">
+                        <h1>Welcome!</h1>
+                        <p>Access maternal health resources as a public user. Please note that this is an agreement for public use and not medical advice, in line with our style guide.</p>
+                        <div id="teacher-context" class="teacher-context">
+                            <p>Please check the curriculum focus for this chat:</p>
+                            <label><input type="checkbox" name="grade" value="Kindergarten"> Kindergarten</label><br>
+                            <label><input type="checkbox" name="grade" value="Grade 1"> Grade 1</label><br>
+                            <label><input type="checkbox" name="grade" value="Grade 2"> Grade 2</label><br>
+                            <label><input type="checkbox" name="grade" value="Grade 3"> Grade 3</label><br>
+                            <label><input type="checkbox" name="grade" value="Grade 4"> Grade 4</label><br>
+                            <label><input type="checkbox" name="grade" value="Grade 5"> Grade 5</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="tos" onclick="checkAffirmations()"> I affirm the terms of service.<br>
+                            <input type="checkbox" id="norms" onclick="checkAffirmations()"> I affirm the community norms and guidelines.<br>
+                            <input type="checkbox" id="acknowledge" onclick="checkAffirmations()"> I acknowledge this is a monitored public health resource.<br>
+                        </div>
+                        <button id="next-button" class="next-button" onclick="showSection(1)" disabled>Next</button>
+                    </div>
+                    <div class="section chat-active">
+                        <div class="chat-container">
+                            <div class="chat-window" id="chat-window">
+                                <div class="message assistant">Welcome to the B'more Healthy Babies Maternal Health Chat</div>
+                            </div>
+                            <div class="input-area">
+                                <input type="text" id="chat-input" placeholder="Type your message here...">
+                                <button class="send-button" onclick="sendMessage()">✈</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <h1>Tools (not available in anonymous public accounts)</h1>
+                        <button id="account-button" class="account-button" onclick="redirectToIntake()" disabled>Create Account to Save Chat</button>
+                        <button onclick="exportPDF()">Export to PDF</button>
+                        <button onclick="restartChat()">Start Over</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-form">
+        <!-- Existing content -->
+    </div>
+
+    <script>
+        let messageCount = 0; // Add at top of script
+
+        document.addEventListener("DOMContentLoaded", function() {
+            showSection(0);
+            window.threadId = localStorage.getItem('threadId') || null;
+            console.log('Session initialized:', window.threadId ? `Using thread ${window.threadId}` : 'No existing thread');
+
+            // Add keyboard handlers
+            const chatInput = document.getElementById("chat-input");
+            const sendButton = document.querySelector(".send-button");
+
+            chatInput.addEventListener("keydown", function(event) {
+                if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    sendMessage();
+                }
+                // Tab handling
+                if (event.key === "Tab") {
+                    event.preventDefault();
+                    sendButton.focus();
+                }
+            });
+
+            // Handle enter key on send button when focused
+            sendButton.addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+        });
+
+        function showSection(index) {
+            document.querySelectorAll('.section').forEach((section, i) => {
+                section.classList.toggle('active', i === index);
+            });
+            document.querySelectorAll('#sidebar button').forEach((button, i) => {
+                button.classList.toggle('active', i === index);
+            });
+
+            const chatContainer = document.querySelector(".chat-container");
+            if (index === 1) {
+                document.getElementById("nav-public-chat").removeAttribute("disabled");
+                if (chatContainer) chatContainer.style.display = "flex";
+            } else {
+                if (chatContainer) chatContainer.style.display = "none";
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById("chat-input");
+            if (input.value.trim() === "") return;
+            
+            messageCount++;
+            console.log(`Message ${messageCount}: ${window.threadId ? `Using thread ${window.threadId}` : 'No thread exists'}`);
+            
+            const requestBody = window.threadId ? 
+                { message: input.value, threadId: window.threadId } : 
+                { message: input.value };
+            
+            console.log(`Sending message ${messageCount}${window.threadId ? ` with threadId: ${window.threadId}` : ''}`);
+            
+            // Add message to UI
+            const chatWindow = document.getElementById("chat-window");
+            const message = document.createElement("div");
+            message.classList.add("message", "user");
+            message.textContent = input.value;
+            chatWindow.appendChild(message);
+            input.value = "";
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            // Show loading indicator
+            const transmissionIndicator = document.createElement("div");
+            transmissionIndicator.classList.add("message", "assistant");
+            transmissionIndicator.textContent = "Sending...";
+            chatWindow.appendChild(transmissionIndicator);
+
+            // Send to Lambda
+            fetch('https://tixnmh1pe8.execute-api.us-east-2.amazonaws.com/prod/IntegralEd-Main', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Full Lambda response:', data);
+                
+                transmissionIndicator.remove(); // Remove the "Sending..." indicator
+                const responseMessage = document.createElement("div");
+                responseMessage.classList.add("message", "assistant");
+                responseMessage.textContent = data.response;
+                chatWindow.appendChild(responseMessage);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+                if (messageCount === 5) {
+                    saveChat();
+                }
+            })
+            .catch((error) => {
+                console.error('Error with thread:', window.threadId, error);
+                transmissionIndicator.textContent = "Failed to send message.";
+            });
+        }
+
+        function redirectToIntake() {
+            const threadId = window.threadId || 'new';
+            window.location.href = `https://bmore.softr.app/user-intake?thread_id=${threadId}`;
+        }
+
+        function checkAffirmations() {
+            const tos = document.getElementById('tos').checked;
+            const norms = document.getElementById('norms').checked;
+            const acknowledge = document.getElementById('acknowledge').checked;
+            const nextButton = document.getElementById('next-button');
+            const accountButton = document.getElementById('account-button');
+
+            if (nextButton && accountButton) {
+                if (tos && norms && acknowledge) {
+                    nextButton.classList.add('enabled');
+                    nextButton.disabled = false;
+                    accountButton.classList.add('enabled');
+                    accountButton.disabled = false;
+                } else {
+                    nextButton.classList.remove('enabled');
+                    nextButton.disabled = true;
+                    accountButton.classList.remove('enabled');
+                    accountButton.disabled = true;
+                }
+            }
+        }
+
+        function saveChat() {
+            const threadId = window.threadId || 'new';
+            const assistantId = 'asst_8Akizj8qAc3itsBD6ypTyO5q';
+            const timestamp = new Date().toISOString();
+            const chatSummary = {
+                event_type: "rag_chat",
+                session: {
+                    id: threadId,
+                    timestamp: timestamp,
+                    source_url: "https://recursivelearning.app/BHB-chat.html",
+                    entry_point: "public_anonymous"
+                },
+                persona: {
+                    role: "community_health_worker",
+                    context_source: "bmore_health_resources",
+                    interaction_style: "empathetic_guidance"
+                },
+                interaction_log: {
+                    initial_query: "I need help finding maternal health support",
+                    location_context: "Baltimore",
+                    identified_needs: ["prenatal_care", "transportation"],
+                    resources_shared: [
+                        {
+                            type: "program",
+                            name: "B'more for Healthy Babies",
+                            url: "https://integraled.org/bmore/programs/healthy-babies"
+                        }
+                    ]
+                },
+                outcome: {
+                    primary_action: "user_signup",
+                    redirect_path: "/user-intake",
+                    context_preservation: {
+                        needs_assessment: true,
+                        location: true,
+                        program_interest: ["maternal_health", "transportation"]
+                    },
+                    instructional_intent: "Guide user through maternal health resource discovery and program enrollment"
+                }
+            };
+
+            fetch('YOUR_WEBHOOK_URL', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(chatSummary)
+            })
+            .then(response => response.json())
+            .then(data => console.log('Success:', data))
+            .catch((error) => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
