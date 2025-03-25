@@ -416,19 +416,34 @@
     <script>
         let messageCount = 0; // Add at top of script
 
-        function getOrInitThreadId() {
-            let existingId = localStorage.getItem('threadId');
-            if (!existingId) {
-                existingId = 'thread_' + Date.now();
-                localStorage.setItem('threadId', existingId);
-            }
-            return existingId;
-        }
-
         document.addEventListener("DOMContentLoaded", function() {
             showSection(0);
-            window.threadId = getOrInitThreadId();
-            console.log('Session initialized with threadId:', window.threadId);
+            window.threadId = localStorage.getItem('threadId') || null;
+            console.log('Session initialized:', window.threadId ? `Using thread ${window.threadId}` : 'No existing thread');
+
+            // Add keyboard handlers
+            const chatInput = document.getElementById("chat-input");
+            const sendButton = document.querySelector(".send-button");
+
+            chatInput.addEventListener("keydown", function(event) {
+                if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    sendMessage();
+                }
+                // Tab handling
+                if (event.key === "Tab") {
+                    event.preventDefault();
+                    sendButton.focus();
+                }
+            });
+
+            // Handle enter key on send button when focused
+            sendButton.addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
         });
 
         function showSection(index) {
@@ -453,13 +468,13 @@
             if (input.value.trim() === "") return;
             
             messageCount++;
+            console.log(`Message ${messageCount}: ${window.threadId ? `Using thread ${window.threadId}` : 'No thread exists'}`);
             
-            // Modify the request body based on whether it's first message
-            const requestBody = messageCount === 1 ? 
-                { message: input.value } : // First message - don't send threadId
-                { message: input.value, threadId: window.threadId }; // Subsequent messages
+            const requestBody = window.threadId ? 
+                { message: input.value, threadId: window.threadId } : 
+                { message: input.value };
             
-            console.log(`Sending message ${messageCount}${messageCount > 1 ? ` with threadId: ${window.threadId}` : ''}`);
+            console.log(`Sending message ${messageCount}${window.threadId ? ` with threadId: ${window.threadId}` : ''}`);
             
             // Add message to UI
             const chatWindow = document.getElementById("chat-window");
@@ -488,13 +503,6 @@
             .then(data => {
                 console.log('Full Lambda response:', data);
                 
-                // Update threadId if Lambda returns a new one
-                if (data.Thread_ID) {
-                    console.log(`Lambda returned new threadId: ${data.Thread_ID}`);
-                    window.threadId = data.Thread_ID;
-                    localStorage.setItem('threadId', data.Thread_ID);
-                }
-
                 transmissionIndicator.remove(); // Remove the "Sending..." indicator
                 const responseMessage = document.createElement("div");
                 responseMessage.classList.add("message", "assistant");

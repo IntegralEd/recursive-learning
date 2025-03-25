@@ -1,0 +1,74 @@
+🏗 Recursive Learning - UX & Layout Specification
+
+// ... existing intro content ...
+
+🎨 Layout Framework Updates
+
+Left Navigation Column (20%):
+- Background: Uses brand color (var(--primary-color))
+- Text: White for contrast (minimum 4.5:1 ratio)
+- Active Tab: White underline via ::after pseudo-element
+- Hover States: Subtle opacity change (0.9)
+
+Active Tab Styling:
+```css
+#sidebar button.active {
+    position: relative;
+    color: #fff;
+    background: none;
+}
+
+#sidebar button.active::after {
+    content: "";
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    bottom: 0;
+    height: 3px;
+    background-color: var(--accent-color);
+}
+```
+
+Send Button Animation:
+```css
+@keyframes pulseSendButton {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.send-button:hover {
+    animation: pulseSendButton 0.8s infinite;
+}
+```
+
+Embed Optimization:
+- Removed radial background
+- Clean white or transparent background
+- Consistent contrast across platforms
+
+Contrast Requirements:
+- Text on brand colors: minimum 4.5:1 ratio
+- Interactive elements: minimum 3:1 ratio
+- White text (#fff) on dark brand colors
+- Dark text (#000) on light brand colors
+
+Message Bubbles:
+```css
+.message.assistant {
+    background: var(--primary-color);
+    color: #fff; /* Ensure contrast meets WCAG AA */
+}
+
+.message.user {
+    background: var(--accent-color);
+    color: #fff;
+}
+```
+
+🔄 Platform-Specific Adjustments:
+- Softr: Transparent background
+- Storyline: Solid white background
+- Web App: Optional radial gradient
+
+// ... rest of existing content ... 
