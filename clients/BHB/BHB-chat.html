@@ -427,7 +427,8 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             showSection(0);
-            window.threadId = getOrInitThreadId(); // Add thread ID initialization
+            window.threadId = getOrInitThreadId();
+            console.log('Session initialized with threadId:', window.threadId);
         });
 
         function showSection(index) {
@@ -451,7 +452,8 @@
             const input = document.getElementById("chat-input");
             if (input.value.trim() === "") return;
             
-            messageCount++; // Increment message counter
+            messageCount++;
+            console.log(`Sending message ${messageCount} with existing threadId: ${window.threadId}`);
             
             const chatWindow = document.getElementById("chat-window");
             const message = document.createElement("div");
@@ -480,7 +482,15 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log('Success:', data);
+                console.log('Full Lambda response:', data);
+                
+                // Update threadId if Lambda returns a new one
+                if (data.Thread_ID) {
+                    console.log(`Lambda returned new threadId: ${data.Thread_ID}`);
+                    window.threadId = data.Thread_ID;
+                    localStorage.setItem('threadId', data.Thread_ID);
+                }
+
                 transmissionIndicator.remove(); // Remove the "Sending..." indicator
                 const responseMessage = document.createElement("div");
                 responseMessage.classList.add("message", "assistant");
@@ -492,7 +502,7 @@
                 }
             })
             .catch((error) => {
-                console.error('Error:', error);
+                console.error('Error with thread:', window.threadId, error);
                 transmissionIndicator.textContent = "Failed to send message.";
             });
         }
