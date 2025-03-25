@@ -164,12 +164,93 @@
                 color: white;
             }
         }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            width: 95vw;
+            height: 85vh;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 1200px; 
+            max-height: 800px;
+            margin: 0 auto;
+        }
+
+        #header-bar {
+            background: var(--primary-color);
+            height: 60px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        #sidebar {
+            width: 20%;
+            background: var(--secondary-color);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #sidebar button {
+            width: 100%;
+            background: none;
+            border: none;
+            color: #fff;
+            text-align: left;
+            padding: 12px;
+            margin-bottom: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #sidebar button.active::after {
+            content: "";
+            position: absolute;
+            left: 10%;
+            right: 10%;
+            bottom: 0;
+            height: 2px;
+            background-color: #fff;
+        }
+
+        #content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+            background: var(--background-color);
+            box-sizing: border-box;
+        }
+
+        .section {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .section.active {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
     <div id="container">
         <div id="header-bar">
-            <img id="header-logo" src="/clients/el-education/assets/images/chat_banner_white.png" alt="Client Logo">
+            <img id="header-logo" src="/clients/el-education/assets/images/EL_EDUCATION_logo_crimson_preferred (4).png" alt="Client Logo">
         </div>
         <div class="main-content">
             <div id="sidebar">
@@ -264,6 +345,22 @@
                 document.body.appendChild(chatPopout);
             });
         });
+
+        function showSection(index) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach((section, i) => {
+                section.classList.toggle('active', i === index);
+            });
+
+            const navButtons = document.querySelectorAll('#sidebar button');
+            navButtons.forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+
+            if (index === 1) {
+                document.getElementById('nav-public-chat').removeAttribute('disabled');
+            }
+        }
     </script>
 </body>
 </html> 
