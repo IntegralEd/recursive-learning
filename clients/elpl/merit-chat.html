@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EL Merit Chat Assistant</title>
+    <title>EL Merit Chat</title>
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/clients/el-education/assets/css/variables.css">
@@ -183,6 +183,15 @@
                         <h1>Welcome!</h1>
                         <p>Access educational resources as a public user. Please note that this is an agreement for public use and not educational advice, in line with our style guide.</p>
                         <!-- Teacher context intake will be added here -->
+                        <div id="teacher-context" class="teacher-context">
+                            <p>Please check the curriculum focus for this chat:</p>
+                            <label><input type="checkbox" name="grade" value="Kindergarten"> Kindergarten</label>
+                            <label><input type="checkbox" name="grade" value="Grade 1"> Grade 1</label>
+                            <label><input type="checkbox" name="grade" value="Grade 2"> Grade 2</label>
+                            <label><input type="checkbox" name="grade" value="Grade 3"> Grade 3</label>
+                            <label><input type="checkbox" name="grade" value="Grade 4"> Grade 4</label>
+                            <label><input type="checkbox" name="grade" value="Grade 5"> Grade 5</label>
+                        </div>
                         <button id="next-button" class="next-button" onclick="showSection(1)" disabled>Next</button>
                     </div>
                     <div class="section chat-active">
@@ -208,7 +217,55 @@
     </div>
 
     <script>
-        // JavaScript functions will be added here
+        // Function to capture selected teacher curriculum context from checkboxes
+        function getTeacherCurriculumContext() {
+            const checkboxes = document.querySelectorAll('#teacher-context input[type="checkbox"]');
+            let selectedGrades = [];
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selectedGrades.push(checkbox.value);
+                }
+            });
+            return selectedGrades;
+        }
+
+        // Add an event listener on the "Next" button to capture context and launch chat
+        document.getElementById('next-button').addEventListener('click', function() {
+            const teacherContext = getTeacherCurriculumContext();
+            // Save the teacher context (for example, in localStorage)
+            localStorage.setItem('teacherContext', JSON.stringify(teacherContext));
+            // Launch the chat with the teacher context attached
+            showSection(1);
+        });
+
+        // Minimal Popout Chat Bubble Script
+        document.addEventListener("DOMContentLoaded", function(){
+            // Create a chat bubble element
+            const chatBubble = document.createElement("div");
+            chatBubble.id = "chat-bubble";
+            chatBubble.innerHTML = '<button id="open-chat">Chat</button>';
+            // Style the bubble (adjust as needed or move styles to custom.css)
+            chatBubble.style.position = "fixed";
+            chatBubble.style.bottom = "20px";
+            chatBubble.style.right = "20px";
+            chatBubble.style.zIndex = "1000";
+            document.body.appendChild(chatBubble);
+
+            // On click, open a popout chat window (minimal version for Storyline)
+            document.getElementById("open-chat").addEventListener("click", function(){
+                const chatPopout = document.createElement("iframe");
+                chatPopout.src = "teacher-chat.html?popout=true"; // Replace with your minimal embed chat URL
+                chatPopout.style.position = "fixed";
+                chatPopout.style.bottom = "80px";
+                chatPopout.style.right = "20px";
+                chatPopout.style.width = "350px";
+                chatPopout.style.height = "500px";
+                chatPopout.style.border = "none";
+                chatPopout.style.boxShadow = "0 4px 8px rgba(0,0,0,0.2)";
+                chatPopout.id = "chat-popout";
+                document.body.appendChild(chatPopout);
+            });
+        });
     </script>
 </body>
 </html> 
