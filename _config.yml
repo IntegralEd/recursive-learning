@@ -7,7 +7,7 @@ theme: minima
 # This pattern means: "/:categories/:title.html"
 # If a page has categories: [bhb], it becomes "/bhb/PAGE-TITLE.html"
 # If categories: [elpl], it becomes "/elpl/PAGE-TITLE.html", etc.
-permalink: "/:categories/:title.html"
+#//permalink: "/:categories/:title.html"# we'll add this later
 
 include:
   - clients
