@@ -1,0 +1,47 @@
+---
+layout: default
+title: "BHB Chat Layout"
+---
+
+<!-- 
+  This layout references your partials:
+  - header.html for the top bar
+  - sidebar.html for the left nav
+  - Then we define the container, 
+    “sections” for welcome, chat, and tools
+  - We can optionally reference chat.js or other scripts
+-->
+
+{% include header.html %}
+
+<div id="container">
+  <div class="main-content">
+    
+    {% include sidebar.html %}
+    
+    <div id="content">
+      <!-- Section 0: Welcome -->
+      <div class="section active" id="section-welcome">
+        {% include welcome_affirmations.html %}
+      </div>
+
+      <!-- Section 1: Chat -->
+      <div class="section chat-active" id="section-chat">
+        {% include chat.html %}
+      </div>
+
+      <!-- Section 2: Tools -->
+      <div class="section" id="section-tools">
+        <h1>Tools (not available in anonymous public accounts)</h1>
+        <button id="account-button" class="account-button" onclick="redirectToIntake()" disabled>
+          Create Account to Save Chat
+        </button>
+        <button onclick="exportPDF()">Export to PDF</button>
+        <button onclick="restartChat()">Start Over</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Optionally include your chat logic or a separate .js file -->
+<script src="{{ '/assets/js/bhb_chat.js' | relative_url }}"></script>
