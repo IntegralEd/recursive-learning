@@ -1,0 +1,34 @@
+<!-- _includes/welcome_affirmations.html -->
+<div class="welcome-section">
+  <h1>Welcome!</h1>
+  <p>
+    Access maternal health resources as a public user.
+    Please note that this is an agreement for public use 
+    and not medical advice, in line with our style guide.
+  </p>
+
+  <div class="affirmation-container">
+    <label>
+      <input type="checkbox" id="tos" onclick="checkAffirmations()" />
+      I affirm the terms of service.
+    </label>
+    <label>
+      <input type="checkbox" id="norms" onclick="checkAffirmations()" />
+      I affirm the community norms and guidelines.
+    </label>
+    <label>
+      <input type="checkbox" id="acknowledge" onclick="checkAffirmations()" />
+      I acknowledge this is a monitored public health resource.
+    </label>
+  </div>
+
+  <!-- The "Next" button typically navigates to the chat or next section -->
+  <button id="next-button" class="next-button" onclick="showSection(1)" disabled>
+    Next
+  </button>
+
+  <!-- The "Account" button, if needed, might open a sign-up flow -->
+  <button id="account-button" class="account-button" onclick="redirectToIntake()" disabled>
+    Create Account to Save Chat
+  </button>
+</div>

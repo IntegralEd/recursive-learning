@@ -1,0 +1,192 @@
+<div id="main-form">
+  <!-- Existing content -->
+</div>
+
+<script>
+  let messageCount = 0; // Add at top of script
+
+  document.addEventListener("DOMContentLoaded", function() {
+      showSection(0);
+      window.threadId = localStorage.getItem('threadId') || null;
+      console.log('Session initialized:', window.threadId ? `Using thread ${window.threadId}` : 'No existing thread');
+
+      // Add keyboard handlers
+      const chatInput = document.getElementById("chat-input");
+      const sendButton = document.querySelector(".send-button");
+
+      chatInput.addEventListener("keydown", function(event) {
+          if (event.key === "Enter" && !event.shiftKey) {
+              event.preventDefault();
+              sendMessage();
+          }
+          // Tab handling
+          if (event.key === "Tab") {
+              event.preventDefault();
+              sendButton.focus();
+          }
+      });
+
+      // Handle enter key on send button when focused
+      sendButton.addEventListener("keydown", function(event) {
+          if (event.key === "Enter") {
+              event.preventDefault();
+              sendMessage();
+          }
+      });
+  });
+
+  function showSection(index) {
+      document.querySelectorAll('.section').forEach((section, i) => {
+          section.classList.toggle('active', i === index);
+      });
+      document.querySelectorAll('#sidebar button').forEach((button, i) => {
+          button.classList.toggle('active', i === index);
+      });
+
+      const chatContainer = document.querySelector(".chat-container");
+      if (index === 1) {
+          document.getElementById("nav-public-chat").removeAttribute("disabled");
+          if (chatContainer) chatContainer.style.display = "flex";
+      } else {
+          if (chatContainer) chatContainer.style.display = "none";
+      }
+  }
+
+  function sendMessage() {
+      const input = document.getElementById("chat-input");
+      if (input.value.trim() === "") return;
+      
+      messageCount++;
+      console.log(`Message ${messageCount}: ${window.threadId ? `Using thread ${window.threadId}` : 'No thread exists'}`);
+      
+      const requestBody = window.threadId ? 
+          { message: input.value, threadId: window.threadId } : 
+          { message: input.value };
+      
+      console.log(`Sending message ${messageCount}${window.threadId ? ` with threadId: ${window.threadId}` : ''}`);
+      
+      // Add message to UI
+      const chatWindow = document.getElementById("chat-window");
+      const message = document.createElement("div");
+      message.classList.add("message", "user");
+      message.textContent = input.value;
+      chatWindow.appendChild(message);
+      input.value = "";
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+
+      // Show loading indicator
+      const transmissionIndicator = document.createElement("div");
+      transmissionIndicator.classList.add("message", "assistant");
+      transmissionIndicator.textContent = "Sending...";
+      chatWindow.appendChild(transmissionIndicator);
+
+      // Send to Lambda
+      fetch('https://tixnmh1pe8.execute-api.us-east-2.amazonaws.com/prod/IntegralEd-Main', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+      })
+      .then(response => response.json())
+      .then(data => {
+          console.log('Full Lambda response:', data);
+          
+          transmissionIndicator.remove(); // Remove the "Sending..." indicator
+          const responseMessage = document.createElement("div");
+          responseMessage.classList.add("message", "assistant");
+          responseMessage.textContent = data.response;
+          chatWindow.appendChild(responseMessage);
+          chatWindow.scrollTop = chatWindow.scrollHeight;
+          if (messageCount === 5) {
+              saveChat();
+          }
+      })
+      .catch((error) => {
+          console.error('Error with thread:', window.threadId, error);
+          transmissionIndicator.textContent = "Failed to send message.";
+      });
+  }
+
+  function redirectToIntake() {
+      const threadId = window.threadId || 'new';
+      window.location.href = `https://bmore.softr.app/user-intake?thread_id=${threadId}`;
+  }
+
+  function checkAffirmations() {
+      const tos = document.getElementById('tos').checked;
+      const norms = document.getElementById('norms').checked;
+      const acknowledge = document.getElementById('acknowledge').checked;
+      const nextButton = document.getElementById('next-button');
+      const accountButton = document.getElementById('account-button');
+
+      if (nextButton && accountButton) {
+          if (tos && norms && acknowledge) {
+              nextButton.classList.add('enabled');
+              nextButton.disabled = false;
+              accountButton.classList.add('enabled');
+              accountButton.disabled = false;
+          } else {
+              nextButton.classList.remove('enabled');
+              nextButton.disabled = true;
+              accountButton.classList.remove('enabled');
+              accountButton.disabled = true;
+          }
+      }
+  }
+
+  function saveChat() {
+      const threadId = window.threadId || 'new';
+      const assistantId = 'asst_8Akizj8qAc3itsBD6ypTyO5q';
+      const timestamp = new Date().toISOString();
+      const chatSummary = {
+          event_type: "rag_chat",
+          session: {
+              id: threadId,
+              timestamp: timestamp,
+              source_url: "https://recursivelearning.app/BHB-chat.html",
+              entry_point: "public_anonymous"
+          },
+          persona: {
+              role: "community_health_worker",
+              context_source: "bmore_health_resources",
+              interaction_style: "empathetic_guidance"
+          },
+          interaction_log: {
+              initial_query: "I need help finding maternal health support",
+              location_context: "Baltimore",
+              identified_needs: ["prenatal_care", "transportation"],
+              resources_shared: [
+                  {
+                      type: "program",
+                      name: "B'more for Healthy Babies",
+                      url: "https://integraled.org/bmore/programs/healthy-babies"
+                  }
+              ]
+          },
+          outcome: {
+              primary_action: "user_signup",
+              redirect_path: "/user-intake",
+              context_preservation: {
+                  needs_assessment: true,
+                  location: true,
+                  program_interest: ["maternal_health", "transportation"]
+              },
+              instructional_intent: "Guide user through maternal health resource discovery and program enrollment"
+          }
+      };
+
+      fetch('YOUR_WEBHOOK_URL', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(chatSummary)
+      })
+      .then(response => response.json())
+      .then(data => console.log('Success:', data))
+      .catch((error) => console.error('Error:', error));
+  }
+</script>
+</body>
+</html>

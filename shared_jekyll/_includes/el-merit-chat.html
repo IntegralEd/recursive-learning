@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EL Merit Chat (Aligned Layout)</title>
+  <style>
+    :root {
+      /* Brand Colors */
+      --primary-color: #c6123f;  /* Crimson */
+      --secondary-color: #211651;/* Navy */
+      --background-color: #f9f9f9;
+      --dark-text-color: #2b2b2b;
+      --cta-color: #ffa409;     /* CTA Orange */
+
+      /* Spacing & Layout */
+      --container-width: 1200px;
+      --container-height: 800px;
+      --header-height: 60px;
+      --sidebar-width: 240px;
+
+      /* Typography */
+      --font-body: Arial, sans-serif;
+      --font-size-body: 16px;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--background-color);
+      font-family: var(--font-body);
+      font-size: var(--font-size-body);
+    }
+
+    /* Outer container for the entire UI */
+    #container {
+      width: 95vw;
+      max-width: var(--container-width);
+      height: 85vh;
+      max-height: var(--container-height);
+      margin: 20px auto; 
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Header bar at the top */
+    #header-bar {
+      background: var(--primary-color);
+      height: var(--header-height);
+      width: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+      box-sizing: border-box;
+    }
+    #header-logo {
+      height: 40px;  /* Adjust if needed */
+    }
+
+    /* Main content area: sidebar + right content */
+    .main-content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Sidebar on the left (white, with a vertical border) */
+    #sidebar {
+      width: var(--sidebar-width);
+      background: #fff;
+      border-right: 2px solid var(--primary-color);
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 20px;
+    }
+    #sidebar button {
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      padding: 10px 0;
+      font-size: 16px;
+      color: var(--dark-text-color);
+      cursor: pointer;
+      position: relative;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      margin-bottom: 5px;
+    }
+    /* Active tab underline */
+    #sidebar button.active::after {
+      content: "";
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      bottom: 0;
+      height: 2px;
+      background: var(--primary-color);
+    }
+    #sidebar button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* The main content area to the right of the sidebar */
+    #content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      box-sizing: border-box;
+      background: var(--background-color);
+    }
+
+    /* Section container for different “tabs” (welcome, chat, tools, etc.) */
+    .section {
+      display: none;
+      height: 100%;
+      box-sizing: border-box;
+    }
+    .section.active {
+      display: block;
+    }
+
+    /* Basic heading styling */
+    h1 {
+      color: var(--primary-color);
+      margin-top: 0;
+    }
+
+    /* Example context form styling */
+    .teacher-context {
+      margin: 20px 0;
+      padding: 15px;
+      background: #fefefe;
+      border: 1px solid var(--secondary-color);
+      border-radius: 8px;
+    }
+    .teacher-context h2 {
+      margin-top: 0;
+    }
+
+    /* Next button */
+    #next-button {
+      display: inline-block;
+      margin-top: 20px;
+      background: #ccc;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: not-allowed;
+    }
+    #next-button.enabled {
+      background: var(--primary-color);
+      cursor: pointer;
+    }
+
+    /* Simple chat container example */
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 0px); /* adjust as needed */
+    }
+    .chat-window {
+      flex: 1;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fff;
+      padding: 10px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+    .input-area {
+      display: flex;
+      align-items: center;
+    }
+    .input-area input {
+      flex-grow: 1;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      margin-right: 10px;
+    }
+    .send-button {
+      width: 50px;
+      height: 40px;
+      background: var(--cta-color);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="container">
+    <!-- Header -->
+    <div id="header-bar">
+      <img id="header-logo" src="https://via.placeholder.com/100x40?text=Logo" alt="Client Logo">
+    </div>
+
+    <!-- Main content: sidebar + content -->
+    <div class="main-content">
+      <!-- Sidebar -->
+      <div id="sidebar">
+        <button onclick="showSection(0)" id="nav-welcome" class="active">Welcome</button>
+        <button onclick="showSection(1)" id="nav-chat" disabled>Chat</button>
+      </div>
+
+      <!-- Content Area -->
+      <div id="content">
+        <!-- Section 0: Welcome -->
+        <div class="section active" id="section-welcome">
+          <h1>Welcome!</h1>
+          <p>
+            Access educational resources as a public user. 
+            Please note that this is an agreement for public use and not educational advice, 
+            in line with our style guide.
+          </p>
+
+          <div class="teacher-context" id="teacher-context">
+            <h2>Please check the curriculum focus for this chat:</h2>
+            <label><input type="checkbox" value="Kindergarten" onclick="checkAffirmations()"> Kindergarten</label>
+            <label><input type="checkbox" value="Grade 1" onclick="checkAffirmations()"> Grade 1</label>
+            <label><input type="checkbox" value="Grade 2" onclick="checkAffirmations()"> Grade 2</label>
+            <label><input type="checkbox" value="Grade 3" onclick="checkAffirmations()"> Grade 3</label>
+            <label><input type="checkbox" value="Grade 4" onclick="checkAffirmations()"> Grade 4</label>
+            <label><input type="checkbox" value="Grade 5" onclick="checkAffirmations()"> Grade 5</label>
+          </div>
+
+          <button id="next-button" onclick="goToChat()" disabled>Next</button>
+        </div>
+
+        <!-- Section 1: Chat -->
+        <div class="section" id="section-chat">
+          <div class="chat-container">
+            <div class="chat-window" id="chat-window">
+              <p><strong>Assistant:</strong> Welcome to the EL Education Merit Chat</p>
+            </div>
+            <div class="input-area">
+              <input type="text" id="chat-input" placeholder="Type your message here...">
+              <button class="send-button" onclick="sendMessage()">Send</button>
+            </div>
+          </div>
+        </div>
+      </div> <!-- #content end -->
+    </div> <!-- .main-content end -->
+  </div> <!-- #container end -->
+
+  <script>
+    // Switch tabs
+    function showSection(index) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach((sec, i) => {
+        sec.classList.toggle('active', i === index);
+      });
+
+      const navButtons = document.querySelectorAll('#sidebar button');
+      navButtons.forEach((btn, i) => {
+        btn.classList.toggle('active', i === index);
+      });
+
+      if (index === 1) {
+        document.getElementById('nav-chat').removeAttribute('disabled');
+      }
+    }
+
+    function checkAffirmations() {
+      // If user checks any of the grade checkboxes, enable Next
+      const checks = document.querySelectorAll('#teacher-context input[type="checkbox"]');
+      const nextBtn = document.getElementById('next-button');
+      let anySelected = false;
+      checks.forEach(ch => { if(ch.checked) anySelected = true; });
+      if (anySelected) {
+        nextBtn.classList.add('enabled');
+        nextBtn.disabled = false;
+      } else {
+        nextBtn.classList.remove('enabled');
+        nextBtn.disabled = true;
+      }
+    }
+
+    function goToChat() {
+      // Optionally store context in localStorage
+      const selected = [];
+      document.querySelectorAll('#teacher-context input[type="checkbox"]:checked')
+        .forEach(ch => selected.push(ch.value));
+      localStorage.setItem('teacherContext', JSON.stringify(selected));
+
+      // Show chat
+      showSection(1);
+    }
+
+    // Dummy chat logic
+    function sendMessage() {
+      const input = document.getElementById('chat-input');
+      if(!input.value.trim()) return;
+      const chatWin = document.getElementById('chat-window');
+      const userMsg = document.createElement('p');
+      userMsg.innerHTML = `<strong>You:</strong> ${input.value}`;
+      chatWin.appendChild(userMsg);
+      input.value = '';
+      chatWin.scrollTop = chatWin.scrollHeight;
+    }
+  </script>
+</body>
+</html>
