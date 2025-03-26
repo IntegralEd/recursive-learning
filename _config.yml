@@ -5,9 +5,10 @@ markdown: kramdown
 theme: minima
 
 include:
-  - clients
-  - shared_jekyll
-  - assets
+  - _includes       # Include the _includes directory
+  - clients         # Include the clients directory
+  - shared_jekyll   # Include the shared_jekyll directory
+  - assets          # Include the assets directory if needed
 
 exclude:
   - Gemfile
@@ -20,3 +21,4 @@ exclude:
 
 plugins:
   - jekyll-feed
+  # Add other plugins here if needed

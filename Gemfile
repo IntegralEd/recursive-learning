@@ -10,11 +10,11 @@ group :jekyll_plugins do
   # Add other plugins here if needed
 end
 
-# Windows-specific gems
+# Windows-specific gems (optional if not on Windows)
 platforms :mingw, :x64_mingw, :mswin, :jruby do
   gem "tzinfo", "~> 1.2"
   gem "tzinfo-data"
 end
 
-# For Windows Jekyll watchers
+# For Windows Jekyll watchers (optional if not on Windows)
 gem "wdm", "~> 0.1.1", platforms: %i[mingw x64_mingw mswin]
