@@ -1,0 +1,30 @@
+<!-- A bottom bar for "Next" style interactions -->
+ 
+<!-- _includes/playbar.html -->
+<div class="playbar" role="region" aria-label="Form navigation bar">
+  <!-- 
+    aria-label or alt text helps screen readers identify the button 
+    "nextStep()" in your JS handles advancing the flow
+  -->
+  <button 
+    class="playbar-button next-button" 
+    onclick="nextStep()" 
+    aria-label="Go to next step"
+  >
+    <img 
+      src="/assets/images/noun-next-5654311-FFFFFF.svg" 
+      class="playbar-icon" 
+      width="50" 
+      height="50" 
+      alt="Next arrow icon" 
+    />
+    <!-- Optionally, include visible text or a visually hidden span -->
+    <span class="sr-only">Next</span>
+  </button>
+</div>
+
+<div class="playbar">
+    <button class="playbar-button">
+        <span class="playbar-icon" aria-label="Playbar Icon"></span>
+    </button>
+</div>
