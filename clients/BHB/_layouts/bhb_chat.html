@@ -2,11 +2,32 @@
 layout: default
 ---
 
+<!-- Assign variables for header -->
+{% assign header_logo = "/clients/BHB/assets/images/RecursiveLearningLockup_White.png" %}
+{% assign header_hue = "#6A6DB3" %}
+
 {% include header.html %}
 
-<h1>BHB Chat Layout</h1>
-<p>Below is page content:</p>
-{{ content }}
+<!-- Include partials within sections -->
+<div id="welcome-section" class="section">
+  {% include welcome_affirmations.html %}
+</div>
 
-<!-- If you want partials or chat UI, include them here -->
-<!-- e.g. {% include chat.html %} -->
+<div id="chat-section" class="section" style="display: none;">
+  {% include chat.html %}
+</div>
+
+<!-- Include footer partials based on tab -->
+{% if page.tab == 'welcome' %}
+  {% include playbar.html %}
+{% elsif page.tab == 'chat' %}
+  {% include chatbar.html %}
+{% endif %}
+
+<!-- JavaScript to handle section display -->
+<script>
+  function showSection(sectionId) {
+    document.getElementById('welcome-section').style.display = (sectionId === 'welcome') ? 'block' : 'none';
+    document.getElementById('chat-section').style.display = (sectionId === 'chat') ? 'block' : 'none';
+  }
+</script>

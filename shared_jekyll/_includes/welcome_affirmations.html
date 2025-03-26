@@ -22,8 +22,8 @@
     </label>
   </div>
 
-  <!-- The "Next" button typically navigates to the chat or next section -->
-  <button id="next-button" class="next-button" onclick="showSection(1)" disabled>
+  <!-- The "Next" button navigates to the chat section -->
+  <button id="next-button" class="next-button" onclick="showSection('chat')" disabled>
     Next
   </button>
 
@@ -32,3 +32,25 @@
     Create Account to Save Chat
   </button>
 </div>
+
+<script>
+  function checkAffirmations() {
+    const tos = document.getElementById('tos').checked;
+    const norms = document.getElementById('norms').checked;
+    const acknowledge = document.getElementById('acknowledge').checked;
+    const nextButton = document.getElementById('next-button');
+    const accountButton = document.getElementById('account-button');
+
+    if (tos && norms && acknowledge) {
+      nextButton.disabled = false;
+      nextButton.classList.add('enabled');
+      accountButton.disabled = false;
+      accountButton.classList.add('enabled');
+    } else {
+      nextButton.disabled = true;
+      nextButton.classList.remove('enabled');
+      accountButton.disabled = true;
+      accountButton.classList.remove('enabled');
+    }
+  }
+</script>

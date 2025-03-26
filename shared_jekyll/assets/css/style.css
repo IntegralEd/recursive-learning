@@ -1,0 +1,7 @@
+.section {
+  /* Existing styles... */
+}
+
+.section.hidden {
+  display: none;
+} 
