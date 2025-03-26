@@ -1,34 +1,60 @@
-<!-- _includes/welcome_affirmations.html -->
-<div class="welcome-section">
+<!-- _includes/teacher_grade_select.html -->
+<div class="teacher-context">
   <h1>Welcome!</h1>
   <p>
-    Access maternal health resources as a public user.
-    Please note that this is an agreement for public use 
-    and not medical advice, in line with our style guide.
+    Access educational resources as a public user. Please note that this is 
+    an agreement for public use and not educational advice, in line with our style guide.
   </p>
+  <p>Please check the curriculum focus for this chat:</p>
 
-  <div class="affirmation-container">
-    <label>
-      <input type="checkbox" id="tos" onclick="checkAffirmations()" />
-      I affirm the terms of service.
-    </label>
-    <label>
-      <input type="checkbox" id="norms" onclick="checkAffirmations()" />
-      I affirm the community norms and guidelines.
-    </label>
-    <label>
-      <input type="checkbox" id="acknowledge" onclick="checkAffirmations()" />
-      I acknowledge this is a monitored public health resource.
-    </label>
-  </div>
+  <label>
+    <input type="checkbox" name="grade" value="Kindergarten" onclick="checkGradeSelections()" />
+    Kindergarten
+  </label>
+  <label>
+    <input type="checkbox" name="grade" value="Grade 1" onclick="checkGradeSelections()" />
+    Grade 1
+  </label>
+  <label>
+    <input type="checkbox" name="grade" value="Grade 2" onclick="checkGradeSelections()" />
+    Grade 2
+  </label>
+  <label>
+    <input type="checkbox" name="grade" value="Grade 3" onclick="checkGradeSelections()" />
+    Grade 3
+  </label>
+  <label>
+    <input type="checkbox" name="grade" value="Grade 4" onclick="checkGradeSelections()" />
+    Grade 4
+  </label>
+  <label>
+    <input type="checkbox" name="grade" value="Grade 5" onclick="checkGradeSelections()" />
+    Grade 5
+  </label>
 
-  <!-- The "Next" button typically navigates to the chat or next section -->
-  <button id="next-button" class="next-button" onclick="showSection(1)" disabled>
+  <button id="next-button" class="next-button" disabled onclick="showSection(1)">
     Next
   </button>
-
-  <!-- The "Account" button, if needed, might open a sign-up flow -->
-  <button id="account-button" class="account-button" onclick="redirectToIntake()" disabled>
-    Create Account to Save Chat
-  </button>
 </div>
+
+<script>
+  // Enables the Next button if ANY grade checkbox is checked
+  function checkGradeSelections() {
+    const checkboxes = document.querySelectorAll('.teacher-context input[type="checkbox"]');
+    let anySelected = false;
+    checkboxes.forEach(checkbox => {
+      if (checkbox.checked) {
+        anySelected = true;
+      }
+    });
+
+    const nextButton = document.getElementById('next-button');
+    if (anySelected) {
+      nextButton.disabled = false;
+      nextButton.classList.add('enabled');
+    } else {
+      nextButton.disabled = true;
+      nextButton.classList.remove('enabled');
+    }
+  }
+</script>
