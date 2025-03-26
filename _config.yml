@@ -1,20 +1,21 @@
-title: Recursive Learning
-baseurl: "" # Leave empty if deploying to root
-url: "https://recursivelearning.app/
- # Your GitHub Pages URL
+title: "Recursive Learning"
+baseurl: ""             # Deploying at domain root
+url: "https://recursivelearning.app"
 markdown: kramdown
 theme: minima
 
-# Include directories
+# This pattern means: "/:categories/:title.html"
+# If a page has categories: [bhb], it becomes "/bhb/PAGE-TITLE.html"
+# If categories: [elpl], it becomes "/elpl/PAGE-TITLE.html", etc.
+permalink: "/:categories/:title.html"
+
 include:
   - clients
   - shared_jekyll
 
-# Exclude files or directories
 exclude:
   - Gemfile
   - Gemfile.lock
 
-# Plugins
 plugins:
   - jekyll-feed
