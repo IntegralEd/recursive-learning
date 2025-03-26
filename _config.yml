@@ -1,0 +1,20 @@
+title: Recursive Learning
+baseurl: "" # Leave empty if deploying to root
+url: "https://recursivelearning.app/
+ # Your GitHub Pages URL
+markdown: kramdown
+theme: minima
+
+# Include directories
+include:
+  - clients
+  - shared_jekyll
+
+# Exclude files or directories
+exclude:
+  - Gemfile
+  - Gemfile.lock
+
+# Plugins
+plugins:
+  - jekyll-feed
