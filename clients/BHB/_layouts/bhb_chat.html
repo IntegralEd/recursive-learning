@@ -1,9 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ page.title }}</title>
+
+  <h1>BHB Chat Layout Test</h1>
+  <p>This is a test content.</p>
+
 <!-- Assign variables for header -->
 {% assign header_logo = "/clients/BHB/assets/images/RecursiveLearningLockup_White.png" %}
 {% assign header_hue = "#6A6DB3" %}
 
 {% include header.html %}
-
+</head>
+<body>
+    
+</body>
 <!-- Include partials within sections -->
 <div id="welcome-section" class="section">
   {% include welcome_affirmations.html %}
@@ -29,3 +40,5 @@
       document.getElementById('chat-section').style.display = (sectionId === 'chat') ? 'block' : 'none';
     }
   </script>
+  </body>
+  </html>
