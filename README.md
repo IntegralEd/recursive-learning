@@ -704,3 +704,48 @@ This platform is designed to provide a multitenant recursive learning environmen
 
 
 
+## Jekyll Setup and Deployment
+
+### Overview
+
+Our platform uses Jekyll to manage and deploy client-specific chat interfaces. This approach allows for modular and reusable components, making it easy to maintain and scale.
+
+### Directory Structure
+
+- **shared_jekyll/**: Contains shared layouts, includes, and assets used across all client sites.
+- **clients/**: Each client has a dedicated directory with specific configurations and pages.
+
+### Key Components
+
+1. **Layouts and Partials**
+   - **_layouts/**: Defines the overall structure of pages.
+   - **_includes/**: Contains reusable components like headers, footers, and sidebars.
+
+2. **Configuration**
+   - **_config.yml**: Central configuration file for Jekyll, specifying directories and plugins.
+   - **CNAME**: Custom domain configuration for GitHub Pages.
+
+3. **Deployment**
+   - **GitHub Pages**: Automatically builds and serves the site from the specified branch.
+   - **Custom Domain**: Configured via the CNAME file and GitHub Pages settings.
+
+### Deployment Process
+
+1. **Local Development**
+   - Run Jekyll locally to test changes before deployment.
+   - Use `bundle exec jekyll serve` to start the local server.
+
+2. **Commit and Push**
+   - Make changes to the content or configuration.
+   - Commit changes and push to the main branch to trigger a rebuild.
+
+3. **Accessing the Site**
+   - The site is accessible at `https://recursivelearning.app/clients/<client-name>/chat.html`.
+
+### Benefits
+
+- **Modularity**: Easily manage and update shared components.
+- **Scalability**: Quickly onboard new clients with minimal setup.
+- **Customization**: Client-specific configurations allow for tailored experiences.
+
+This setup streamlines the deployment process and ensures consistency across all client sites.
