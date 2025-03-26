@@ -26,8 +26,10 @@ layout: default
 
 <!-- JavaScript to handle section display -->
 <script>
-  function showSection(sectionId) {
-    document.getElementById('welcome-section').style.display = (sectionId === 'welcome') ? 'block' : 'none';
-    document.getElementById('chat-section').style.display = (sectionId === 'chat') ? 'block' : 'none';
-  }
-</script>
+    console.log('bhb_chat.html script is running'); // Added console log
+    function showSection(sectionId) {
+      console.log('showSection called with', sectionId); // Added console log
+      document.getElementById('welcome-section').style.display = (sectionId === 'welcome') ? 'block' : 'none';
+      document.getElementById('chat-section').style.display = (sectionId === 'chat') ? 'block' : 'none';
+    }
+  </script>
