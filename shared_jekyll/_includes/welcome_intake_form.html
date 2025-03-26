@@ -1,0 +1,155 @@
+<!-- _includes/intake_form.html -->
+<div class="intake-form-container">
+  <!-- Step 0: Welcome -->
+  <div class="section active" id="intake-step-0">
+    <h1>Welcome!</h1>
+    <p>
+      Thanks for your interest! Please provide some details so we can guide you 
+      to the right resources and early-access programs.
+    </p>
+    <button class="next-button" onclick="showStep(1)">
+      Next
+    </button>
+  </div>
+
+  <!-- Step 1: Email -->
+  <div class="section" id="intake-step-1">
+    <h2>What's your email address?</h2>
+    <p><em>We'll use this to contact you if you’re approved for a beta account.</em></p>
+    <input 
+      type="email" 
+      id="intake-email" 
+      placeholder="you@example.com" 
+      oninput="validateIntakeForm()" 
+      required
+    />
+    <button class="next-button" onclick="showStep(2)" disabled id="step1-next">
+      Next
+    </button>
+  </div>
+
+  <!-- Step 2: Role / Title -->
+  <div class="section" id="intake-step-2">
+    <h2>What's your role or title?</h2>
+    <p>
+      <em>Share your professional or personal identity. 
+      For example, '5th-grade teacher', 'Tech coordinator', or 'Curious parent'.</em>
+    </p>
+    <textarea 
+      id="intake-role" 
+      rows="3"
+      oninput="validateIntakeForm()"
+    ></textarea>
+    <button class="next-button" onclick="showStep(3)" disabled id="step2-next">
+      Next
+    </button>
+  </div>
+
+  <!-- Step 3: Goal -->
+  <div class="section" id="intake-step-3">
+    <h2>What's your main goal?</h2>
+    <p><em>Tell us what sort of learning or solutions you hope to create or host.</em></p>
+    <textarea 
+      id="intake-goal" 
+      rows="3"
+      oninput="validateIntakeForm()"
+    ></textarea>
+    <button class="next-button" onclick="showStep(4)" disabled id="step3-next">
+      Next
+    </button>
+  </div>
+
+  <!-- Step 4: Referral or Context -->
+  <div class="section" id="intake-step-4">
+    <h2>How did you hear about us?</h2>
+    <textarea 
+      id="intake-referral" 
+      rows="3"
+      placeholder="Tell us how you found us..." 
+      oninput="validateIntakeForm()"
+    ></textarea>
+    <button class="next-button" onclick="showStep(5)" disabled id="step4-next">
+      Next
+    </button>
+  </div>
+
+  <!-- Step 5: Final Submit -->
+  <div class="section" id="intake-step-5">
+    <h2>Submit Your Info</h2>
+    <p>We appreciate your time! If everything looks good, tap “Submit.”</p>
+    <button id="submit-button" class="submit-button" disabled onclick="submitIntakeForm()">
+      Submit
+    </button>
+  </div>
+</div>
+
+<script>
+// Show/hide steps
+function showStep(index) {
+  const sections = document.querySelectorAll('.intake-form-container .section');
+  sections.forEach((sec, i) => {
+    sec.classList.toggle('active', i === index);
+  });
+}
+
+// Validate fields at each step
+function validateIntakeForm() {
+  const email = document.getElementById('intake-email');
+  const role = document.getElementById('intake-role');
+  const goal = document.getElementById('intake-goal');
+  const referral = document.getElementById('intake-referral');
+
+  // Basic checks
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const validEmail = emailPattern.test(email.value.trim());
+  const roleFilled = role.value.trim().length > 0;
+  const goalFilled = goal.value.trim().length > 0;
+  const referralFilled = referral.value.trim().length > 0;
+
+  // Step 1 next button
+  document.getElementById('step1-next').disabled = !validEmail;
+
+  // Step 2 next button
+  document.getElementById('step2-next').disabled = !roleFilled;
+
+  // Step 3 next button
+  document.getElementById('step3-next').disabled = !goalFilled;
+
+  // Step 4 next button
+  document.getElementById('step4-next').disabled = !referralFilled;
+
+  // Final submit
+  const canSubmit = validEmail && roleFilled && goalFilled && referralFilled;
+  document.getElementById('submit-button').disabled = !canSubmit;
+}
+
+function submitIntakeForm() {
+  const emailValue = document.getElementById('intake-email').value.trim();
+  const roleValue = document.getElementById('intake-role').value.trim();
+  const goalValue = document.getElementById('intake-goal').value.trim();
+  const referralValue = document.getElementById('intake-referral').value.trim();
+
+  const payload = {
+    email: emailValue,
+    role: roleValue,
+    goal: goalValue,
+    referral: referralValue
+  };
+
+  // Example fetch to your serverless function or endpoint
+  fetch('https://example.com/intake-endpoint', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert('Form submitted successfully!');
+    // Possibly redirect or reset form
+  })
+  .catch(err => {
+    console.error(err);
+    alert('Error submitting form.');
+  });
+}
+</script>
