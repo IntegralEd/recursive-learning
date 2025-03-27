@@ -1,11 +1,11 @@
 ---
-layout: bhb_chat
-categories: [bhb]
+layout: chat
 title: "BHB Chat"
+permalink: "/clients/BHB/chat.html"
+client_baseurl: "/clients/BHB"
 brand_logo: "/clients/BHB/assets/images/chat_banner_white.png"
 brand_color: "#6A6DB3"
-favicon: "{{ page.client_baseurl }}/assets/images/logo.ico"
-permalink: "/clients/BHB/chat.html"
+favicon: "/clients/BHB/assets/images/logo.ico"
 ---
 <!DOCTYPE html>
 <html>
