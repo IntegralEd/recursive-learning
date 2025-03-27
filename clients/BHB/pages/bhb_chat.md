@@ -1,5 +1,5 @@
 ---
-layout: bhb_chat
+layout: default
 categories: [bhb]
 title: "chat"
 brand_logo: "{{ page.client_baseurl }}/assets/images/chat_banner_white.png"
