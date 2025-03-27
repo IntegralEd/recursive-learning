@@ -36,5 +36,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_site
-          publish_branch: gh-pages  # Ensure GitHub Pages is set to use this branch
+          publish_branch: main  # Ensure GitHub Pages is set to use this branch
           force_orphan: true  # Optional: Creates a new orphan branch
