@@ -7,7 +7,6 @@ theme: minima
 include:
   - _includes       # Include the _includes directory
   - clients         # Include the clients directory
-  - shared_jekyll   # Include the shared_jekyll directory
   - assets          # Include the assets directory if needed
 
 exclude:
