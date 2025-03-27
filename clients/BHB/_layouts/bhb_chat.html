@@ -1,12 +1,26 @@
----
-layout: default
----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Title</title>
+    <!-- Include any necessary meta tags, stylesheets, and scripts -->
+    <link rel="icon" href="{{ page.favicon }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ page.client_baseurl }}/assets/css/styles.css">
+</head>
+<body>
 
 {% include header.html %}
 
-<h1>BHB Chat Layout</h1>
-<p>Below is page content:</p>
+<h1>Test Title</h1>
+
+<!-- Use client_baseurl for assets -->
+<img src="{{ page.brand_logo }}" alt="BHB Logo">
+
+<!-- Page content -->
 {{ content }}
 
-<!-- If you want partials or chat UI, include them here -->
-<!-- e.g. {% include chat.html %} -->
+<!-- Include chat UI components -->
+<!-- e.g., {% include chat.html %} -->
+
+</body>
+</html>
