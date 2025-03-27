@@ -3,10 +3,12 @@ source "https://rubygems.org"
 gem "jekyll", "~> 4.2.0"
 gem "minima", "~> 2.5"
 gem "jekyll-feed", "~> 0.15"
-gem "webrick", "~> 1.7"
+gem "webrick", "~> 1.7.0"
 
+# Add any additional plugins your site uses
 group :jekyll_plugins do
   gem "jekyll-feed", "~> 0.15"
+  # e.g., gem "jekyll-sitemap"
   # Add other plugins here if needed
 end
 

@@ -1,44 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>{{ page.title }}</title>
-  <title>Test Title Loading</title>
-
-  <!-- Assign variables for header -->
-  {% assign header_logo = "/clients/BHB/assets/images/RecursiveLearningLockup_White.png" %}
-  {% assign header_hue = "#6A6DB3" %}
 </head>
 <body>
-  {% include header.html %}
 
-  <!-- Moved h1 and p elements into body -->
-  <h1>BHB Chat Layout Test</h1>
-  <p>This is a test content.</p>
+  <!-- Page content -->
+  <h1>{{ page.title }}</h1>
+  <p>This is a minimal test page.</p>
 
-  <!-- Include partials within sections -->
-  <div id="welcome-section" class="section">
-    {% include welcome_affirmations.html %}
-  </div>
-
-  <div id="chat-section" class="section" style="display: none;">
-    {% include chat.html %}
-  </div>
-
-  <!-- Include footer partials based on tab -->
-  {% if page.tab == 'welcome' %}
-    {% include playbar.html %}
-  {% elsif page.tab == 'chat' %}
-    {% include chatbar.html %}
-  {% endif %}
-
-  <!-- JavaScript to handle section display -->
+  <!-- Simple script -->
   <script>
-    console.log('bhb_chat.html script is running'); // Added console log
-    function showSection(sectionId) {
-      console.log('showSection called with', sectionId); // Added console log
-      document.getElementById('welcome-section').style.display = (sectionId === 'welcome') ? 'block' : 'none';
-      document.getElementById('chat-section').style.display = (sectionId === 'chat') ? 'block' : 'none';
-    }
+    console.log('Test script is running');
+    alert('JavaScript is working');
   </script>
+
 </body>
 </html>
