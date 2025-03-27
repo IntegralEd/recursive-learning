@@ -1,0 +1,144 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+MDC Plan for RL Front-End Repo
+1. Repository Creation & Setup (~30 minutes)
+Create New Repo: Name it something like rl-frontend (public or private as you prefer).
+
+Initialize Structure:
+
+Copy minimal Jekyll files (_config.yml, Gemfile, index.md, _layouts/default.html) from your existing partials approach or start from a fresh minimal set.
+
+Ensure you have a .gitignore for Ruby artifacts (.bundle, Gemfile.lock) if desired.
+
+2. Local Branch & Initial Commit (~15 minutes)
+New Branch: feature/initial-structure from main (or master).
+
+Add Tree & Partials:
+
+Create the directories:
+
+rust
+Copy
+Edit
+├── _config.yml
+├── _layouts/
+├── _includes/
+├── assets/ (css, js, images)
+├── clients/
+  └── BHB/ (subfolders for pages, assets)
+Copy relevant partials (e.g., header.html, sidebar.html, etc.) from your old repo into _includes/.
+
+Commit changes.
+
+3. Quick Local Test (Optional ~30 minutes)
+Why Optional: If local environment issues are too time-consuming, you can skip or do minimal local checks. But local testing shortens the iteration cycle.
+
+Install Gems:
+
+bash
+Copy
+Edit
+bundle install
+Serve:
+
+bash
+Copy
+Edit
+bundle exec jekyll serve
+Check:
+
+Visit http://127.0.0.1:4000 in your browser.
+
+Confirm a minimal “Hello World” or partial-based page is rendering.
+
+Adjust anything obviously broken, commit as needed.
+
+4. Configure GitHub Pages & Deploy (~45 minutes)
+Enable Pages:
+
+Under the Settings → Pages, pick your branch (often main) and /(root) or /docs as desired.
+
+(If Using a Custom Action):
+
+Copy .github/workflows/pages-build.yml or similar from your old approach or a template.
+
+Adjust any references (like build commands, gem versions).
+
+Commit.
+
+Wait for the Build:
+
+Check “Actions” tab for a successful run.
+
+Once it’s done, your site should appear at https://yourusername.github.io/rl-frontend/ (or custom domain if configured).
+
+Verify:
+
+Confirm partials are included, brand colors, etc.
+
+If you see issues, push fixes or re-run the build.
+
+5. Insert the “BHB” Structure & Pages (~30 minutes)
+Under clients/BHB/pages/:
+
+Add bhb_chat.md with front matter referencing your partials:
+
+yaml
+Copy
+Edit
+---
+layout: bhb_chat
+title: "BHB Chat"
+# For a simpler path:
+# permalink: /bhb/chat.html
+---
+# BHB Chat here
+Create a bhb_chat.html Layout (optional) or reuse default.html:
+
+liquid
+Copy
+Edit
+---
+layout: default
+---
+{% include header.html %}
+<div id="container">
+  {% include sidebar.html %}
+  {% include chat.html %}
+</div>
+Push & Deploy:
+
+Merged or push to feature/initial-structure.
+
+Wait for GH Pages build.
+
+Confirm https://recursivelearning.app/bhb/chat.html works (if you used a permalink) or .../clients/BHB/pages/bhb_chat.html by default.
+
+6. Finalize & Merge (Remainder of Time)
+Review: Add finishing touches (brand color variables in _config.yml, partial stylings).
+
+Document: A README.md explaining how to add new clients, how to do local testing vs. GH Pages deployment.
+
+Merge: Once stable, merge feature/initial-structure into main.
+
+Ongoing: Future steps might be hooking up the same Lambda endpoint for all chat functionalities or building additional partials for forms.
+
+Summary
+In ~3 hours:
+
+Create rl-frontend repo with minimal Jekyll scaffolding.
+
+Copy partials from your existing code.
+
+(Optionally) Local Test with bundle exec jekyll serve.
+
+Configure GH Pages or a custom workflow so the site auto‐publishes.
+
+Add BHB’s basic structure (bhb_chat.md, brand partials).
+
+Publish the new front-end, verifying the user can visit a BHB chat page at a clean URL.
+
+

@@ -701,51 +701,46 @@ This platform is designed to provide a multitenant recursive learning environmen
 - Finalize integration with Make and Airtable to support multitenant systems.
 - Iterate on feedback and refine the chat experience for the MVP release.
 
+## RL Frontend Plan
 
+1. Repository Creation & Setup (≈30 minutes)
+   - Create the new "rl-frontend" repo.
+   - Copy minimal Jekyll files (_config.yml, Gemfile, index.md, _layouts/default.html) from your existing setup or a fresh minimal template.
+   - Add a .gitignore for Ruby artifacts if desired (e.g. .bundle, Gemfile.lock).
 
+2. Local Branch & Initial Commit (≈15 minutes)
+   - Create a feature/initial-structure branch from main.
+   - Create directories:
+     - _layouts/
+     - _includes/
+     - assets/ (css, js, images)
+     - clients/BHB/ (subfolders: pages, assets)
+   - Copy relevant partials such as header.html, sidebar.html into _includes/.
+   - Commit and push these initial files.
 
-## Jekyll Setup and Deployment
+3. Quick Local Test (Optional, ≈30 minutes)
+   - (If you have a local Ruby & Jekyll environment) run "bundle install" then "bundle exec jekyll serve."
+   - Open http://127.0.0.1:4000 to confirm a minimal "Hello World" page or partial-based page is working.
 
-### Overview
+4. Configure GitHub Pages & Deploy (≈45 minutes)
+   - Under Settings → Pages, choose your branch (often main) and either /(root) or /docs.
+   - If you use a custom build Action, copy your existing .github/workflows/pages-build.yml and adapt it.
+   - Once the GitHub Actions build completes, confirm your site is live.
 
-Our platform uses Jekyll to manage and deploy client-specific chat interfaces. This approach allows for modular and reusable components, making it easy to maintain and scale.
+5. Insert the "BHB" Structure & Pages (≈30 minutes)
+   - In clients/BHB/pages, add bhb_chat.md with front matter referencing a layout:
+     ---
+     layout: bhb_chat
+     title: "BHB Chat"
+     permalink: /clients/BHB/chat.html
+     ---
+   - Create/adjust bhb_chat.html in _layouts/ or reuse default.html.  
+   - Push changes and wait for the GH Pages build.
+   - Test at https://yourdomain/clients/BHB/chat.html.
 
-### Directory Structure
+6. Finalize & Merge (Remainder of Time)
+   - Add finishing touches: brand color variables in _config.yml, partial stylings, etc.
+   - Document usage: how to add new clients, local testing, GH Pages deployment.
+   - Merge feature/initial-structure into main.
 
-- **shared_jekyll/**: Contains shared layouts, includes, and assets used across all client sites.
-- **clients/**: Each client has a dedicated directory with specific configurations and pages.
-
-### Key Components
-
-1. **Layouts and Partials**
-   - **_layouts/**: Defines the overall structure of pages.
-   - **_includes/**: Contains reusable components like headers, footers, and sidebars.
-
-2. **Configuration**
-   - **_config.yml**: Central configuration file for Jekyll, specifying directories and plugins.
-   - **CNAME**: Custom domain configuration for GitHub Pages.
-
-3. **Deployment**
-   - **GitHub Pages**: Automatically builds and serves the site from the specified branch.
-   - **Custom Domain**: Configured via the CNAME file and GitHub Pages settings.
-
-### Deployment Process
-
-1. **Local Development**
-   - Run Jekyll locally to test changes before deployment.
-   - Use `bundle exec jekyll serve` to start the local server.
-
-2. **Commit and Push**
-   - Make changes to the content or configuration.
-   - Commit changes and push to the main branch to trigger a rebuild.
-
-3. **Accessing the Site**
-   - The site is accessible at `https://recursivelearning.app/clients/<client-name>/chat.html`.
-
-### Benefits
-
-- **Modularity**: Easily manage and update shared components.
-- **Scalability**: Quickly onboard new clients with minimal setup.
-- **Customization**: Client-specific configurations allow for tailored experiences.
-
-This setup streamlines the deployment process and ensures consistency across all client sites.
+Enjoy your new dedicated RL Frontend repo for Jekyll-based chat pages!
