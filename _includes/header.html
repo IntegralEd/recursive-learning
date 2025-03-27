@@ -1,0 +1,12 @@
+<!-- Example snippet to show the banner -->
+<header style="background-color: {{ page.primary_color }}; height: 50px; display: flex; align-items: center; padding: 5px;">
+  <div style="max-width: 1200px; width: 100%; margin: 0 auto; display: flex; align-items: center;">
+    {% if page.client_baseurl %}
+      <img src="{{ page.client_baseurl }}/assets/images/chat_banner_white.png" alt="BHB Logo" style="padding: 5px;">
+    {% else %}
+      <img src="/shared_jekyll/assets/images/RecursiveLearningLockup_White.png" alt="Recursive Learning Logo" style="padding: 5px;">
+    {% endif %}
+  </div>
+</header>
+
+<link rel="icon" href="{{ page.favicon }}" type="image/x-icon"> 
