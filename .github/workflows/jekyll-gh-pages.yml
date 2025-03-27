@@ -12,7 +12,7 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,29 +22,19 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.0'  # Use '3.0' if desired
-          bundler-cache: true
+          ruby-version: '3.0'
+          bundler-cache: true  # Caches gems between builds
 
       - name: Install dependencies
         run: bundle install
 
       - name: Build site with Jekyll
         run: bundle exec jekyll build
-        env:
-          JEKYLL_ENV: production
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1  # Updated action
-        with:
-          path: ./_site  # Path to your built site
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1  # Ensure you're using the latest version
+        uses: peaceiris/actions-gh-pages@v3.9.1  # Ensure you're using the latest version
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          publish_branch: gh-pages  # Ensure GitHub Pages is set to use this branch
+          force_orphan: true  # Optional: Creates a new orphan branch
