@@ -1,0 +1,39 @@
+## Lambda Network Access Checkpoint
+
+- [ ] Temporarily removed Lambda from VPC or confirmed NAT Gateway access.
+- [ ] Verified Lambda successfully reaches OpenAI API.
+- [ ] Confirmed successful Assistant API response after network fix.
+
+## Updated Steps for Connectivity Issue Resolution
+
+1. **Log into AWS Console**
+   - Navigate to AWS Console → Lambda → Functions → [Your Lambda function]
+
+2. **Adjust VPC Settings (temporarily)**
+   - Click on the Configuration tab.
+   - Select VPC from the sidebar.
+   - If it says "Configured within a VPC", click Edit.
+   - Change to "No VPC" and click Save.
+   - If "No VPC" is already selected, proceed to testing.
+
+3. **Quick Sanity Check Test (Lambda Console)**
+   - In your Lambda function view, click Test.
+   - Re-run the existing test event (Chat_Test).
+   - Confirm it no longer times out and returns a response from OpenAI.
+
+4. **Validate Response (CloudWatch Logs)**
+   - If issues persist, go to Monitoring → View logs in CloudWatch.
+   - Confirm successful logs or pinpoint further errors.
+
+## Goal for Today
+
+- Achieve a successful chat with the Bmore instance within 1 hour.
+
+## EL Merit RAG Chat Implementation
+
+### Branch Creation
+```bash
+git checkout -b el-merit main
+```
+
+### File Structure 
