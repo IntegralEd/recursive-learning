@@ -1,6 +1,5 @@
 const { SSMClient, GetParametersCommand } = require('@aws-sdk/client-ssm');
 const OpenAI = require('openai');
-// const fetch = require('node-fetch');
 
 let fetch;
 (async () => {
@@ -22,28 +21,6 @@ async function getOpenAIKey() {
   return response.Parameters[0].Value;
 }
 
-// Function to get Assistant ID from SSM Parameter Store
-// async function getAssistantID() {
-//   const command = new GetParametersCommand({
-//     Names: ['integraled/bmore/OpenAI_Assistant_ID'],
-//     WithDecryption: true,
-//   });
-
-//   try {
-//     const response = await ssmClient.send(command);
-//     console.log('SSM Response for Assistant ID:', JSON.stringify(response, null, 2));
-
-//     if (!response.Parameters || response.Parameters.length === 0) {
-//       throw new Error('Assistant ID not found in SSM Parameter Store');
-//     }
-
-//     return response.Parameters[0].Value;
-//   } catch (error) {
-//     console.error('Error retrieving Assistant ID:', error);
-//     throw new Error('Error retrieving Assistant ID');
-//   }
-// }
-
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -57,7 +34,11 @@ exports.handler = async (event) => {
 
   try {
     const body = JSON.parse(event.body);
-    const { message, threadId } = body;
+    const { message, threadId, assistantId } = body;
+
+    if (!assistantId) {
+      throw new Error('Assistant ID must be provided in the request body');
+    }
 
     const openAIKey = await getOpenAIKey();
     const openai = new OpenAI({ apiKey: openAIKey });
@@ -69,7 +50,6 @@ exports.handler = async (event) => {
       content: message,
     });
 
-    const assistantId = 'asst_QoAA395ibbyMImFJERbG2hKT';
     const run = await openai.beta.threads.runs.create(currentThreadId, {
       assistant_id: assistantId,
     });
@@ -98,4 +78,4 @@ exports.handler = async (event) => {
       body: JSON.stringify({ error: error.message }),
     };
   }
-}; 
+};
